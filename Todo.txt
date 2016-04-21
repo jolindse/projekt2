@@ -1,5 +1,7 @@
 * npm install -g nodemon
 
+https://docs.mongodb.org/v3.0/tutorial/install-mongodb-on-windows/
+
 > show dbs
 local  0.000GB
 > use testsystem
