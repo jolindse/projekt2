@@ -8,6 +8,8 @@ var mongoose = require('mongoose');
  *  Schema entry for the user db entities.
  */
 
+var Exam = require('./Exam');
+
 var userSchema = mongoose.Schema({
 
     // Basic information
@@ -32,9 +34,6 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    class:{
-        type: String
-    },
     admin:{
         type: Boolean,
         default: false,
@@ -44,7 +43,7 @@ var userSchema = mongoose.Schema({
     // Data fields related to exams
 
     testToTake: {
-        type: Array
+        type: [{type: Schema.ObjectId,ref:'Exam'}]
     }
 
 });

@@ -16,8 +16,9 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
 
-Users = require('./models/users');
+User = require('./models/User');
 
 // Connect to mongoose
 
@@ -35,8 +36,8 @@ USERS ENDPOINTS
  ------------------------------------------------------------------------------------------------------------------------
  */
 
-app.get('/api/users', function(req, res){
-    Users.getUsers(function (err, users) {
+app.get('/api/users/', function(req, res){
+    User.getUsers(function (err, users) {
         if (err){
             throw err;
         }
