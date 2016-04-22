@@ -1,6 +1,8 @@
 /**
  * Created by Johan on 2016-04-22.
  */
+var mongoose = require('mongoose');
+Schema = mongoose.Schema;
 var User = require('./User');
 var Exam = require('./Exam');
 

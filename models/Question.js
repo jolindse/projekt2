@@ -2,6 +2,8 @@
  * Created by Johan on 2016-04-22.
  */
 
+var mongoose = require('mongoose');
+Schema = mongoose.Schema;
 var User = require('./User');
 
 var questionSchema = mongoose.Schema({
@@ -9,7 +11,7 @@ var questionSchema = mongoose.Schema({
     // Basic information
 
     title:{
-        type: String,
+        type: String
     },
     questionText:{
         type: String,
