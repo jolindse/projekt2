@@ -1,22 +1,26 @@
 /**
- * Created by Johan on 2016-04-22.
+ * Exam entity class
  */
 
-var User = require('./User');
+var mongoose = require('mongoose');
+
+Schema = mongoose.Schema;
 
 var examSchema = mongoose.Schema({
 
     // Basic information
 
-    title:{
+    title: {
         type: String,
         required: true
     },
-    subject:{
+    subject: {
         type: String,
         required: true
     },
-    interval:{
+
+    // Array with start date, end date.
+    interval: {
         type: Array
     },
     time: {
@@ -25,6 +29,8 @@ var examSchema = mongoose.Schema({
     type: {
         type: String
     },
+
+    // Array [0] = G percentage, [1] = VG percentage
     gradePercentage: {
         type: Array
     },
@@ -36,12 +42,44 @@ var examSchema = mongoose.Schema({
         type: Boolean,
         default: true
     },
+    // Array with question ids.
     questions: {
-        // HÄR SKALL DET VARA FRÅGE REFERENSER
+        type: Array
     },
+    // User id of cre8or
     cre8or: {
-        type: {type:Schema.ObjectId,ref: 'User'}
+        type: String
     }
 });
 
+// Export model for application use.
 var Exam = module.exports = mongoose.model('Exam', examSchema);
+
+/*
+ Functions for the entity.
+ */
+
+// List all exams
+module.exports.getExams = function (callback) {
+    Exam.find(callback);
+};
+
+// Add exam
+module.exports.addExam = function (examData, callback) {
+    Exam.create(examData, callback);
+};
+
+// Update exam
+module.exports.updateExam = function(id, updatedExam, callback) {
+  Exam.findOneAndUpdate(
+      {_id: id},
+      updatedExam,
+      {upsert: false},
+      callback
+  );
+};
+
+// Delete exam
+module.exports.deleteExam = function(id, callback) {
+  Exam.findOneAndRemove({_id: id}, callback);
+};
