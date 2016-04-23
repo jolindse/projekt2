@@ -84,7 +84,7 @@ module.exports.addUser = function (user, callback) {
 
 // Log in
 module.exports.loginUser = function (id, callback) {
-    User.findOne({_id: id}, callback);
+    User.findOne({id: id}, callback);
 };
 
 module.exports.deleteUser = function (id, callback) {
