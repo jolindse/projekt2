@@ -13,12 +13,12 @@
  */
 
 // Dependecies
-var express = require('express');
-var app = express();
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+var express     =   require('express');
+var app         =   express();
+var mongoose    =   require('mongoose');
+var bodyParser  =   require('body-parser');
 
-User = require('./models/User');
+var User = require('./models/User');
 
 // Connect to mongoose
 
@@ -58,11 +58,50 @@ app.post('/api/user', function (req, res) {
     });
 });
 
+app.get('/api/user/:id', function(req, res) {
+    User.getUser(req.params.id, function(err, user) {
+        if(err) {
+            console.log(err);
+        }
+        res.json(user);
+    });
+});
+
+app.put('/api/user/:id', function(req, res) {
+    var currUser = req.body;
+    User.updateUser(req.params.id, currUser, function(err, updatedUser) {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log('Updated user');
+            res.json(updatedUser);
+        }
+
+    });
+});
+
+// Log in
+app.post('/api/user/login/:id', function(req, res) {
+    var id = req.params.id;
+    User.loginUser(id, function(err, user){
+        if (err) {
+            res.json({login: false, message: 'Error connecting to db'});
+        } else {
+            if(user.password === req.body.password) {
+                res.json({login: true, user: user});
+            } else {
+                res.json({login: false, message: 'Not logged in. Check id,pw'});
+            }
+        }
+    });
+});
+
 /*
  ------------------------------------------------------------------------------------------------------------------------
  EXAM ENDPOINTS
  ------------------------------------------------------------------------------------------------------------------------
  */
+
 
 // Start listening and log start.
 app.listen(3000);
