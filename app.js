@@ -27,15 +27,13 @@ var Submitted = require('./models/SubmittedExam');
 // Init express to handle api-requests
 var app = express();
 
-// Connect to mongoose
-
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Default endpoint.
 app.get('/', function (req, res) {
-    res.send('System for exam. Please use /api/users or /api/exams');
+    res.send('System for exam. Please use /api/users, /api/class, /api/exams, /api/question, /api/submitted');
 });
 
 /*
@@ -100,7 +98,6 @@ app.put('/api/user/:id', function (req, res) {
 });
 
 // Log in
-// ADD CALLBACK FOR ADMIN LOGIN?
 app.post('/api/user/login/:id', function (req, res) {
     var id = req.params.id;
     User.loginUser(id, function (err, user) {

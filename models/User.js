@@ -10,7 +10,6 @@ var mongoose = require('mongoose');
 var userSchema = mongoose.Schema({
 
     // Basic information
-
     firstName: {
         type: String,
         required: true
@@ -41,7 +40,6 @@ var userSchema = mongoose.Schema({
     },
 
     // Data fields related to exams
-
     // Array with Exam ids.
     testToTake: {
         type: Array,
@@ -87,6 +85,7 @@ module.exports.loginUser = function (id, callback) {
     User.findOne({id: id}, callback);
 };
 
+// Delete a user
 module.exports.deleteUser = function (id, callback) {
     User.findOneAndRemove({_id: id}, callback);
-}
+};

@@ -9,7 +9,6 @@ Schema = mongoose.Schema;
 var examSchema = mongoose.Schema({
 
     // Basic information
-
     title: {
         type: String,
         required: true

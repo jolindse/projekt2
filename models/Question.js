@@ -11,7 +11,6 @@ Schema = mongoose.Schema;
 var questionSchema = mongoose.Schema({
 
     // Basic information
-
     title:{
         type: String
     },

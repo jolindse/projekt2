@@ -11,7 +11,6 @@ Schema = mongoose.Schema;
 var submittedSchema = mongoose.Schema({
 
     // Basic information
-
     student: {
         type: String,
         required: true
