@@ -64,6 +64,11 @@ module.exports.getExams = function (callback) {
     Exam.find(callback);
 };
 
+// Get specific exam
+module.exports.getExam = function (id, callback) {
+    Exam.findById(id, callback);
+}
+
 // Add exam
 module.exports.addExam = function (examData, callback) {
     Exam.create(examData, callback);
@@ -82,4 +87,9 @@ module.exports.updateExam = function(id, updatedExam, callback) {
 // Delete exam
 module.exports.deleteExam = function(id, callback) {
   Exam.findOneAndRemove({_id: id}, callback);
+};
+
+// Get by cre8or
+module.exports.getByAuthor = function(id, callback) {
+    Exam.find({cre8or:id});
 };

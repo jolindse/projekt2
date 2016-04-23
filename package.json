@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/jolindse/projekt2BackendServer.git"
   },
-  "author": "Johan Lindstroem",
+  "author": "Johan Lindstroem, Mattias Larsson, Robin Listerberg, Jonas Sunnari",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jolindse/projekt2BackendServer/issues"

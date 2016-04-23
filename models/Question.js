@@ -40,7 +40,7 @@ var questionSchema = mongoose.Schema({
         type: Number
     },
     cre8or: {
-        type: Array
+        type: String
     }
     
 });
@@ -80,4 +80,9 @@ module.exports.updateQuestion = function(id, updatedQuestion, callback) {
 // Delete question
 module.exports.deleteQuestion = function(id, callback) {
     Question.findOneAndRemove({_id: id}, callback);
+};
+
+// Get by cre8or
+module.exports.getByAuthor = function(id, callback) {
+    Question.find({cre8or: id});
 };
