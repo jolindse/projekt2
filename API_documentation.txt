@@ -3,39 +3,39 @@ API ENDPOINTS:
 =========================================================================================================================
 Endpoint:					Call:	Expects:	Returns:		Info:
 
-/api/user					GET		-			[user]			Gets ALL users
-/api/user					POST	user		-				Adds a user
-/api/user/(id) 				PUT		user 		-				Updates a user
-/api/user/(id)				GET 	-			user 			Gets specific user
-/api/user/(id)				DELETE	-			-				Deletes a user
-/api/user/login/(id)		POST	user.id		login:bool		Login, returns true or false
+/api/user					GET		-			[user]			    Gets ALL users
+/api/user					POST	user		-				    Adds a user
+/api/user/(id) 				PUT		user 		-				    Updates a user
+/api/user/(id)				GET 	-			user 			    Gets specific user
+/api/user/(id)				DELETE	-			-				    Deletes a user
+/api/user/login/(id)		POST	user.id		login:bool		    Login, returns true or false
 
-/api/class					GET 	-			[class]			Gets ALL classes
-/api/class 					POST	class 		- 				Adds a class
-/api/class/(id)				PUT		class 		-				Updates a class
-/api/class/(id)				GET 	-			class 			Gets a specific class
-/api/class/(id)				DELETE 	-			-				Deletes a class
-/api/class/remove/(id)		DELETE 	-			-				Deletes a class and ALL students that belong to it
+/api/class					GET 	-			[class]			    Gets ALL classes
+/api/class 					POST	class 		- 				    Adds a class
+/api/class/(id)				PUT		class 		-				    Updates a class
+/api/class/(id)				GET 	-			[class,[user]]	    Gets a specific class with its students
+/api/class/(id)				DELETE 	-			-				    Deletes a class
+/api/class/remove/(id)		DELETE 	-			-				    Deletes a class and ALL students that belong to it
 
-/api/exam					GET 	- 			[exam]			Gets ALL exams
-/api/exam 					POST 	exam 		-				Adds a exam
-/api/exam/(id)				PUT 	exam 		- 				Updates a exam
-/api/exam/(id)				GET 	-			exam 			Gets a specific exam
-/api/exam/(id)				DELETE 	- 			-				Deletes a exam and all submitted that relates to it
-/api/exam/cre8or/(id)		GET 	-			[exam]			Gets all exams by a cre8or
+/api/exam					GET 	- 			[exam]			    Gets ALL exams
+/api/exam 					POST 	exam 		-				    Adds a exam
+/api/exam/(id)				PUT 	exam 		- 				    Updates a exam
+/api/exam/(id)				GET 	-			[exam,[questions]]	Gets a specific exam with its questions
+/api/exam/(id)				DELETE 	- 			-				    Deletes a exam and all submitted that relates to it
+/api/exam/cre8or/(id)		GET 	-			[exam]			    Gets all exams by a cre8or
 
-/api/question				GET 	- 			[question]		Gets ALL questions
-/api/question 				POST 	question 	-				Adds a question
-/api/question/(id)			PUT 	question 	- 				Updates a question
-/api/question/(id) 			GET 	- 			question 		Gets a specific question
-/api/question/(id) 			DELETE 	- 			- 				Deletes a question
-/api/question/cre8or/(id)	GET 	-			[question]		Gets all questions by a cre8or
+/api/question				GET 	- 			[question]		    Gets ALL questions
+/api/question 				POST 	question 	-				    Adds a question
+/api/question/(id)			PUT 	question 	- 				    Updates a question
+/api/question/(id) 			GET 	- 			question 		    Gets a specific question
+/api/question/(id) 			DELETE 	- 			- 				    Deletes a question
+/api/question/cre8or/(id)	GET 	-			[question]		    Gets all questions by a cre8or
 
-/api/submitted				POST 	submitted	- 				Adds a submitted exam
-/api/submitted/(id)			GET 	- 			submitted 		Gets a specific submitted exam
-/api/submitted/(id) 		PUT 	submitted 	- 				Updates a submitted exam
-/api/submitted/(id) 		DELETE 	- 			-				Deletes a submitted exam
-/api/submitted/user/(id)	GET 	- 			[submitted]		Gets ALL submitted exams by a student
+/api/submitted				POST 	submitted	- 				    Adds a submitted exam
+/api/submitted/(id)			GET 	- 			submitted 		    Gets a specific submitted exam
+/api/submitted/(id) 		PUT 	submitted 	- 				    Updates a submitted exam
+/api/submitted/(id) 		DELETE 	- 			-				    Deletes a submitted exam
+/api/submitted/user/(id)	GET 	- 			[submitted]		    Gets ALL submitted exams by a student
 
 all (id) except for the login one refers to MongoDB _id.
 
