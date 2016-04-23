@@ -14,8 +14,8 @@
 
 // Dependecies
 var express     =   require('express');
-var mongoose    =   require('mongoose');
 var bodyParser  =   require('body-parser');
+var db          =   require('./components/db');
 
 // Models import
 var User        =   require('./models/User');
@@ -28,8 +28,6 @@ var Submitted   =   require('./models/SubmittedExam');
 var app         =   express();
 
 // Connect to mongoose
-mongoose.connect('mongodb://localhost/examsystem');
-var db = mongoose.connection;
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({ extended: false }));
