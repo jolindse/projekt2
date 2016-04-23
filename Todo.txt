@@ -1,18 +1,8 @@
-* npm install -g nodemon
+API:
 
-https://docs.mongodb.org/v3.0/tutorial/install-mongodb-on-windows/
+* Get all tests that needs correction.
 
-> show dbs
-local  0.000GB
-> use testsystem
-switched to db testsystem
-> show collections
-> db.createCollection('users')
-{ "ok" : 1 }
-> db.createCollection('exams')
-{ "ok" : 1 }
-> show collections
-exams
-users
->
+SERVER:
+
+* Auto correction routines.
 

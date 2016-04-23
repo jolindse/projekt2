@@ -3,14 +3,8 @@
  *
  * Entity model for submitted exam
  *
- * The array answer contains objects:
- * answer: {
- *          text:       answertext
- *          points:     pointsawarded
- *          corrected:  boolean to indicate if the answer have been corrected
- *          }
- *
  */
+
 var mongoose = require('mongoose');
 Schema = mongoose.Schema;
 
@@ -33,7 +27,7 @@ var submittedSchema = mongoose.Schema({
     comment: {
         type: String
     },
-    completedCorrection: {
+    completeCorrection: {
         type: Boolean,
         default: false
     },
