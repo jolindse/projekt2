@@ -1,0 +1,31 @@
+<!--
+
+/api/submitted				POST 	submitted	- 				Adds a submitted exam
+/api/submitted/(id)			GET 	- 			submitted 		Gets a specific submitted exam
+/api/submitted/(id) 		PUT 	submitted 	- 				Updates a submitted exam
+/api/submitted/(id) 		DELETE 	- 			-				Deletes a submitted exam
+/api/submitted/user/(id)	GET 	- 			[submitted]		Gets ALL submitted exams by a student
+
+submitted:
+	{
+		_id:				MongoDB id
+		student:			user._id
+		exam:				exam._id
+		answers:			[submittedAnswerObject:{
+									text:		String
+									comment:	String
+									correct:	Boolean
+									corrected:	Boolean
+									points:		Number
+							},...]
+		comment:			String
+		completeCorrection:	Boolean
+		grade:				String
+		points:				Number
+	}
+
+-->
+
+<article id="submitted">
+    <p> Submitted </p>
+</article>

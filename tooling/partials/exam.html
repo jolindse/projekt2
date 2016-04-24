@@ -1,0 +1,27 @@
+<!--
+
+/api/exam					GET 	- 			[exam]			Gets ALL exams
+/api/exam 					POST 	exam 		-				Adds a exam
+/api/exam/(id)				PUT 	exam 		- 				Updates a exam
+/api/exam/(id)				GET 	-			exam 			Gets a specific exam
+/api/exam/(id)				DELETE 	- 			-				Deletes a exam and all submitted that relates to it
+/api/exam/cre8or/(id)		GET 	-			[exam]			Gets all exams by a cre8or
+
+exam:
+	{
+		_id:				MongoDB id
+		title:				String
+		subject:			String
+		interval:			[Date.start,Date.end]
+		time:				Number (minutes)
+		gradePercentage:	[Number.G_Threshold,Number.VG_Threshold]
+		anonymous:			Boolean
+		feedback:			Boolean
+		questions:			[question._id,question_id...]
+		cre8or:				user._id
+	}
+
+-->
+<article id="exam">
+    <p> Exam </p>
+</article>

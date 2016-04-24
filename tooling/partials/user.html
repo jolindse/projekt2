@@ -1,0 +1,25 @@
+<!--
+/api/user					GET		-			[user]			Gets ALL users
+/api/user					POST	user		-				Adds a user
+/api/user/(id) 				PUT		user 		-				Updates a user
+/api/user/(id)				GET 	-			user 			Gets specific user
+/api/user/(id)				DELETE	-			-				Deletes a user
+/api/user/login/(id)		POST	user.id		login:bool		Login, returns true or false
+
+user:
+	{
+		_id: 				MongoDB id
+		firstName:			String
+		surName:			String
+		id:					Number (personnummer)
+		password:			String (Hash later?)
+		email:				String
+		admin:				Boolean
+		testToTake: 		[exam._id,exam._id...]
+	}
+
+-->
+
+<article id="user">
+    <p> User </p>
+</article>

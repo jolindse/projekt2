@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="uat">
+<head>
+    <meta charset="UTF-8">
+    <title>UAT</title>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#user">User</a></li>
+            <li><a href="#class">Class</a></li>
+            <li><a href="#exam">Exam</a></li>
+            <li><a href="#question">Question</a></li>
+            <li><a href="#submitted">Submitted Exam</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section ng-view>
+</section>
+
+
+<!-- imports -->
+<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
+<!-- Angular components -->
+<script src="js/config.js"></script>
+<script src="js/controllers.js"></script>
+</body>
+</html>
