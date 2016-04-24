@@ -120,6 +120,7 @@ app.delete('/api/user/:id', function (req, res) {
         if (err) {
             res.status(405).json('Delete operation unsuccessful.');
         } else {
+            Class.removeStudent(id);
             Submitted.getByUser(id).forEach(function (userSubmitted) {
                 Submitted.deleteSubmitted(userSubmitted._id);
             });
