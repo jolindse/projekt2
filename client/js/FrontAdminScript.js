@@ -11,6 +11,18 @@ $(document).ready(function(){
         $("#classContainer").hide();
         $("#testContainer").slideToggle();
     });
+
+
+
+    $('#addAnsRow').click(function () {
+        $('#inputAnsDivs').append('<div class="inputAnsRow"> <div class="input-group"> <span class="input-group-addon"> <input type="checkbox" aria-label="..."> </span> <input type="text" class="form-control" aria-label="..."> </div> </div>');
+    });
+
+    $('.list-group-item').click(function () {
+        $('.list-group a').removeClass('active');
+        $(this).addClass('active');
+    });
+    
 });
 
 
