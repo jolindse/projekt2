@@ -86,3 +86,7 @@ module.exports.getByExam = function (id) {
 module.exports.getByStudent = function (id, callback) {
     SubmittedExam.find({student: id}, callback);
 };
+
+module.exports.getExamsNeedCorrection = function(callback) {
+    SubmittedExam.find({completeCorrection: false}, callback);
+};
