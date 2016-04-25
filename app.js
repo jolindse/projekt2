@@ -27,14 +27,20 @@ var Submitted = require('./models/SubmittedExam');
 // Init express to handle api-requests
 var app = express();
 
-app.use(express.static(__dirname+'/client'));
+// Enable CORS-calls
+app.all('/*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Default endpoint.
-app.get('/api', function (req, res) {
+app.get('/', function (req, res) {
     res.send('System for exam. Please use /api/users, /api/class, /api/exams, /api/question, /api/submitted');
 });
 
@@ -115,22 +121,6 @@ app.post('/api/user/login/:id', function (req, res) {
     });
 });
 
-// Log in
-app.post('/api/login/', function (req, res) {
-    var id = req.params.id;
-    User.loginUser(id, function (err, user) {
-        if (err) {
-            res.status(405).json({login: false, message: 'Error connecting to db'});
-        } else {
-            if (user.password === req.body.password) {
-                res.status(200).json({login: true, user: user});
-            } else {
-                res.status(405).json({login: false, message: 'Not logged in. Check id,pw'});
-            }
-        }
-    });
-});
-
 // Delete specific user (id)
 app.delete('/api/user/:id', function (req, res) {
     var id = req.params.id;
@@ -165,6 +155,7 @@ app.get('/api/class', function (req, res) {
 
 // Add class
 app.post('/api/class', function (req, res) {
+    console.log('A class is being added!'); // TEST
     var currClass = req.body;
     Class.addClass(currClass, function (err, currClass) {
         if (err) {
@@ -204,6 +195,7 @@ app.delete('/api/class/:id', function (req, res) {
 
 // Get specific class (id)
 app.get('/api/class/:id', function (req, res) {
+    console.log("Getting of class with id: "+req.params.id+" is being called!") // TEST
     var result = [];
     var currClass = Class.getClass(req.params.id, function (err) {
         if (err) {
@@ -271,7 +263,7 @@ app.put('/api/exam/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated exam');
+            console.log('Updated user');
             res.status(200).json(updatedExam);
         }
 
@@ -296,31 +288,17 @@ app.delete('/api/exam/:id', function (req, res) {
 // Get specific exam (id) with questions
 app.get('/api/exam/:id', function (req, res) {
     var result = [];
-    var currExam = '';
-    var questionsArray = [];
-    var counter = 0;
-
-    Exam.getExam(req.params.id, function (err, exam) {
+    var currExam = Exam.getExam(req.params.id, function (err) {
         if (err) {
             res.status(404).json('No such exam.');
         } else {
-            currExam = exam;
-            result.push(currExam);
-            counter = currExam.questions.length;
+            var questions = [];
             currExam.questions.forEach(function (questionId) {
-                Question.getQuestion(questionId, function(err, question) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        questionsArray.push(question);
-                        counter--;
-                        if (counter === 0) {
-                            result.push(questionsArray);
-                            res.status(200).json(result);
-                        }
-                    }
-                });
+                questions.push(Question.getQuestion(questionId));
             });
+            result.push(currExam);
+            result.push(questions);
+            res.status(200).json(result);
         }
     });
 });
@@ -472,26 +450,16 @@ app.delete('/api/submitted/:id', function (req, res) {
 });
 
 // Get all submitted exams by a student
-app.get('/api/submitted/user/:id', function (req, res){
-   Submitted.getByStudent(req.params.id, function (err, submitted) {
-       if (err) {
-           res.status(404).json('No submitted exams found.');
-       } else {
-           res.status(200).json(submitted);
-       }
-   });
-});
-
-// Get all exams which needs to be corrected
-app.get('/api/submitted/needcorr/', function(req, res) {
-    Submitted.getExamsNeedCorrection(function(err, exam) {
+app.get('/api/submitted/user/:id', function (req, res) {
+    Submitted.getByStudent(req.params.id, function (err, submitted) {
         if (err) {
-            res.status(404).json('No exams need correction.');
+            res.status(404).json('No submitted exams found.');
         } else {
-            res.status(200).json(exam);
+            res.status(200).json(submitted);
         }
     });
 });
+
 
 // Start listening and log start.
 app.listen(3000);

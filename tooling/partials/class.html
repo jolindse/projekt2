@@ -1,12 +1,5 @@
 <!--
 
-/api/class					GET 	-			[class]			Gets ALL classes
-/api/class 					POST	class 		- 				Adds a class
-/api/class/(id)				PUT		class 		-				Updates a class
-/api/class/(id)				GET 	-			class 			Gets a specific class
-/api/class/(id)				DELETE 	-			-				Deletes a class
-/api/class/remove/(id)		DELETE 	-			-				Deletes a class and ALL students that belong to it
-
 class:
 	{
 		_id:				MongoDB id
@@ -17,7 +10,32 @@ class:
 -->
 
 <article id="class">
-    <p> Class </p>
+    <h1> Class </h1>
+    <br/>
+    <br/>
 
+    <form ng-submit="submitClass()">
+
+        <p>id</p>
+        <input id="_id" ng-model="studentClass._id" type="text">
+        <br/>
+        <button ng-click="loadClass()">Load class</button>
+        <br/>
+        <p>Name</p>
+        <input id="name" ng-model="studentClass.name" type="text">
+        <br/>
+        <p>StudentIDs</p>
+        <div ng-repeat="student in studentClass.students track by $index">
+            <input ng-model="student" type="text">
+        </div>
+        <br/>
+        <p>Add student id</p>
+        <input type="text" ng-model="studentToAdd">
+        <button ng-click="addStudent()">Add student</button>
+        <br/>
+        <button type="submit">Add/modify class</button>
+    </form>
+    <tt>_id: {{studentClass._id}}</tt><br/>
+    <tt>name: {{studentClass.name}}</tt>
 
 </article>

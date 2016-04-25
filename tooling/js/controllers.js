@@ -2,11 +2,11 @@
  * Created by Johan on 2016-04-24.
  */
 
-myApp.controller('homeCtrl', function ($scope) {
+uat.controller('homeCtrl', function ($scope) {
 
 });
 
-myApp.controller('classCtrl', function ($scope, $http) {
+uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
     /***********************************************************************************************************************
      /api/class                    GET    -            [class]            Gets ALL classes
      /api/class                POST    class        -                Adds a class
@@ -23,33 +23,36 @@ myApp.controller('classCtrl', function ($scope, $http) {
      }
      ***********************************************************************************************************************/
 
-    $scope.class = {
-        _id: "",
-        name: "",
-        students: []
-    };
+    $scope.studentClass = new StudentClassManager.getStudentClass(0);
 
+    $scope.studentToAdd = '';
 
-    $http.get('http://localhost:3000/api/class').success(function (classList) {
-        $scope.listOfClasses;
-    })
+    $scope.loadClass = function() {
+        $scope.studentClass = StudentClass.getStudentClass($scope.studentClass._id);
+    }
 
-    $http.get('http://local')
+    $scope.addStudent = function() {
+        $scope.studentClass.students.push($scope.studentToAdd);
+    }
 
-});
-
-myApp.controller('examCtrl', function ($scope) {
-
-});
-
-myApp.controller('questionCtrl', function ($scope) {
+    $scope.submitClass = function() {
+        StudentClassManager.addStudentClass($scope.studentClass);
+    }
 
 });
 
-myApp.controller('submittedCtrl', function ($scope) {
+uat.controller('examCtrl', function ($scope) {
 
 });
 
-myApp.controller('userCtrl', function ($scope) {
+uat.controller('questionCtrl', function ($scope) {
+
+});
+
+uat.controller('submittedCtrl', function ($scope) {
+
+});
+
+uat.controller('userCtrl', function ($scope) {
 
 });
