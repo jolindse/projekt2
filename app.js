@@ -278,19 +278,28 @@ app.delete('/api/exam/:id', function (req, res) {
 // Get specific exam (id) with questions
 app.get('/api/exam/:id', function (req, res) {
     var result = [];
-    var currExam = Exam.getExam(req.params.id, function (err) {
+    var currExam = '';
+    var questionsArray = [];
+    
+    Exam.getExam(req.params.id, function (err, exam) {
+        currExam = exam;
+        result.push(currExam);
         if (err) {
             res.status(404).json('No such exam.');
         } else {
-            var questions = [];
             currExam.questions.forEach(function (questionId) {
-                questions.push(Question.getQuestion(questionId));
+                Question.getQuestion(questionId, function(err, question) {
+                    if (err) {
+                        console.log('FEL');
+                    } else {
+                        questionsArray.push(question);
+                    }
+                });
             });
-            result.push(currExam);
-            result.push(questions);
-            res.status(200).json(result);
         }
+
     });
+    
 });
 
 // Get exams by author
@@ -450,7 +459,16 @@ app.get('/api/submitted/user/:id', function (req, res){
    });
 });
 
-
+// Get all exams which needs to be corrected
+app.get('/api/submitted/needcorr/', function(req, res) {
+    Submitted.getExamsNeedCorrection(function(err, exam) {
+        if (err) {
+            res.status(404).json('No exams need correction.');
+        } else {
+            res.status(200).json(exam);
+        }
+    });
+});
 
 // Start listening and log start.
 app.listen(3000);

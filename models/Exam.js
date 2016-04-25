@@ -66,7 +66,7 @@ module.exports.getExams = function (callback) {
 // Get specific exam
 module.exports.getExam = function (id, callback) {
     Exam.findById(id, callback);
-}
+};
 
 // Add exam
 module.exports.addExam = function (examData, callback) {
