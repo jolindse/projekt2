@@ -27,6 +27,14 @@ var Submitted = require('./models/SubmittedExam');
 // Init express to handle api-requests
 var app = express();
 
+// Enable CORS-calls
+app.all('/*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -147,6 +155,7 @@ app.get('/api/class', function (req, res) {
 
 // Add class
 app.post('/api/class', function (req, res) {
+    console.log('A class is being added!'); // TEST
     var currClass = req.body;
     Class.addClass(currClass, function (err, currClass) {
         if (err) {
@@ -186,6 +195,7 @@ app.delete('/api/class/:id', function (req, res) {
 
 // Get specific class (id)
 app.get('/api/class/:id', function (req, res) {
+    console.log("Getting of class with id: "+req.params.id+" is being called!") // TEST
     var result = [];
     var currClass = Class.getClass(req.params.id, function (err) {
         if (err) {
