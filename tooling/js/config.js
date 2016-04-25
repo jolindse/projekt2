@@ -2,11 +2,9 @@
  * Created by Johan on 2016-04-24.
  */
 
-var uat = angular.module('uat', [
-    'ngRoute'
-]);
+var myApp = angular.module('myApp', ['ngRoute']);
 
-uat.config(function ($routeProvider) {
+myApp.config(function ($routeProvider) {
     $routeProvider
         .when('/home', {
             templateUrl: 'partials/home.html',

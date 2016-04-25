@@ -2,11 +2,11 @@
  * Created by Johan on 2016-04-24.
  */
 
-uat.controller('homeCtrl', function ($scope) {
+myApp.controller('homeCtrl', function ($scope) {
 
 });
 
-uat.controller('classCtrl', function ($scope, $http) {
+myApp.controller('classCtrl', function ($scope, $http) {
     /***********************************************************************************************************************
      /api/class                    GET    -            [class]            Gets ALL classes
      /api/class                POST    class        -                Adds a class
@@ -38,18 +38,18 @@ uat.controller('classCtrl', function ($scope, $http) {
 
 });
 
-uat.controller('examCtrl', function ($scope) {
+myApp.controller('examCtrl', function ($scope) {
 
 });
 
-uat.controller('questionCtrl', function ($scope) {
+myApp.controller('questionCtrl', function ($scope) {
 
 });
 
-uat.controller('submittedCtrl', function ($scope) {
+myApp.controller('submittedCtrl', function ($scope) {
 
 });
 
-uat.controller('userCtrl', function ($scope) {
+myApp.controller('userCtrl', function ($scope) {
 
 });

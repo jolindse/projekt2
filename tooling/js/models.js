@@ -12,7 +12,7 @@
  * User
  */
 
-uat.factory('User', [$http, function($http){
+myApp.factory('User', [$http, function($http){
     function User(userData) {
         if (userData) {
             this.setData(userData);
@@ -34,7 +34,7 @@ uat.factory('User', [$http, function($http){
 }]);
 
 
-uat.factory('userManager', [$http, $q, User, function($http, $q, User) {
+myApp.factory('userManager', [$http, $q, User, function($http, $q, User) {
     var userManager = {
         _pool: {},
         _retriveInstance: function(userId, userData) {
