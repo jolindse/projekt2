@@ -440,16 +440,15 @@ app.delete('/api/submitted/:id', function (req, res) {
 });
 
 // Get all submitted exams by a student
-app.get('/api/submitted/user/:id', function (req, res){
-   Submitted.getByStudent(req.params.id, function (err, submitted) {
-       if (err) {
-           res.status(404).json('No submitted exams found.');
-       } else {
-           res.status(200).json(submitted);
-       }
-   });
+app.get('/api/submitted/user/:id', function (req, res) {
+    Submitted.getByStudent(req.params.id, function (err, submitted) {
+        if (err) {
+            res.status(404).json('No submitted exams found.');
+        } else {
+            res.status(200).json(submitted);
+        }
+    });
 });
-
 
 
 // Start listening and log start.
