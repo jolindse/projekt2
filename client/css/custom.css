@@ -30,6 +30,9 @@ ul.nav{
 .btn-lg{
     font-size: 36px;
 }
+.input-group{
+    margin-top: 10px;
+}
 #classContainer{
     display: none;
 }

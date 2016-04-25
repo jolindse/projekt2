@@ -63,13 +63,14 @@
     </div>
 </div>
 <!--Create Test-->
+
+
 <div class="container" id="testContainer">
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-9">
         <div class="btn-group" role="group" aria-label="...">
             <button type="button" class="btn btn-default">1</button>
-            <button type="button" class="btn btn-default">2</button>
 
         <div class="btn-group" role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -104,6 +105,9 @@
             <button type="button" class="btn btn-default btn-lg" id="addAnsRow">
                 <span class="glyphicon-plus" aria-hidden="true"></span>
             </button>
+            <button type="button" class="btn btn-default btn-lg" id="saveAnsRow">
+                <span aria-hidden="true"></span> Save
+            </button>
         </div>
         </div>
 </div>
@@ -125,25 +129,25 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr class="klassJava1">
                         <td>1</td>
                         <td>Mark</td>
                         <td>Otto</td>
                         <td>@mdo</td>
                     </tr>
-                    <tr>
+                    <tr class="klassJava1">
                         <td>2</td>
                         <td>Jacob</td>
                         <td>Thornton</td>
                         <td>@fat</td>
                     </tr>
-                    <tr>
+                    <tr class="klass.Net1">
                         <td>3</td>
                         <td>Larry</td>
                         <td>the Bird</td>
                         <td>@twitter</td>
                     </tr>
-                    <tr>
+                    <tr class="klass.Net1">
                         <td>4</td>
                         <td>Berry</td>
                         <td>the King</td>
@@ -154,10 +158,10 @@
             </div>
                 <div class="col-md-3 sidebar-offcanvas" id="sidebar">
                     <div class="list-group">
-                           <a href="#" class="list-group-item active">Java 1</a>
-                           <a href="#" class="list-group-item">Java 2</a>
-                           <a href="#" class="list-group-item">.Net 1</a>
-                           <a href="#" class="list-group-item">.Net 2</a>
+                           <a href="#" class="list-group-item active" id="listGroupJava1">Java 1</a>
+                           <a href="#" class="list-group-item" id="listGroupJava2">Java 2</a>
+                           <a href="#" class="list-group-item" id="listGroupNet1">.Net 1</a>
+                           <a href="#" class="list-group-item" id="listGroupNet2" >.Net 2</a>
                     </div>
                 </div><!--/.sidebar-offcanvas-->
         </div>
