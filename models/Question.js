@@ -59,7 +59,7 @@ module.exports.getQuestions = function (callback) {
 // Get a question
 module.exports.getQuestion = function (id, callback) {
     Question.findById(id, callback);
-}
+};
 
 // Add question
 module.exports.addQuestion = function (QuestionData, callback) {
