@@ -271,7 +271,7 @@ app.put('/api/exam/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
+            console.log('Updated exam');
             res.status(200).json(updatedExam);
         }
 
@@ -298,26 +298,31 @@ app.get('/api/exam/:id', function (req, res) {
     var result = [];
     var currExam = '';
     var questionsArray = [];
-    
+    var counter = 0;
+
     Exam.getExam(req.params.id, function (err, exam) {
-        currExam = exam;
-        result.push(currExam);
         if (err) {
             res.status(404).json('No such exam.');
         } else {
+            currExam = exam;
+            result.push(currExam);
+            counter = currExam.questions.length;
             currExam.questions.forEach(function (questionId) {
                 Question.getQuestion(questionId, function(err, question) {
                     if (err) {
-                        console.log('FEL');
+                        console.log(err);
                     } else {
                         questionsArray.push(question);
+                        counter--;
+                        if (counter === 0) {
+                            result.push(questionsArray);
+                            res.status(200).json(result);
+                        }
                     }
                 });
             });
         }
-
     });
-    
 });
 
 // Get exams by author
