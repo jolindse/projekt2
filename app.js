@@ -16,6 +16,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var db = require('./components/db');
+var multer = require('multer'),
+    path = require('path');
+
 
 // Models import
 var User = require('./models/User');
@@ -26,6 +29,7 @@ var Submitted = require('./models/SubmittedExam');
 
 // Init express to handle api-requests
 var app = express();
+app.use(bodyParser.json());
 
 // Enable CORS-calls
 app.all('/*', function(req, res, next) {
@@ -37,7 +41,6 @@ app.all('/*', function(req, res, next) {
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 
 // Default endpoint.
 app.get('/', function (req, res) {
@@ -155,7 +158,6 @@ app.get('/api/class', function (req, res) {
 
 // Add class
 app.post('/api/class', function (req, res) {
-    console.log('A class is being added!'); // TEST
     var currClass = req.body;
     Class.addClass(currClass, function (err, currClass) {
         if (err) {
@@ -195,7 +197,6 @@ app.delete('/api/class/:id', function (req, res) {
 
 // Get specific class (id)
 app.get('/api/class/:id', function (req, res) {
-    console.log("Getting of class with id: "+req.params.id+" is being called!") // TEST
     var result = [];
     Class.getClass(req.params.id, function (err, currClass) {
         if (err) {
@@ -305,17 +306,36 @@ app.delete('/api/exam/:id', function (req, res) {
 // Get specific exam (id) with questions
 app.get('/api/exam/:id', function (req, res) {
     var result = [];
-    var currExam = Exam.getExam(req.params.id, function (err) {
+    var currExam = '';
+    var questionsArray = [];
+    var counter = 0;
+
+    Exam.getExam(req.params.id, function (err, exam) {
         if (err) {
             res.status(404).json('No such exam.');
         } else {
-            var questions = [];
-            currExam.questions.forEach(function (questionId) {
-                questions.push(Question.getQuestion(questionId));
-            });
+            currExam = exam;
             result.push(currExam);
-            result.push(questions);
-            res.status(200).json(result);
+            counter = currExam.questions.length;
+            if (counter > 0) {
+                currExam.questions.forEach(function (questionId) {
+                    Question.getQuestion(questionId, function (err, question) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            questionsArray.push(question);
+                            counter--;
+                            if (counter === 0) {
+                                result.push(questionsArray);
+                                res.status(200).json(result);
+                            }
+                        }
+                    });
+                });
+            } else {
+                result.push(questionsArray);
+                res.status(200).json(result);
+            }
         }
     });
 });
@@ -358,10 +378,16 @@ app.get('/api/question/:id', function (req, res) {
     });
 });
 
+// Get image (filename)
+app.get('/api/questionImages/:file', function (req, res) {
+    res.send(path.join('../../questionImages', req.params.file));
+});
 
 // Add question
-app.post('/api/question', function (req, res) {
+app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     var currQuestion = req.body;
+    console.log(app.address().address);
+    currQuestion.imageUrl = req.file.filename;
     Question.addQuestion(currQuestion, function (err, currQuestion) {
         if (err) {
             console.log(err);
@@ -379,10 +405,9 @@ app.put('/api/question/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
+            console.log('Updated question');
             res.status(200).json(updatedQuestion);
         }
-
     });
 });
 
@@ -447,10 +472,9 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
-            res.status(200).json(updatedSubmitted);
+            console.log('Updated exam');
+            res.status(200).json('Exam updated');
         }
-
     });
 });
 
@@ -467,17 +491,29 @@ app.delete('/api/submitted/:id', function (req, res) {
 });
 
 // Get all submitted exams by a student
-app.get('/api/submitted/user/:id', function (req, res) {
-    Submitted.getByStudent(req.params.id, function (err, submitted) {
+app.get('/api/submitted/user/:id', function (req, res){
+   Submitted.getByStudent(req.params.id, function (err, submitted) {
+       if (err) {
+           res.status(404).json('No submitted exams found.');
+       } else {
+           res.status(200).json(submitted);
+       }
+   });
+});
+
+// Get all exams which needs to be corrected
+app.get('/api/submittedTests/needcorr/', function(req, res) {
+    Submitted.getExamsNeedCorrection(function(err, exam) {
         if (err) {
-            res.status(404).json('No submitted exams found.');
+            res.status(404).json('No exams need correction.');
         } else {
-            res.status(200).json(submitted);
+            res.status(200).json(exam);
         }
     });
 });
 
-
 // Start listening and log start.
-app.listen(3000);
-console.log('Server running on port 3000');
+var listener = app.listen(3000, function() {
+    console.log('Server running on port 3000');
+});
+

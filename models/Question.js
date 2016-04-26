@@ -83,5 +83,5 @@ module.exports.deleteQuestion = function(id, callback) {
 
 // Get by cre8or
 module.exports.getByAuthor = function(id, callback) {
-    Question.find({cre8or: id});
+    Question.find({cre8or: id}, callback);
 };
