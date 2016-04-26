@@ -14,7 +14,7 @@ class:
     <br/>
     <br/>
 
-    <form ng-submit="submitClass()">
+    <form>
 
         <p>id</p>
         <input id="_id" ng-model="studentClass._id" type="text">
@@ -31,10 +31,14 @@ class:
         <br/>
         <p>Add student id</p>
         <input type="text" ng-model="studentToAdd">
+        <br/>
         <button ng-click="addStudent()">Add student</button>
         <br/>
-        <button type="submit">Add/modify class</button>
+        <br/>
+        <button ng-click="submitClass()">Add/modify class</button>
     </form>
+    <br/>
+    <p>Current class:</p>
     <tt>_id: {{studentClass._id}}</tt><br/>
     <tt>name: {{studentClass.name}}</tt><br/>
     <tt>students: {{studentClass.students}}</tt>
