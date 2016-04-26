@@ -28,8 +28,9 @@
 // });
 
     $(document).ready(function(){
+
+        $('.ExamForm').hide().first().show();
         
-        $('.container div .ExamForm').hide().first().show();
 
     });
    
