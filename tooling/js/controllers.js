@@ -6,7 +6,7 @@ uat.controller('homeCtrl', function ($scope) {
 
 });
 
-uat.controller('classCtrl', function ($scope, $http, StudentClassManager, StudentClass, $q) {
+uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
     /***********************************************************************************************************************
      /api/class                    GET    -            [class]            Gets ALL classes
      /api/class                POST    class        -                Adds a class
@@ -23,25 +23,37 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager, Studen
      }
      ***********************************************************************************************************************/
 
-    $scope.studentClass = new StudentClass();
+    $scope.studentClass = StudentClassManager.getStudentClass(0);
 
     $scope.studentToAdd = '';
 
+    // Load a class
     $scope.loadClass = function() {
-        $scope.studentClass = StudentClassManager.getStudentClass($scope.studentClass._id);
-    }
+        console.log('Should load class with id: '+$scope.studentClass._id);
+        StudentClassManager.getStudentClass($scope.studentClass._id).then(function (currClass) {
+            console.log('Loaded class: '+JSON.stringify(currClass));
+            $scope.studentClass = currClass;
+        })
+    };
 
+    // Add students to class
     $scope.addStudent = function() {
         $scope.studentClass.students.push($scope.studentToAdd);
-    }
+    };
 
+    // Update and add
     $scope.submitClass = function() {
-        StudentClassManager.addStudentClass($scope.studentClass).then(
-        function (newClass) {
-            console.log(newClass._id);
-        });
-    }
+        if ($scope.studentClass._id) {
+            $scope.studentClass.update();
+        } else {
+            delete $scope.studentClass._id; // Need to remove this in order for MongoDB integrity.
+            StudentClassManager.addStudentClass($scope.studentClass, function(newClass){
+                $scope.studentClass = newClass;
+                console.log('submitClass; result: '+JSON.stringify(newClass)); // TEST
+            });
 
+        }
+    };
 });
 
 uat.controller('examCtrl', function ($scope) {
