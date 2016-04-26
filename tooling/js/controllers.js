@@ -6,7 +6,7 @@ uat.controller('homeCtrl', function ($scope) {
 
 });
 
-uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
+uat.controller('classCtrl', function ($scope, $http, StudentClassManager, StudentClass, $q) {
     /***********************************************************************************************************************
      /api/class                    GET    -            [class]            Gets ALL classes
      /api/class                POST    class        -                Adds a class
@@ -23,7 +23,7 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
      }
      ***********************************************************************************************************************/
 
-    $scope.studentClass = new StudentClassManager.getStudentClass(0);
+    $scope.studentClass = new StudentClass();
 
     $scope.studentToAdd = '';
 
@@ -36,7 +36,10 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
     }
 
     $scope.submitClass = function() {
-        StudentClassManager.addStudentClass($scope.studentClass);
+        StudentClassManager.addStudentClass($scope.studentClass).then(
+        function (newClass) {
+            console.log(newClass._id);
+        });
     }
 
 });
