@@ -174,7 +174,7 @@ app.put('/api/class/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
+            console.log('Updated Class');
             res.status(200).json(updatedClass);
         }
 

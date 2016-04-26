@@ -28,7 +28,7 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
     $scope.studentToAdd = '';
 
     $scope.loadClass = function() {
-        $scope.studentClass = StudentClass.getStudentClass($scope.studentClass._id);
+        $scope.studentClass = StudentClassManager.getStudentClass($scope.studentClass._id);
     }
 
     $scope.addStudent = function() {
