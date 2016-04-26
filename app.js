@@ -195,7 +195,7 @@ app.delete('/api/class/:id', function (req, res) {
 // Get specific class (id)
 app.get('/api/class/:id', function (req, res) {
     var result = [];
-    var currClass = Class.getClass(req.params.id, function (err) {
+    Class.getClass(req.params.id, function (err, currClass) {
         if (err) {
             res.status(404).json('No such Class.');
         } else {
@@ -203,21 +203,26 @@ app.get('/api/class/:id', function (req, res) {
             var students = [];
             var counter = currClass.students.length;
 
-            currClass.students.forEach(function (studentId) {
-                User.getUser(studentId, function (err, currStudent){
-                    if (err) {
-                        res.status(404).json('Problem retrieving students.')
-                    } else {
-                        students.push(currStudent);
-                        counter--;
-                        if (counter === 0) {
-                            result.push(students);
-                            res.status(200).json(result);
+            if (counter > 0) {
+                currClass.students.forEach(function (studentId) {
+                    User.getUser(studentId, function (err, currStudent) {
+                        if (err) {
+                            res.status(404).json('Problem retrieving students.')
+                        } else {
+                            students.push(currStudent);
+                            counter--;
+                            if (counter === 0) {
+                                result.push(students);
+                                res.status(200).json(result);
+                            }
                         }
-                    }
-                });
+                    });
 
-            });
+                });
+            } else {
+                result.push(students);
+                res.status(200).json(result);
+            }
         }
     });
 });
