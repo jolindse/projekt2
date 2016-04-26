@@ -30,6 +30,7 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/question/(id) 			GET 	- 			question 		    Gets a specific question
 /api/question/(id) 			DELETE 	- 			- 				    Deletes a question
 /api/question/cre8or/(id)	GET 	-			[question]		    Gets all questions by a cre8or
+/api/questionImages/(file)  GET     -           path                Gets a path to the specific image
 
 /api/submitted				POST 	submitted	- 				    Adds a submitted exam
 /api/submitted/(id)			GET 	- 			submitted 		    Gets a specific submitted exam

@@ -58,9 +58,9 @@ module.exports.addSubmitted = function (submittedData, callback) {
 
 // Update a submitted exam
 //TODO CHECK IF CORRECTION IS DONE ROUTINES OR DO IT IN ANGULAR?
-module.exports.updateSubmitted = function (updatedSubmitted, callback) {
+module.exports.updateSubmitted = function (id, updatedSubmitted, callback) {
     SubmittedExam.findOneAndUpdate(
-        {_id: updatedSubmitted._id},
+        {_id: id},
         updatedSubmitted,
         {upsert: false},
         callback
@@ -87,6 +87,8 @@ module.exports.getByStudent = function (id, callback) {
     SubmittedExam.find({student: id}, callback);
 };
 
+
+// Get all submitted exams not completly corrected
 module.exports.getExamsNeedCorrection = function(callback) {
     SubmittedExam.find({completeCorrection: false}, callback);
 };
