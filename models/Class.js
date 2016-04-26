@@ -31,7 +31,7 @@ module.exports.getClasses = function (callback) {
 
 // Get a class
 module.exports.getClass = function (id, callback) {
-    Class.findOne({_id:id}, callback);
+    Class.findById(id, callback);
 }
 
 // Add a class
