@@ -2,12 +2,20 @@
     <div class="card card-container">
         <img id="profile-img" class="profile-img-card" src="../img/newton-logo.png"/>
         <p id="profile-name" class="profile-name-card"></p>
-        <form ng-submit="login()" class="form-signin">
+        <form ng-submit="attemptLogin()" class="form-signin">
             <span id="reauth-email" class="reauth-email"></span>
-            <input type="number" id="inputPersNumb" class="form-control" placeholder="Personnummer" required autofocus>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Lösenord" required>
+            <input ng-model="username" type="number" id="inputPersNumb" class="form-control" placeholder="Personnummer" required autofocus>
+            <input ng-model="password" type="password" id="inputPassword" class="form-control" placeholder="Lösenord" required>
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Logga in</button>
+
+            <div ng-show="loginError" class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                Enter a valid email address
+            </div>
+
         </form><!-- /form -->
     </div><!-- /card-container -->
 </div><!-- /container -->
+
 

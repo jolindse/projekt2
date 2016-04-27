@@ -102,30 +102,23 @@ app.put('/api/user/:id', function (req, res) {
 // Log in
 app.post('/api/user/login/:id', function (req, res) {
     var id = req.params.id;
+    console.log(req.body.password);
     User.loginUser(id, function (err, user) {
         if (err) {
             res.status(405).json({login: false, message: 'Error connecting to db'});
         } else {
-            if (user.password === req.body.password) {
-                res.status(200).json({login: true, user: user});
-            } else {
-                res.status(405).json({login: false, message: 'Not logged in. Check id,pw'});
-            }
-        }
-    });
-});
 
-// Log in
-app.post('/api/login/', function (req, res) {
-    var id = req.params.id;
-    User.loginUser(id, function (err, user) {
-        if (err) {
-            res.status(405).json({login: false, message: 'Error connecting to db'});
-        } else {
-            if (user.password === req.body.password) {
-                res.status(200).json({login: true, user: user});
-            } else {
-                res.status(405).json({login: false, message: 'Not logged in. Check id,pw'});
+            if (user != null) {
+
+                if (user.password === req.body.password) {
+                    res.status(200).json({login: true, user: user});
+                } else {
+                    res.status(405).json({login: false, message: 'Not logged in. Check id,pw'});
+                }
+            }
+
+            else {
+                res.status(405).json({login: false, message: 'Hittar inte användarnamnet.'});
             }
         }
     });
