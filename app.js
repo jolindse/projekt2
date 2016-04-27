@@ -16,6 +16,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var db = require('./components/db');
+var multer = require('multer'),
+    path = require('path');
+
 
 // Models import
 var User = require('./models/User');
@@ -26,6 +29,7 @@ var Submitted = require('./models/SubmittedExam');
 
 // Init express to handle api-requests
 var app = express();
+app.use(bodyParser.json());
 
 // Enable CORS-calls
 app.all('/*', function(req, res, next) {
@@ -37,7 +41,6 @@ app.all('/*', function(req, res, next) {
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 
 // Default endpoint.
 app.get('/', function (req, res) {
@@ -314,20 +317,25 @@ app.get('/api/exam/:id', function (req, res) {
             currExam = exam;
             result.push(currExam);
             counter = currExam.questions.length;
-            currExam.questions.forEach(function (questionId) {
-                Question.getQuestion(questionId, function(err, question) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        questionsArray.push(question);
-                        counter--;
-                        if (counter === 0) {
-                            result.push(questionsArray);
-                            res.status(200).json(result);
+            if (counter > 0) {
+                currExam.questions.forEach(function (questionId) {
+                    Question.getQuestion(questionId, function (err, question) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            questionsArray.push(question);
+                            counter--;
+                            if (counter === 0) {
+                                result.push(questionsArray);
+                                res.status(200).json(result);
+                            }
                         }
-                    }
+                    });
                 });
-            });
+            } else {
+                result.push(questionsArray);
+                res.status(200).json(result);
+            }
         }
     });
 });
@@ -370,10 +378,16 @@ app.get('/api/question/:id', function (req, res) {
     });
 });
 
+// Get image (filename)
+app.get('/api/questionImages/:file', function (req, res) {
+    res.send(path.join('../../questionImages', req.params.file));
+});
 
 // Add question
-app.post('/api/question', function (req, res) {
+app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     var currQuestion = req.body;
+    console.log(app.address().address);
+    currQuestion.imageUrl = req.file.filename;
     Question.addQuestion(currQuestion, function (err, currQuestion) {
         if (err) {
             console.log(err);
@@ -391,10 +405,9 @@ app.put('/api/question/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
+            console.log('Updated question');
             res.status(200).json(updatedQuestion);
         }
-
     });
 });
 
@@ -459,10 +472,9 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
-            res.status(200).json(updatedSubmitted);
+            console.log('Updated exam');
+            res.status(200).json('Exam updated');
         }
-
     });
 });
 
@@ -490,7 +502,7 @@ app.get('/api/submitted/user/:id', function (req, res){
 });
 
 // Get all exams which needs to be corrected
-app.get('/api/submitted/needcorr/', function(req, res) {
+app.get('/api/submittedTests/needcorr/', function(req, res) {
     Submitted.getExamsNeedCorrection(function(err, exam) {
         if (err) {
             res.status(404).json('No exams need correction.');
@@ -501,5 +513,7 @@ app.get('/api/submitted/needcorr/', function(req, res) {
 });
 
 // Start listening and log start.
-app.listen(3000);
-console.log('Server running on port 3000');
+var listener = app.listen(3000, function() {
+    console.log('Server running on port 3000');
+});
+
