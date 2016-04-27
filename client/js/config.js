@@ -6,8 +6,7 @@ var myApp = angular.module('myApp', ['ngRoute']);
 myApp.config(function ($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'partials/login.html',
-            controller: 'loginCtrl'
+
         })
 
         .when('/student', {
@@ -56,16 +55,21 @@ myApp.config(function ($routeProvider) {
         })
 
         .otherwise({
-            redirectTo: '/login'
+            //redirectTo: '/login'
         });
 });
 
 myApp.run(function($rootScope, $location) {
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
-        if ($rootScope.loggedInUser == null) {
-            // no logged user, redirect to /login
+
+        //If no logged user, redirect to /login
+        if (sessionStorage.getItem('userId') == null) {
+
+            //If the next page is login, do nothing.
             if ( next.templateUrl === "partials/login.html") {
-            } else {
+            }
+            //Else, change location to login:
+            else {
                 $location.path("/login");
             }
         }

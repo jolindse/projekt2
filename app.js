@@ -113,10 +113,10 @@ app.post('/api/user/login/:id', function (req, res) {
                 if (user.password === req.body.password) {
                     res.status(200).json({login: true, user: user});
                 } else {
-                    res.status(405).json({login: false, message: 'Not logged in. Check id,pw'});
+                    res.status(405).json({login: false, message: 'Kontrollera användarnamn och lösenord'});
                 }
-            }
 
+            }
             else {
                 res.status(405).json({login: false, message: 'Hittar inte användarnamnet.'});
             }

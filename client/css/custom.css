@@ -3,6 +3,11 @@ body, html {
     background: linear-gradient(rgb(238, 114, 2), rgb(161, 77, 1)) no-repeat;
 }
 
+.thead {
+    background-color: #373A3C;
+    color: white;
+}
+
 /*
 * LOGIN
 */
