@@ -379,14 +379,13 @@ app.get('/api/question/:id', function (req, res) {
 });
 
 // Get image (filename)
-app.get('/api/questionImages/:file', function (req, res) {
+app.get('/api/questionimages/:file', function (req, res) {
     res.send(path.join('../../questionImages', req.params.file));
 });
 
 // Add question
 app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     var currQuestion = req.body;
-    console.log(app.address().address);
     currQuestion.imageUrl = req.file.filename;
     Question.addQuestion(currQuestion, function (err, currQuestion) {
         if (err) {
