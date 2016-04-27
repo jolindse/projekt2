@@ -16,7 +16,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var db = require('./components/db');
-var multer = require('multer'),
+var multer = require('multer'), 
     path = require('path');
 
 
@@ -84,13 +84,13 @@ app.post('/api/user', function (req, res) {
 
 // Get specific user (id)
 app.get('/api/user/:id', function (req, res) {
-    User.getUser(req.params.id, function (err, user) {
-        if (err) {
-            console.log(err);
-            res.status(404);
-        }
-        res.status(200).json(user);
-    });
+        User.getUser(req.params.id, function (err, user) {
+            if (err) {
+                console.log(err);
+                res.status(404);
+            }
+            res.status(200).json(user);
+        });
 });
 
 // Update specific user (id)
