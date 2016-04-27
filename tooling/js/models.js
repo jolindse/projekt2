@@ -590,12 +590,12 @@ uat.factory('StudentClassManager', ['$http', '$q', 'StudentClass', 'APIBASEURL',
                 instance.setData(studentClassData);
             } else {
                 instance = new StudentClass(studentClassData);
-                this._pool[studentClassId] = instance;
+                StudentClassManager._pool[studentClassId] = instance;
             }
             return instance;
         },
         _search: function (studentClassId) {
-            return this._pool[studentClassId];
+            return StudentClassManager._pool[studentClassId];
         },
         _save: function (studentClassData, callback) {
             $http.post(APIBASEURL + '/api/class', studentClassData)
@@ -621,37 +621,32 @@ uat.factory('StudentClassManager', ['$http', '$q', 'StudentClass', 'APIBASEURL',
             if (studentClass) {
                 deferred.resolve(studentClass);
             } else {
-                this._load(studentClassId, deferred);
+                StudentClassManager._load(studentClassId, deferred);
             }
             return deferred.promise;
         },
         addStudentClass: function (studentClassData, callback) {
-            this._save(studentClassData, function (savedClass) {
+            StudentClassManager._save(studentClassData, function (savedClass) {
                 callback(savedClass);
             });
         },
-        getAllStudentClasses: function () {
-            var deferred = $q.defer();
+        getAllStudentClasses: function (callback) {
             $http.get(APIBASEURL + '/api/class')
                 .success(function (studentClassArray) {
                     var studentClasses = [];
                     studentClassArray.forEach(function (studentClassData) {
-                        var studentClass = this._retriveInstance(studentClassData._id, studentClassData);
+                        var studentClass = StudentClassManager._retriveInstance(studentClassData._id, studentClassData);
                         studentClasses.push(studentClass);
                     });
-                    deferred.resolve(studentClasss);
+                    callback(studentClassArray);
                 })
-                .error(function () {
-                    deferred.reject();
-                });
-            return deferred.promise;
         },
         setStudentClass: function (studentClassData) {
-            var studentClass = this._search(studentClassData._id);
+            var studentClass = StudentClassManager._search(studentClassData._id);
             if (studentClass) {
                 studentClass.setData(studentClassData);
             } else {
-                studentClass = this._retriveInstance(studentClassData);
+                studentClass = StudentClassManager._retriveInstance(studentClassData);
             }
             return studentClass;
         }

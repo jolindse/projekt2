@@ -8,12 +8,12 @@ uat.controller('homeCtrl', function ($scope) {
 
 uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
     /***********************************************************************************************************************
-     /api/class                    GET    -            [class]            Gets ALL classes
-     /api/class                POST    class        -                Adds a class
-     /api/class/(id)            PUT        class        -                Updates a class
-     /api/class/(id)            GET    -            class            Gets a specific class
-     /api/class/(id)            DELETE    -            -                Deletes a class
-     /api/class/remove/(id)        DELETE    -            -                Deletes a class and ALL students that belong to it
+     /api/class                 GET         -            [class]            Gets ALL classes
+     /api/class                 POST        class        -                Adds a class
+     /api/class/(id)            PUT         class        -                Updates a class
+     /api/class/(id)            GET         -            class            Gets a specific class
+     /api/class/(id)            DELETE      -            -                Deletes a class
+     /api/class/remove/(id)     DELETE      -            -                Deletes a class and ALL students that belong to it
 
      class:
      {
@@ -23,9 +23,10 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
      }
      ***********************************************************************************************************************/
 
+    $scope.studentClasses = [];
     $scope.studentClass = StudentClassManager.getStudentClass(0);
-
     $scope.studentToAdd = '';
+
 
     // Load a class
     $scope.loadClass = function() {
@@ -54,6 +55,14 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
 
         }
     };
+
+    // Show all classes
+    $scope.getAllClasses = function() {
+        StudentClassManager.getAllStudentClasses(function (data){
+            $scope.studentClasses = data;
+        });
+    };
+    $scope.getAllClasses();
 });
 
 uat.controller('examCtrl', function ($scope) {

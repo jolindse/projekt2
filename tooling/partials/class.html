@@ -10,37 +10,45 @@ class:
 -->
 
 <article id="class">
-    <h1> Class </h1>
-    <br/>
-    <br/>
+	<h1> Class </h1>
+	<br/>
+	<br/>
 
-    <form>
+	<form>
 
-        <p>id</p>
-        <input id="_id" ng-model="studentClass._id" type="text">
-        <br/>
-        <button ng-click="loadClass()">Load class</button>
-        <br/>
-        <p>Name</p>
-        <input id="name" ng-model="studentClass.name" type="text">
-        <br/>
-        <p>StudentIDs</p>
-        <div ng-repeat="student in studentClass.students track by $index">
-            <input ng-model="student" type="text">
-        </div>
-        <br/>
-        <p>Add student id</p>
-        <input type="text" ng-model="studentToAdd">
-        <br/>
-        <button ng-click="addStudent()">Add student</button>
-        <br/>
-        <br/>
-        <button ng-click="submitClass()">Add/modify class</button>
-    </form>
-    <br/>
-    <p>Current class:</p>
-    <tt>_id: {{studentClass._id}}</tt><br/>
-    <tt>name: {{studentClass.name}}</tt><br/>
-    <tt>students: {{studentClass.students}}</tt>
-
+		<p>id</p>
+		<input id="_id" ng-model="studentClass._id" type="text">
+		<br/>
+		<button ng-click="loadClass()">Load class</button>
+		<br/>
+		<p>Name</p>
+		<input id="name" ng-model="studentClass.name" type="text">
+		<br/>
+		<p>StudentIDs</p>
+		<div ng-repeat="student in studentClass.students track by $index">
+			<input ng-model="student" type="text">
+		</div>
+		<br/>
+		<p>Add student id</p>
+		<input type="text" ng-model="studentToAdd">
+		<br/>
+		<button ng-click="addStudent()">Add student</button>
+		<br/>
+		<br/>
+		<button ng-click="submitClass()">Add/modify class</button>
+	</form>
+	<br/>
+	<p>Current class:</p>
+	<tt>_id: {{studentClass._id}}</tt><br/>
+	<tt>name: {{studentClass.name}}</tt><br/>
+	<tt>students: {{studentClass.students}}</tt>
+	<br/>
+	<p>All classes</p>
+	<button ng-click="getAllClasses()">Update class list</button>
+	<div ng-repeat="currClass in studentClasses">
+		<tt>_id: {{currClass._id}}</tt><br/>
+		<tt>name: {{currClass.name}}</tt><br/>
+		<tt>students: {{currClass.students}}</tt><br/>
+		<br/>
+	</div>
 </article>
