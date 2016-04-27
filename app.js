@@ -16,6 +16,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var db = require('./components/db');
+var multer = require('multer'),
+    path = require('path');
+
 
 // Models import
 var User = require('./models/User');
@@ -26,15 +29,21 @@ var Submitted = require('./models/SubmittedExam');
 
 // Init express to handle api-requests
 var app = express();
+app.use(bodyParser.json());
 
-app.use(express.static(__dirname+'/client'));
+// Enable CORS-calls
+app.all('/*', function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
 
 // Default endpoint.
-app.get('/api', function (req, res) {
+app.get('/', function (req, res) {
     res.send('System for exam. Please use /api/users, /api/class, /api/exams, /api/question, /api/submitted');
 });
 
@@ -102,23 +111,14 @@ app.put('/api/user/:id', function (req, res) {
 // Log in
 app.post('/api/user/login/:id', function (req, res) {
     var id = req.params.id;
-    console.log(req.body.password);
     User.loginUser(id, function (err, user) {
         if (err) {
             res.status(405).json({login: false, message: 'Error connecting to db'});
         } else {
-
-            if (user != null) {
-
-                if (user.password === req.body.password) {
-                    res.status(200).json({login: true, user: user});
-                } else {
-                    res.status(405).json({login: false, message: 'Kontrollera användarnamn och lösenord'});
-                }
-
-            }
-            else {
-                res.status(405).json({login: false, message: 'Hittar inte användarnamnet.'});
+            if (user.password === req.body.password) {
+                res.status(200).json({login: true, user: user});
+            } else {
+                res.status(405).json({login: false, message: 'Not logged in. Check id,pw'});
             }
         }
     });
@@ -131,6 +131,7 @@ app.delete('/api/user/:id', function (req, res) {
         if (err) {
             res.status(405).json('Delete operation unsuccessful.');
         } else {
+            //TODO Hangs from tooling.
             Class.removeStudent(id);
             Submitted.getByUser(id).forEach(function (userSubmitted) {
                 Submitted.deleteSubmitted(userSubmitted._id);
@@ -176,7 +177,7 @@ app.put('/api/class/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
+            console.log('Updated Class');
             res.status(200).json(updatedClass);
         }
 
@@ -198,17 +199,11 @@ app.delete('/api/class/:id', function (req, res) {
 // Get specific class (id)
 app.get('/api/class/:id', function (req, res) {
     var result = [];
-    var currClass = Class.getClass(req.params.id, function (err) {
+    Class.getClass(req.params.id, function (err, currClass) {
         if (err) {
             res.status(404).json('No such Class.');
         } else {
-            var students = [];
-            currClass.students.forEach(function (studentId) {
-                students.push(User.getUser(studentId));
-            });
-            result.push(currClass);
-            result.push(students);
-            res.status(200).json(result);
+            res.status(200).json(currClass);
         }
     });
 });
@@ -289,17 +284,15 @@ app.delete('/api/exam/:id', function (req, res) {
 // Get specific exam (id) with questions
 app.get('/api/exam/:id', function (req, res) {
     var result = [];
-    var currExam = Exam.getExam(req.params.id, function (err) {
+    var currExam = '';
+    var questionsArray = [];
+    var counter = 0;
+
+    Exam.getExam(req.params.id, function (err, exam) {
         if (err) {
             res.status(404).json('No such exam.');
         } else {
-            var questions = [];
-            currExam.questions.forEach(function (questionId) {
-                questions.push(Question.getQuestion(questionId));
-            });
-            result.push(currExam);
-            result.push(questions);
-            res.status(200).json(result);
+            res.status(200).json(exam);
         }
     });
 });
@@ -342,10 +335,16 @@ app.get('/api/question/:id', function (req, res) {
     });
 });
 
+// Get image (filename)
+app.get('/api/questionImages/:file', function (req, res) {
+    res.send(path.join('../../questionImages', req.params.file));
+});
 
 // Add question
-app.post('/api/question', function (req, res) {
+app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     var currQuestion = req.body;
+    console.log(app.address().address);
+    currQuestion.imageUrl = req.file.filename;
     Question.addQuestion(currQuestion, function (err, currQuestion) {
         if (err) {
             console.log(err);
@@ -363,10 +362,9 @@ app.put('/api/question/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
+            console.log('Updated question');
             res.status(200).json(updatedQuestion);
         }
-
     });
 });
 
@@ -431,10 +429,9 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
-            res.status(200).json(updatedSubmitted);
+            console.log('Updated exam');
+            res.status(200).json('Exam updated');
         }
-
     });
 });
 
@@ -451,18 +448,29 @@ app.delete('/api/submitted/:id', function (req, res) {
 });
 
 // Get all submitted exams by a student
-app.get('/api/submitted/user/:id', function (req, res){
-   Submitted.getByStudent(req.params.id, function (err, submitted) {
-       if (err) {
-           res.status(404).json('No submitted exams found.');
-       } else {
-           res.status(200).json(submitted);
-       }
-   });
+app.get('/api/submitted/user/:id', function (req, res) {
+    Submitted.getByStudent(req.params.id, function (err, submitted) {
+        if (err) {
+            res.status(404).json('No submitted exams found.');
+        } else {
+            res.status(200).json(submitted);
+        }
+    });
 });
 
-
+// Get all exams which needs to be corrected
+app.get('/api/submittedTests/needcorr/', function (req, res) {
+    Submitted.getExamsNeedCorrection(function (err, exam) {
+        if (err) {
+            res.status(404).json('No exams need correction.');
+        } else {
+            res.status(200).json(exam);
+        }
+    });
+});
 
 // Start listening and log start.
-app.listen(3000);
-console.log('Server running on port 3000');
+var listener = app.listen(3000, function () {
+    console.log('Server running on port 3000');
+});
+

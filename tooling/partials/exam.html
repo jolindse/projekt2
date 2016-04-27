@@ -1,12 +1,4 @@
 <!--
-
-/api/exam					GET 	- 			[exam]			Gets ALL exams
-/api/exam 					POST 	exam 		-				Adds a exam
-/api/exam/(id)				PUT 	exam 		- 				Updates a exam
-/api/exam/(id)				GET 	-			exam 			Gets a specific exam
-/api/exam/(id)				DELETE 	- 			-				Deletes a exam and all submitted that relates to it
-/api/exam/cre8or/(id)		GET 	-			[exam]			Gets all exams by a cre8or
-
 exam:
 	{
 		_id:				MongoDB id
@@ -23,5 +15,95 @@ exam:
 
 -->
 <article id="exam">
-    <p> Exam </p>
+    <h1> Exam </h1>
+
+    <form>
+        <p>id</p>
+        <input id="_id" ng-model="exam._id" type="text">
+        <button ng-click="loadExam()">Load exam</button>
+        <input id="cre8or" ng-model="exam.cre8or" type="text">
+        <button ng-click="getByAuthor()">Load exams by cre8or</button>
+        <br/>
+        <br/>
+        <p>title</p>
+        <input id="title" ng-model="exam.title" type="text">
+        <p>subject</p>
+        <input id="subject" ng-model="exam.subject" type="text">
+        <p>time</p>
+        <input id="id" ng-model="exam.time" type="text">
+        <p>interval start date</p>
+        <input id="intervalStart" ng-model="exam.interval[0]" type="text">
+        <p>interval end date</p>
+        <input id="intervalEnd" ng-model="exam.interval[1]" type="text">
+        <p>gradePercentage G</p>
+        <input id="gradeG" ng-model="exam.gradePercentage[0]" type="text">
+        <p>gradePercentage VG</p>
+        <input id="gradeVG" ng-model="exam.gradePercentage[1]" type="text">
+        <p>anonymous</p>
+        <input type="checkbox" ng-model="exam.anonymous">
+        <p>feedback</p>
+        <input type="checkbox" ng-model="exam.feedback">
+        <br/>
+        <p>questions (_id)</p>
+        <div ng-repeat="question in exam.questions track by $index">
+            <input ng-model="question" type="text">
+        </div>
+        <br/>
+        <p>Add question id</p>
+        <input type="text" ng-model="questionToAdd">
+        <br/>
+        <button ng-click="addQuestion()">Add exam</button>
+        <br/>
+        <br/>
+        <button ng-click="submitExam()">Add/modify exam</button>
+        <br/>
+        <input type="text" ng-model="deleteId">
+        <button ng-click="deleteExam()">Delete exam</button>
+    </form>
+    <br/>
+
+
+
+    <p>Current exam:</p>
+    <tt>_id: {{exam._id}}</tt><br/>
+    <tt>title: {{exam.title}}</tt><br/>
+    <tt>subject: {{exam.subject}}</tt><br/>
+    <tt>interval: {{exam.interval}}</tt><br/>
+    <tt>time: {{exam.time}}</tt><br/>
+    <tt>gradePercentage: {{exam.gradePercentage}}</tt><br/>
+    <tt>feedback: {{exam.feedback}}</tt><br/>
+    <tt>anonymous: {{exam.anonymous}}</tt><br/>
+    <tt>questions: {{exam.questions}}</tt><br/>
+    <tt>cre8or: {{exam.cre8or}}</tt><br/>
+    <br/>
+    <p>All exams</p>
+    <button ng-click="getAllExams()">Update class list</button>
+    <div ng-repeat="currExam in exams">
+        <tt>_id: {{currExam._id}}</tt><br/>
+        <tt>title: {{currExam.title}}</tt><br/>
+        <tt>subject: {{currExam.subject}}</tt><br/>
+        <tt>interval: {{currExam.interval}}</tt><br/>
+        <tt>time: {{currExam.time}}</tt><br/>
+        <tt>gradePercentage: {{currExam.gradePercentage}}</tt><br/>
+        <tt>feedback: {{currExam.feedback}}</tt><br/>
+        <tt>anonymous: {{currExam.anonymous}}</tt><br/>
+        <tt>questions: {{currExam.questions}}</tt><br/>
+        <tt>cre8or: {{currExam.cre8or}}</tt><br/>
+        <br/>
+    </div>
+    <br/>
+    <p>Exams by cre8or ({{exam.cre8or}})</p>
+    <div ng-repeat="currExam in examByAuthor">
+        <tt>_id: {{currExam._id}}</tt><br/>
+        <tt>title: {{currExam.title}}</tt><br/>
+        <tt>subject: {{currExam.subject}}</tt><br/>
+        <tt>interval: {{currExam.interval}}</tt><br/>
+        <tt>time: {{currExam.time}}</tt><br/>
+        <tt>gradePercentage: {{currExam.gradePercentage}}</tt><br/>
+        <tt>feedback: {{currExam.feedback}}</tt><br/>
+        <tt>anonymous: {{currExam.anonymous}}</tt><br/>
+        <tt>questions: {{currExam.questions}}</tt><br/>
+        <tt>cre8or: {{currExam.cre8or}}</tt><br/>
+        <br/>
+    </div>
 </article>

@@ -27,5 +27,90 @@ question:
 -->
 
 <article id="question">
-    <p> Question </p>
+    <h1> Question </h1>
+    <form>
+        <p>id</p>
+        <input id="_id" ng-model="question._id" type="text">
+        <button ng-click="loadQuestion()">Load question</button>
+        <input id="cre8or" ng-model="question.cre8or" type="text">
+        <button ng-click="getByAuthor()">Load questions by cre8or</button>
+        <br/>
+        <br/>
+        <p>title</p>
+        <input ng-model="question.title" type="text">
+        <p>subject</p>
+        <input ng-model="question.questionText" type="text">
+        <p>type</p>
+        <input ng-model="question.type" type="text">
+        <p>extraInfo</p>
+        <input ng-model="question.extraInfo" type="text">
+        <p>imageUrl</p>
+        <input ng-model="question.imageUrl" type="text">
+        <p>points</p>
+        <input ng-model="question.points" type="text">
+        <p>vgQuestion</p>
+        <input type="checkbox" ng-model="question.vgQuestion">
+        <br/>
+        <p>answerOptions</p>
+        <div ng-repeat="answer in question.answerOptions track by $index">
+            text: <input ng-model="answer.text" type="text">
+            correct: <input type="checkbox" ng-model="answer.correct">
+        </div>
+        <br/>
+        <p>Add answer option</p>
+        text: <input type="text" ng-model="questionToAdd.text">
+        <br/>
+        correct: <input type="checkbox" ng-model="questionToAdd.correct">
+        <button ng-click="addAnswer()">Add answer</button>
+        <br/>
+        <br/>
+        <button ng-click="submitQuestion()">Add/modify question</button>
+        <br/>
+        <input type="text" ng-model="deleteId">
+        <button ng-click="deleteQuestion()">Delete question</button>
+    </form>
+    <br/>
+
+    <p>Current question:</p>
+    <tt>_id: {{question._id}}</tt><br/>
+    <tt>title: {{question.title}}</tt><br/>
+    <tt>subject: {{question.subject}}</tt><br/>
+    <tt>interval: {{question.interval}}</tt><br/>
+    <tt>time: {{question.time}}</tt><br/>
+    <tt>gradePercentage: {{question.gradePercentage}}</tt><br/>
+    <tt>feedback: {{question.feedback}}</tt><br/>
+    <tt>anonymous: {{question.anonymous}}</tt><br/>
+    <tt>questions: {{question.questions}}</tt><br/>
+    <tt>cre8or: {{question.cre8or}}</tt><br/>
+    <br/>
+    <p>All questions</p>
+    <button ng-click="getAllQuestions()">Update class list</button>
+    <div ng-repeat="currQuestion in questions">
+        <tt>_id: {{currQuestion._id}}</tt><br/>
+        <tt>title: {{currQuestion.title}}</tt><br/>
+        <tt>subject: {{currQuestion.subject}}</tt><br/>
+        <tt>interval: {{currQuestion.interval}}</tt><br/>
+        <tt>time: {{currQuestion.time}}</tt><br/>
+        <tt>gradePercentage: {{currQuestion.gradePercentage}}</tt><br/>
+        <tt>feedback: {{currQuestion.feedback}}</tt><br/>
+        <tt>anonymous: {{currQuestion.anonymous}}</tt><br/>
+        <tt>questions: {{currQuestion.questions}}</tt><br/>
+        <tt>cre8or: {{currQuestion.cre8or}}</tt><br/>
+        <br/>
+    </div>
+    <br/>
+    <p>Questions by cre8or ({{question.cre8or}})</p>
+    <div ng-repeat="currQuestion in questionByAuthor">
+        <tt>_id: {{currQuestion._id}}</tt><br/>
+        <tt>title: {{currQuestion.title}}</tt><br/>
+        <tt>subject: {{currQuestion.subject}}</tt><br/>
+        <tt>interval: {{currQuestion.interval}}</tt><br/>
+        <tt>time: {{currQuestion.time}}</tt><br/>
+        <tt>gradePercentage: {{currQuestion.gradePercentage}}</tt><br/>
+        <tt>feedback: {{currQuestion.feedback}}</tt><br/>
+        <tt>anonymous: {{currQuestion.anonymous}}</tt><br/>
+        <tt>questions: {{currQuestion.questions}}</tt><br/>
+        <tt>cre8or: {{currQuestion.cre8or}}</tt><br/>
+        <br/>
+    </div>
 </article>
