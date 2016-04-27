@@ -57,7 +57,6 @@ module.exports.addSubmitted = function (submittedData, callback) {
 };
 
 // Update a submitted exam
-//TODO CHECK IF CORRECTION IS DONE ROUTINES OR DO IT IN ANGULAR?
 module.exports.updateSubmitted = function (id, updatedSubmitted, callback) {
     SubmittedExam.findOneAndUpdate(
         {_id: id},
@@ -65,6 +64,7 @@ module.exports.updateSubmitted = function (id, updatedSubmitted, callback) {
         {upsert: false},
         callback
     );
+    
 };
 
 // Delete a submitted exam
