@@ -5,32 +5,29 @@
  * MODELS and MODELMANAGERS for use in controllers.
  *
  * as derived from http://www.webdeveasy.com/angularjs-data-model/
+ * converted for callback behaviour in order for proper use in our
+ * application.
+ *
+ * Each model is divided into two sections. One decorator for the object
+ * from the server that adds basic functionality and one modelManager for
+ * each model that behaves as a interface in the controller.
  *
  */
 
 uat.constant('APIBASEURL', 'http://localhost:3000');
 
 /***********************************************************************************************************************
- * USER
- *
- /api/user                    GET        -            [user]                Gets ALL users
- /api/user                    POST    user        -                    Adds a user
- /api/user/(id)            PUT        user        -                    Updates a user
- /api/user/(id)                GET    -            user                Gets specific user
- /api/user/(id)                DELETE    -            -                    Deletes a user
- /api/user/login/(id)        POST    user.id        login:bool            Login, returns true or false
- *
  *
  user:
  {
      _id: 				MongoDB id
      firstName:			String
      surName:			String
-     id:					Number (personnummer)
+     id:				Number (personnummer)
      password:			String (Hash later?)
      email:				String
      admin:				Boolean
-     testToTake: 		[exam._id,exam._id...]
+     testToTake: 		[User._id,User._id...]
  }
  *
  **********************************************************************************************************************/
@@ -39,7 +36,6 @@ uat.factory('User', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
     function User(userData) {
         this.setData(userData);
     };
-
     User.prototype = {
         setData: function (userData) {
             angular.extend(this, userData);
@@ -48,25 +44,18 @@ uat.factory('User', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
             $http.delete(APIBASEURL + '/api/user/' + this._id);
         },
         update: function () {
-            console.log('USER.update; id: ' + this._id + ' data: ' + JSON.stringify(this)); // TEST
             $http.put(APIBASEURL + '/api/user/' + this._id, this);
         }
     };
     return User;
 }]);
 
-
 uat.factory('UserManager', ['$http', '$q', 'User', 'APIBASEURL', function ($http, $q, User, APIBASEURL) {
     var UserManager = {
         _pool: {},
         _retriveInstance: function (userId, userData) {
             var instance = UserManager._pool[userId];
-            if (instance) {
-                console.log('MANAGER_INSTANCE VS USERDATA; Instance ' + JSON.stringify(instanceData) + " Userdata: " + JSON.stringify(userData)); // TEST
-                instance.setData(userData);
-                console.log('MANAGER_retriveInstance: found. Should update.Data: ' + JSON.stringify(userData)); // TEST
-            } else {
-                console.log('MANAGER_retriveInstance: Not found. Should make new. Data: ' + JSON.stringify(userData)); // TEST
+            if (!instance) {
                 instance = new User(userData);
                 UserManager._pool[userId] = instance;
             }
@@ -78,30 +67,33 @@ uat.factory('UserManager', ['$http', '$q', 'User', 'APIBASEURL', function ($http
         _save: function (userData, callback) {
             $http.post(APIBASEURL + '/api/user', userData)
                 .success(function (response) {
-                    var user = UserManager._retriveInstance(response._id, response);
+                    UserManager._retriveInstance(response._id, response);
                     callback(response);
                 });
         },
-        _load: function (userId, deferred) {
+        _load: function (userId, callback) {
             $http.get(APIBASEURL + '/api/user/' + userId)
                 .success(function (userData) {
                     var user = UserManager._retriveInstance(userId, userData);
-                    deferred.resolve(user);
-                })
-                .error(function () {
-                    deferred.reject();
+                    callback(user);
                 });
         },
         /* Public methods */
-        getUser: function (userId) {
-            var deferred = $q.defer();
+        getUser: function (userId, callback) {
             var user = this._search(userId);
             if (user) {
-                deferred.resolve(user);
+                callback(user);
             } else {
-                UserManager._load(userId, deferred);
+                UserManager._load(userId, function (data) {
+                    callback(data);
+                });
             }
-            return deferred.promise;
+        },
+        deleteUser: function (id) {
+            UserManager._load(id, function (currUser) {
+                delete UserManager._pool.id;
+                currUser.delete();
+            });
         },
         addUser: function (userData, callback) {
             UserManager._save(userData, function (savedClass) {
@@ -121,7 +113,6 @@ uat.factory('UserManager', ['$http', '$q', 'User', 'APIBASEURL', function ($http
         },
         setUser: function (userData) {
             var user = UserManager._retriveInstance(userData._id, userData);
-            console.log('MANAGER_setUser: ' + JSON.stringify(user)); // TEST
             user.update();
             return user;
         }
@@ -130,15 +121,6 @@ uat.factory('UserManager', ['$http', '$q', 'User', 'APIBASEURL', function ($http
 }]);
 
 /***********************************************************************************************************************
- * EXAM
- *
- /api/exam                    GET    -            [exam]                Gets ALL exams
- /api/exam                    POST    exam        -                    Adds a exam
- /api/exam/(id)                PUT    exam        -                    Updates a exam
- /api/exam/(id)                GET    -            [exam,[questions]]    Gets a specific exam with its questions
- /api/exam/(id)                DELETE    -            -                    Deletes a exam and all submitted that relates to it
- /api/exam/cre8or/(id)        GET    -            [exam]                Gets all exams by a cre8or
- *
  *
  exam:
  {
@@ -161,7 +143,6 @@ uat.factory('Exam', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
     function Exam(examData) {
         this.setData(examData);
     };
-
     Exam.prototype = {
         setData: function (examData) {
             angular.extend(this, examData);
@@ -176,15 +157,12 @@ uat.factory('Exam', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
     return Exam;
 }]);
 
-
 uat.factory('ExamManager', ['$http', '$q', 'Exam', 'APIBASEURL', function ($http, $q, Exam, APIBASEURL) {
     var ExamManager = {
         _pool: {},
         _retriveInstance: function (examId, examData) {
             var instance = ExamManager._pool[examId];
-            if (instance) {
-                instance.setData(examData);
-            } else {
+            if (!instance) {
                 instance = new Exam(examData);
                 ExamManager._pool[examId] = instance;
             }
@@ -196,54 +174,53 @@ uat.factory('ExamManager', ['$http', '$q', 'Exam', 'APIBASEURL', function ($http
         _save: function (examData, callback) {
             $http.post(APIBASEURL + '/api/exam', examData)
                 .success(function (response) {
-                    var exam = ExamManager._retriveInstance(response._id, response);
+                    ExamManager._retriveInstance(response._id, response);
                     callback(response);
                 });
         },
-        _load: function (examId, deferred) {
-            $http.get(APIBASEURL + '/api/exam/' + examId)
+        _load: function (examId, callback) {
+            $http.get(APIBASEURL + '/api/Exam/' + examId)
                 .success(function (examData) {
                     var exam = ExamManager._retriveInstance(examId, examData);
-                    deferred.resolve(exam);
-                })
-                .error(function () {
-                    deferred.reject();
+                    callback(exam);
                 });
         },
         /* Public methods */
-        getExam: function (examId) {
-            var deferred = $q.defer();
+        getExam: function (examId, callback) {
             var exam = this._search(examId);
             if (exam) {
-                deferred.resolve(exam);
+                callback(exam);
             } else {
-                ExamManager._load(examId, deferred);
+                ExamManager._load(examId, function (data) {
+                    callback(data);
+                });
             }
-            return deferred.promise;
         },
         addExam: function (examData, callback) {
             ExamManager._save(examData, function (savedClass) {
                 callback(savedClass);
             });
         },
-        getAllExames: function (callback) {
-            $http.get(APIBASEURL + '/api/exam')
+        getAllExams: function (callback) {
+            $http.get(APIBASEURL + '/api/Exam')
                 .success(function (examArray) {
-                    var exames = [];
+                    var exams = [];
                     examArray.forEach(function (examData) {
-                        var exam = ExamManager._retriveInstance(examData._id, examData);
-                        exames.push(exam);
+                        var exam = ExamManager._retriveInstance(ExamData._id, ExamData);
+                        exams.push(exam);
                     });
-                    callback(examArray);
+                    callback(exams);
                 })
         },
+        deleteExam: function (id) {
+            ExamManager._load(id, function (currExam) {
+                delete ExamManager._pool.id;
+                currExam.delete();
+            });
+        },
         setExam: function (examData) {
-            var exam = ExamManager._search(examData._id);
-            if (exam) {
-                exam.setData(examData);
-            } else {
-                exam = ExamManager._retriveInstance(examData);
-            }
+            var exam = ExamManager._retriveInstance(examData._id, examData);
+            exam.update();
             return exam;
         },
         getExamBy: function (cre8orId, callback) {
@@ -259,19 +236,10 @@ uat.factory('ExamManager', ['$http', '$q', 'Exam', 'APIBASEURL', function ($http
                 })
         }
     };
-    return examManager;
+    return ExamManager;
 }]);
 
 /***********************************************************************************************************************
- * QUESTION
- *
- /api/question                GET    -            [question]            Gets ALL questions
- /api/question                POST    question    -                    Adds a question
- /api/question/(id)            PUT    question    -                    Updates a question
- /api/question/(id)        GET    -            question            Gets a specific question
- /api/question/(id)        DELETE    -            -                    Deletes a question
- /api/question/cre8or/(id)    GET    -            [question]            Gets all questions by a cre8or
- *
  *
  question:
  {
@@ -296,7 +264,6 @@ uat.factory('Question', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
     function Question(questionData) {
         this.setData(questionData);
     };
-
     Question.prototype = {
         setData: function (questionData) {
             angular.extend(this, questionData);
@@ -311,15 +278,12 @@ uat.factory('Question', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
     return Question;
 }]);
 
-
 uat.factory('QuestionManager', ['$http', '$q', 'Question', 'APIBASEURL', function ($http, $q, Question, APIBASEURL) {
     var QuestionManager = {
         _pool: {},
         _retriveInstance: function (questionId, questionData) {
             var instance = QuestionManager._pool[questionId];
-            if (instance) {
-                instance.setData(questionData);
-            } else {
+            if (!instance) {
                 instance = new Question(questionData);
                 QuestionManager._pool[questionId] = instance;
             }
@@ -331,55 +295,54 @@ uat.factory('QuestionManager', ['$http', '$q', 'Question', 'APIBASEURL', functio
         _save: function (questionData, callback) {
             $http.post(APIBASEURL + '/api/question', questionData)
                 .success(function (response) {
-                    var question = QuestionManager._retriveInstance(response._id, response);
+                    QuestionManager._retriveInstance(response._id, response);
                     callback(response);
                 });
         },
-        _load: function (questionId, deferred) {
+        _load: function (questionId, callback) {
             $http.get(APIBASEURL + '/api/question/' + questionId)
                 .success(function (questionData) {
                     var question = QuestionManager._retriveInstance(questionId, questionData);
-                    deferred.resolve(question);
-                })
-                .error(function () {
-                    deferred.reject();
+                    callback(question);
                 });
         },
         /* Public methods */
-        getQuestion: function (questionId) {
-            var deferred = $q.defer();
+        getQuestion: function (questionId, callback) {
             var question = this._search(questionId);
             if (question) {
-                deferred.resolve(question);
+                callback(question);
             } else {
-                QuestionManager._load(questionId, deferred);
+                QuestionManager._load(questionId, function (data) {
+                    callback(data);
+                });
             }
-            return deferred.promise;
         },
         addQuestion: function (questionData, callback) {
             QuestionManager._save(questionData, function (savedClass) {
                 callback(savedClass);
             });
         },
-        getAllQuestiones: function (callback) {
+        getAllQuestions: function (callback) {
             $http.get(APIBASEURL + '/api/question')
                 .success(function (questionArray) {
-                    var questiones = [];
+                    var questions = [];
                     questionArray.forEach(function (questionData) {
                         var question = QuestionManager._retriveInstance(questionData._id, questionData);
-                        questiones.push(question);
+                        questions.push(question);
                     });
-                    callback(questionArray);
+                    callback(questions);
                 })
         },
         setQuestion: function (questionData) {
-            var question = QuestionManager._search(questionData._id);
-            if (question) {
-                question.setData(questionData);
-            } else {
-                question = QuestionManager._retriveInstance(questionData);
-            }
+            var question = QuestionManager._retriveInstance(questionData._id, questionData);
+            question.update();
             return question;
+        },
+        deleteQuestion: function (id) {
+            QuestionManager._load(id, function (currQuestion) {
+                delete QuestionManager._pool.id;
+                currQuestion.delete();
+            });
         },
         getQuestionBy: function (cre8orId, callback) {
             var scope = this;
@@ -394,25 +357,16 @@ uat.factory('QuestionManager', ['$http', '$q', 'Question', 'APIBASEURL', functio
                 })
         }
     };
-    return questionManager;
+    return QuestionManager;
 }]);
 
 /***********************************************************************************************************************
- * SUBMITTED
- *
- /api/submitted                POST    submitted    -                    Adds a submitted exam
- /api/submitted/(id)        GET    -            submitted            Gets a specific submitted exam
- /api/submitted/(id)        PUT    submitted    -                    Updates a submitted exam
- /api/submitted/(id)        DELETE    -            -                    Deletes a submitted exam
- /api/submitted/user/(id)    GET    -            [submitted]            Gets ALL submitted exams by a student
- //TODO ADD NEW ENDPOINT FOR ALL TESTS THAT NEED CORRECTION
- *
  *
  submitted:
  {
      _id:				MongoDB id
      student:			user._id
-     exam:				exam._id
+     User:				User._id
      answers:			[submittedAnswerObject:{
                                  text:		String
                                  comment:	String
@@ -432,7 +386,6 @@ uat.factory('Submitted', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
     function Submitted(submittedData) {
         this.setData(submittedData);
     };
-
     Submitted.prototype = {
         setData: function (submittedData) {
             angular.extend(this, submittedData);
@@ -447,15 +400,12 @@ uat.factory('Submitted', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
     return Submitted;
 }]);
 
-
 uat.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', function ($http, $q, Submitted, APIBASEURL) {
     var SubmittedManager = {
         _pool: {},
         _retriveInstance: function (submittedId, submittedData) {
             var instance = SubmittedManager._pool[submittedId];
-            if (instance) {
-                instance.setData(submittedData);
-            } else {
+            if (!instance) {
                 instance = new Submitted(submittedData);
                 SubmittedManager._pool[submittedId] = instance;
             }
@@ -467,55 +417,71 @@ uat.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', funct
         _save: function (submittedData, callback) {
             $http.post(APIBASEURL + '/api/submitted', submittedData)
                 .success(function (response) {
-                    var submitted = SubmittedManager._retriveInstance(response._id, response);
+                    SubmittedManager._retriveInstance(response._id, response);
                     callback(response);
                 });
         },
-        _load: function (submittedId, deferred) {
+        _load: function (submittedId, callback) {
             $http.get(APIBASEURL + '/api/submitted/' + submittedId)
                 .success(function (submittedData) {
                     var submitted = SubmittedManager._retriveInstance(submittedId, submittedData);
-                    deferred.resolve(submitted);
-                })
-                .error(function () {
-                    deferred.reject();
+                    callback(submitted);
                 });
         },
         /* Public methods */
-        getSubmitted: function (submittedId) {
-            var deferred = $q.defer();
+        getSubmitted: function (submittedId, callback) {
             var submitted = this._search(submittedId);
             if (submitted) {
-                deferred.resolve(submitted);
+                callback(submitted);
             } else {
-                SubmittedManager._load(submittedId, deferred);
+                SubmittedManager._load(submittedId, function (data) {
+                    callback(data);
+                });
             }
-            return deferred.promise;
         },
         addSubmitted: function (submittedData, callback) {
             SubmittedManager._save(submittedData, function (savedClass) {
                 callback(savedClass);
             });
         },
+        getAllSubmitteds: function (callback) {
+            $http.get(APIBASEURL + '/api/submitted')
+                .success(function (submittedArray) {
+                    var submitteds = [];
+                    submittedArray.forEach(function (submittedData) {
+                        var submitted = SubmittedManager._retriveInstance(submittedData._id, submittedData);
+                        submitteds.push(submitted);
+                    });
+                    callback(submitteds);
+                })
+        },
         setSubmitted: function (submittedData) {
-            var submitted = SubmittedManager._search(submittedData._id);
-            if (submitted) {
-                submitted.setData(submittedData);
-            } else {
-                submitted = SubmittedManager._retriveInstance(submittedData);
-            }
+            var submitted = SubmittedManager._retriveInstance(submittedData._id, submittedData);
+            submitted.update();
             return submitted;
         },
         getSubmittedBy: function (studentId, callback) {
             var scope = this;
             $http.get(APIBASEURL + '/api/submitted/user/' + studentId)
                 .success(function (submittedArray) {
-                    var submitteds = [];
+                    var sub = [];
                     submittedArray.forEach(function (submittedData) {
                         var submitted = scope._retriveInstance(submittedData._id, submittedData);
-                        submitteds.push(submitted);
+                        sub.push(submitted);
                     });
-                    callback(submitteds);
+                    callback(sub);
+                })
+        },
+        getNeedCorrection: function (callback) {
+            var scope = this;
+            $http.get(APIBASEURL + '/api/submitted/needcorr')
+                .success(function (needCorrArray) {
+                    var needCorr = [];
+                    needCorrArray.forEach(function (currSub) {
+                        var currNeedCorr = scope._retriveInstance(currSub._id, currSub);
+                        needCorr.push(currNeedCorr);
+                    });
+                    callback(needCorr);
                 })
         }
     };
@@ -523,10 +489,6 @@ uat.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', funct
 }]);
 
 /***********************************************************************************************************************
- * CLASS
- *
- /api/class                    GET    -            [class]                Gets ALL classes
- *
  *
  class:
  {
@@ -559,15 +521,12 @@ uat.factory('StudentClass', ['$http', 'APIBASEURL', function ($http, APIBASEURL)
     return StudentClass;
 }]);
 
-
 uat.factory('StudentClassManager', ['$http', '$q', 'StudentClass', 'APIBASEURL', function ($http, $q, StudentClass, APIBASEURL) {
     var StudentClassManager = {
         _pool: {},
         _retriveInstance: function (studentClassId, studentClassData) {
             var instance = StudentClassManager._pool[studentClassId];
-            if (instance) {
-                instance.setData(studentClassData);
-            } else {
+            if (!instance) {
                 instance = new StudentClass(studentClassData);
                 StudentClassManager._pool[studentClassId] = instance;
             }
@@ -579,30 +538,39 @@ uat.factory('StudentClassManager', ['$http', '$q', 'StudentClass', 'APIBASEURL',
         _save: function (studentClassData, callback) {
             $http.post(APIBASEURL + '/api/class', studentClassData)
                 .success(function (response) {
-                    var studentClass = StudentClassManager._retriveInstance(response._id, response);
+                    StudentClassManager._retriveInstance(response._id, response);
                     callback(response);
                 });
         },
-        _load: function (studentClassId, deferred) {
+        _load: function (studentClassId, callback) {
             $http.get(APIBASEURL + '/api/class/' + studentClassId)
                 .success(function (studentClassData) {
                     var studentClass = StudentClassManager._retriveInstance(studentClassId, studentClassData);
-                    deferred.resolve(studentClass);
-                })
-                .error(function () {
-                    deferred.reject();
+                    callback(studentClass);
                 });
         },
         /* Public methods */
-        getStudentClass: function (studentClassId) {
-            var deferred = $q.defer();
+        getStudentClass: function (studentClassId, callback) {
             var studentClass = this._search(studentClassId);
             if (studentClass) {
-                deferred.resolve(studentClass);
+                callback(studentClass);
             } else {
-                StudentClassManager._load(studentClassId, deferred);
+                StudentClassManager._load(studentClassId, function (data) {
+                    callback(data);
+                });
             }
-            return deferred.promise;
+        },
+        deleteClass: function (id) {
+            StudentClassManager._load(id, function (currClass) {
+                delete StudentClassManager._pool.id;
+                currClass.delete();
+            });
+        },
+        deleteClassFull: function (id) {
+            StudentClassManager._load(id, function (currClass) {
+                delete StudentClassManager._pool.id;
+                currClass.deleteAll();
+            });
         },
         addStudentClass: function (studentClassData, callback) {
             StudentClassManager._save(studentClassData, function (savedClass) {
@@ -612,24 +580,19 @@ uat.factory('StudentClassManager', ['$http', '$q', 'StudentClass', 'APIBASEURL',
         getAllStudentClasses: function (callback) {
             $http.get(APIBASEURL + '/api/class')
                 .success(function (studentClassArray) {
-                    var studentClasses = [];
+                    var studentClasss = [];
                     studentClassArray.forEach(function (studentClassData) {
                         var studentClass = StudentClassManager._retriveInstance(studentClassData._id, studentClassData);
-                        studentClasses.push(studentClass);
+                        studentClasss.push(studentClass);
                     });
-                    callback(studentClassArray);
+                    callback(studentClasss);
                 })
         },
         setStudentClass: function (studentClassData) {
-            var studentClass = StudentClassManager._search(studentClassData._id);
-            if (studentClass) {
-                studentClass.setData(studentClassData);
-            } else {
-                studentClass = StudentClassManager._retriveInstance(studentClassData);
-            }
+            var studentClass = StudentClassManager._retriveInstance(studentClassData._id, studentClassData);
+            studentClass.update();
             return studentClass;
         }
     };
     return StudentClassManager;
 }]);
-

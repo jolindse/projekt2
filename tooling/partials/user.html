@@ -1,11 +1,4 @@
 <!--
-/api/user					GET		-			[user]			Gets ALL users
-/api/user					POST	user		-				Adds a user
-/api/user/(id) 				PUT		user 		-				Updates a user
-/api/user/(id)				GET 	-			user 			Gets specific user
-/api/user/(id)				DELETE	-			-				Deletes a user
-/api/user/login/(id)		POST	user.id		login:bool		Login, returns true or false
-
 user:
 	{
 		_id: 				MongoDB id
@@ -25,11 +18,10 @@ user:
     <br/>
 
     <form>
-
         <p>id</p>
         <input id="_id" ng-model="user._id" type="text">
         <br/>
-        <button ng-click="loadUser()">Load class</button>
+        <button ng-click="loadUser()">Load user</button>
         <br/>
         <p>Name</p>
         <input id="firstname" ng-model="user.firstName" type="text">
@@ -41,9 +33,9 @@ user:
         <p>Email</p>
         <input id="email" ng-model="user.email" type="text">
         <p>admin</p>
-            <input type="radio" ng-model="user.admin">
+            <input type="checkbox" ng-model="user.admin" >
         <br/>
-        <p>StudentIDs</p>
+        <p>Test to take (_id)</p>
         <div ng-repeat="exam in user.testToTake track by $index">
             <input ng-model="exam" type="text">
         </div>
@@ -51,13 +43,22 @@ user:
         <p>Add student id</p>
         <input type="text" ng-model="testToAdd">
         <br/>
-        <button ng-click="addExam()">Add student</button>
+        <button ng-click="addExam()">Add exam</button>
         <br/>
         <br/>
-        <button ng-click="submitUser()">Add/modify class</button>
+        <button ng-click="submitUser()">Add/modify user</button>
+        <br/>
+        <input type="text" ng-model="deleteId">
+        <button ng-click="deleteUser()">Delete user</button>
     </form>
     <br/>
-    <p>Current class:</p>
+
+    <p>TEST:</p>
+    <div ng-repeat="(key, prop) in user">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+
+    <p>Current user:</p>
     <tt>_id: {{user._id}}</tt><br/>
     <tt>firstName: {{user.firstName}}</tt><br/>
     <tt>surName: {{user.surName}}</tt><br/>
@@ -67,7 +68,7 @@ user:
     <tt>admin: {{user.admin}}</tt><br/>
     <tt>testToTake: {{user.testToTake}}</tt><br/>
     <br/>
-    <p>All classes</p>
+    <p>All users</p>
     <button ng-click="getAllUsers()">Update class list</button>
     <div ng-repeat="currUser in users">
         <tt>_id: {{currUser._id}}</tt><br/>
