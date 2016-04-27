@@ -19,7 +19,65 @@ user:
 	}
 
 -->
-
 <article id="user">
-    <p> User </p>
+    <h1> User </h1>
+    <br/>
+    <br/>
+
+    <form>
+
+        <p>id</p>
+        <input id="_id" ng-model="user._id" type="text">
+        <br/>
+        <button ng-click="loadUser()">Load class</button>
+        <br/>
+        <p>Name</p>
+        <input id="firstname" ng-model="user.firstName" type="text">
+        <input id="surname" ng-model="user.surName" type="text">
+        <p>Id/Pers.nr</p>
+        <input id="id" ng-model="user.id" type="text">
+        <p>Password</p>
+        <input id="password" ng-model="user.password" type="text">
+        <p>Email</p>
+        <input id="email" ng-model="user.email" type="text">
+        <p>admin</p>
+            <input type="radio" ng-model="user.admin">
+        <br/>
+        <p>StudentIDs</p>
+        <div ng-repeat="exam in user.testToTake track by $index">
+            <input ng-model="exam" type="text">
+        </div>
+        <br/>
+        <p>Add student id</p>
+        <input type="text" ng-model="testToAdd">
+        <br/>
+        <button ng-click="addExam()">Add student</button>
+        <br/>
+        <br/>
+        <button ng-click="submitUser()">Add/modify class</button>
+    </form>
+    <br/>
+    <p>Current class:</p>
+    <tt>_id: {{user._id}}</tt><br/>
+    <tt>firstName: {{user.firstName}}</tt><br/>
+    <tt>surName: {{user.surName}}</tt><br/>
+    <tt>id: {{user.id}}</tt><br/>
+    <tt>password: {{user.password}}</tt><br/>
+    <tt>email: {{user.email}}</tt><br/>
+    <tt>admin: {{user.admin}}</tt><br/>
+    <tt>testToTake: {{user.testToTake}}</tt><br/>
+    <br/>
+    <p>All classes</p>
+    <button ng-click="getAllUsers()">Update class list</button>
+    <div ng-repeat="currUser in users">
+        <tt>_id: {{currUser._id}}</tt><br/>
+        <tt>firstName: {{currUser.firstName}}</tt><br/>
+        <tt>surName: {{currUser.surName}}</tt><br/>
+        <tt>id: {{currUser.id}}</tt><br/>
+        <tt>password: {{currUser.password}}</tt><br/>
+        <tt>email: {{currUser.email}}</tt><br/>
+        <tt>admin: {{currUser.admin}}</tt><br/>
+        <tt>testToTake: {{currUser.testToTake}}</tt><br/>
+        <br/>
+    </div>
 </article>

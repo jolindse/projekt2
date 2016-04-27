@@ -6,7 +6,7 @@ uat.controller('homeCtrl', function ($scope) {
 
 });
 
-uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
+uat.controller('classCtrl',['$scope','$http','StudentClassManager', function ($scope, $http, StudentClassManager) {
     /***********************************************************************************************************************
      /api/class                 GET         -            [class]            Gets ALL classes
      /api/class                 POST        class        -                Adds a class
@@ -45,7 +45,7 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
     // Update and add
     $scope.submitClass = function() {
         if ($scope.studentClass._id) {
-            $scope.studentClass.update();
+            StudentClassManager.setData(studentClass);
         } else {
             delete $scope.studentClass._id; // Need to remove this in order for MongoDB integrity.
             StudentClassManager.addStudentClass($scope.studentClass, function(newClass){
@@ -63,7 +63,7 @@ uat.controller('classCtrl', function ($scope, $http, StudentClassManager) {
         });
     };
     $scope.getAllClasses();
-});
+}]);
 
 uat.controller('examCtrl', function ($scope) {
 
@@ -77,6 +77,46 @@ uat.controller('submittedCtrl', function ($scope) {
 
 });
 
-uat.controller('userCtrl', function ($scope) {
+uat.controller('userCtrl', function ($scope, UserManager) {
+    $scope.user = "";
+    $scope.testToAdd = "";
+    $scope.users = [];
 
+     // Load a class
+     $scope.loadUser = function() {
+         UserManager.getUser($scope.user._id).then(function (currUser) {
+             $scope.user = currUser;
+         })
+     };
+
+    // Add students to class
+    $scope.addExam = function() {
+        $scope.user.testToTake.push($scope.testToAdd);
+    };
+
+    // Show all classes
+    $scope.getAllUsers = function() {
+        console.log('Gets all users');
+        UserManager.getAllUsers(function (data){
+            $scope.users = data;
+        });
+    };
+
+    // Update and add
+    $scope.submitUser = function() {
+        if ($scope.user._id) {
+            console.log('submitUser; existing : '+JSON.stringify($scope.user));
+            UserManager.setUser($scope.user);
+        } else {
+            delete $scope.user._id; // Need to remove this in order for MongoDB integrity.
+            console.log('submitUser; new : '+JSON.stringify($scope.user));
+            UserManager.addUser($scope.user, function(newUser){
+                $scope.user = newUser;
+            });
+        }
+        $scope.getAllUsers();
+    };
+
+
+    $scope.getAllUsers();
 });
