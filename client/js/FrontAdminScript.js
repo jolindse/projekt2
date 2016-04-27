@@ -25,7 +25,6 @@ $(document).ready(function(){
     });
     
     $('#saveAnsRow').click(function (e) {
-        
         $('.btn-group').prepend('<button type="button" class="btn btn-default">'+butValue+'</button>');
     })
     
