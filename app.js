@@ -16,8 +16,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var db = require('./components/db');
-var multer = require('multer'), 
-    path = require('path');
+var multer = require('multer');
+var path = require('path');
+var correction = require('./components/correction');
 
 
 // Models import
@@ -84,13 +85,13 @@ app.post('/api/user', function (req, res) {
 
 // Get specific user (id)
 app.get('/api/user/:id', function (req, res) {
-        User.getUser(req.params.id, function (err, user) {
-            if (err) {
-                console.log(err);
-                res.status(404);
-            }
-            res.status(200).json(user);
-        });
+    User.getUser(req.params.id, function (err, user) {
+        if (err) {
+            console.log(err);
+            res.status(404);
+        }
+        res.status(200).json(user);
+    });
 });
 
 // Update specific user (id)
@@ -263,6 +264,7 @@ app.get('/api/exam', function (req, res) {
 
 // Add exam
 app.post('/api/exam', function (req, res) {
+    console.log(req.body);
     var currExam = req.body;
     Exam.addExam(currExam, function (err, currExam) {
         if (err) {
@@ -379,7 +381,7 @@ app.get('/api/question/:id', function (req, res) {
 });
 
 // Get image (filename)
-app.get('/api/questionimages/:file', function (req, res) {
+app.get('/api/question/images/:file', function (req, res) {
     res.send(path.join('../../questionImages', req.params.file));
 });
 
@@ -466,13 +468,21 @@ app.post('/api/submitted', function (req, res) {
 // Update submitted exam
 app.put('/api/submitted/:id', function (req, res) {
     var currSubmitted = req.body;
-    Submitted.updateSubmitted(req.params.id, currSubmitted, function (err, updatedSubmitted) {
+    Submitted.updateSubmitted(req.params.id, currSubmitted, function (err, updatedExam) {
         if (err) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated exam');
-            res.status(200).json('Exam updated');
+            console.log('rättar');
+            correction.setExamCorrected(req.params.id, function(err) {
+               if (err) {
+                   console.log(err);
+                   res.status(404);
+               } else {
+                   console.log('Skickar');
+                   res.status(200).json('Exam updated');
+               }
+            });
         }
     });
 });
@@ -501,11 +511,12 @@ app.get('/api/submitted/user/:id', function (req, res){
 });
 
 // Get all exams which needs to be corrected
-app.get('/api/submittedTests/needcorr/', function(req, res) {
+app.get('/api/submittedneedcorr/', function(req, res) {
     Submitted.getExamsNeedCorrection(function(err, exam) {
         if (err) {
             res.status(404).json('No exams need correction.');
         } else {
+            console.log('Skickar');
             res.status(200).json(exam);
         }
     });
