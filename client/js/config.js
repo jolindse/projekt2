@@ -10,6 +10,16 @@ myApp.config(function ($routeProvider) {
             controller: 'loginCtrl'
         })
 
+        .when('/student', {
+            templateUrl: 'partials/student_home.html',
+            controller: 'studentController'
+        })
+
+        .when('/admin', {
+            templateUrl: 'partials/admin_home.html',
+            controller: 'adminController'
+        })
+
         .when('/home', {
             templateUrl: 'partials/home.html',
             controller: 'homeCtrl'
@@ -45,16 +55,12 @@ myApp.config(function ($routeProvider) {
             controller: "loginCtrl"
         })
 
-        .when('/student', {
-            templateUrl: 'partials/index.html'
-        })
-
         .otherwise({
             redirectTo: '/login'
         });
 });
 
-run(function($rootScope, $location) {
+myApp.run(function($rootScope, $location) {
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
         if ($rootScope.loggedInUser == null) {
             // no logged user, redirect to /login
