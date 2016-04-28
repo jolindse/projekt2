@@ -77,54 +77,110 @@
         <p><br><br><br><br></p>
     </div>
 </div>
-<!--Create Test-->
-<div class="container" id="testContainer">
+<div class="container">
     <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-9">
-        <div class="btn-group" role="group" aria-label="...">
-            <button type="button" class="btn btn-default">1</button>
-            <button type="button" class="btn btn-default">2</button>
-            <button type="button" class="btn btn-default">3</button>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Questiontype
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#" id=textQuest">Fritext</a></li>
-                <li><a href="#" id="rankQuest">Rangordning</a></li>
-                <li><a href="#" id="checkQuest">Flerval</a></li>
-                <li><a href="#" id="radioQuest">Enval</a></li>
-            </ul>
-        </div>
-        </div>
-        </div>
+
     </div>
-        <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-lg-9">
-            <div id="inputAnsDivs">
-                <div class="inputAnsRow">
-                <input type="text" class="form-control" aria-label="...">
-                <div class="input-group">
-                  <span class="input-group-addon">
-                    <input type="checkbox" aria-label="...">
-                  </span>
-                    <input type="text" class="form-control" aria-label="...">
+
+</div>
+
+ <!--Create Test 2.0-->
+<div class="container test" id="testContainer">
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="nav nav-pills" >
+                <li role="presentation"  class="active" id="inputId"><a href="#">Input</a></li>
+                <li role="presentation" id="butId"><a href="#">Knappar</a></li>
+                <li role="presentation" id="helpId"><a href="#">Hjälp</a></li>
+            </ul>
+            <div class="questElements" id="inputElements">
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="textinput">Text Input</label>
+                    <div class="col-md-4">
+                        <input id="textinput" name="textinput" type="text" placeholder="placeholder" class="form-control input-md">
+                    </div>
                 </div>
             </div>
+            <div class="questElements" id="butElements">
+                <!-- Multiple Radios -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="radios">Multiple Radios</label>
+                    <div class="col-md-4">
+                        <div class="radio">
+                            <label for="radios-0">
+                                <input type="radio" name="radios" id="radios-0" value="1" checked="checked">
+                                Option one
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label for="radios-1">
+                                <input type="radio" name="radios" id="radios-1" value="2">
+                                Option two
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /input-group -->
-            <button type="button" class="btn btn-default btn-lg" id="addAnsRow">
-                <span class="glyphicon-plus" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-default btn-lg" id="saveAnsRow">
-                <span aria-hidden="true"></span> Save
-            </button>
         </div>
+        <div class="col-md-6">
+    <form class="form-horizontal">
+        <fieldset>
+            <legend>Test Titel</legend>
+        </fieldset>
+    </form>
         </div>
+    </div>
 </div>
+
+<!--Create Test 1.0-->
+<!--<div class="container" id="testContainer">-->
+    <!--<div class="row">-->
+        <!--<div class="col-md-3"></div>-->
+        <!--<div class="col-md-9">-->
+        <!--<div class="btn-group" role="group" aria-label="...">-->
+            <!--<button type="button" class="btn btn-default">1</button>-->
+            <!--<button type="button" class="btn btn-default">2</button>-->
+            <!--<button type="button" class="btn btn-default">3</button>-->
+        <!--<div class="btn-group" role="group">-->
+            <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                <!--Questiontype-->
+                <!--<span class="caret"></span>-->
+            <!--</button>-->
+            <!--<ul class="dropdown-menu">-->
+                <!--<li><a href="#" id=textQuest">Fritext</a></li>-->
+                <!--<li><a href="#" id="rankQuest">Rangordning</a></li>-->
+                <!--<li><a href="#" id="checkQuest">Flerval</a></li>-->
+                <!--<li><a href="#" id="radioQuest">Enval</a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+        <!--<div class="row">-->
+        <!--<div class="col-md-3"></div>-->
+        <!--<div class="col-lg-9">-->
+            <!--<div id="inputAnsDivs">-->
+                <!--<div class="inputAnsRow">-->
+                <!--<input type="text" class="form-control" aria-label="...">-->
+                <!--<div class="input-group">-->
+                  <!--<span class="input-group-addon">-->
+                    <!--<input type="checkbox" aria-label="...">-->
+                  <!--</span>-->
+                    <!--<input type="text" class="form-control" aria-label="...">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /input-group &ndash;&gt;-->
+            <!--<button type="button" class="btn btn-default btn-lg" id="addAnsRow">-->
+                <!--<span class="glyphicon-plus" aria-hidden="true"></span>-->
+            <!--</button>-->
+            <!--<button type="button" class="btn btn-default btn-lg" id="saveAnsRow">-->
+                <!--<span aria-hidden="true"></span> Save-->
+            <!--</button>-->
+        <!--</div>-->
+        <!--</div>-->
+<!--</div>-->
 <!--Klasslista med elever-->
 <div class="container" id="classContainer">
     <!-- Example row of columns -->
@@ -143,29 +199,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="klassJava1">
-                        <td>1</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr class="klassJava1">
-                        <td>2</td>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr class="klass.Net1">
-                        <td>3</td>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr class="klass.Net1">
-                        <td>4</td>
-                        <td>Berry</td>
-                        <td>the King</td>
-                        <td>@twitter</td>
+                    <tr class="skolKlass">
+                        <td id="persId">1</td>
+                        <td id="fName">Mark</td>
+                        <td id="eName">Otto</td>
+                        <td id="eMail">@mdo</td>
                     </tr>
                     </tbody>
                 </table>

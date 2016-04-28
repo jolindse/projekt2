@@ -3,6 +3,14 @@
  */
 
 $(document).ready(function(){
+
+    var persNr =  document.getElementById('persId');
+    var fName =  document.getElementById('fName');
+    var eName =  document.getElementById('eName');
+    var eMail =  document.getElementById('eMail');
+    var elementTab;
+
+
     $('#sortUserTab').click(function (e) {
         $("#classContainer").slideToggle();
          $("#testContainer").hide();
@@ -23,7 +31,50 @@ $(document).ready(function(){
         $(this).addClass('active');
         e.preventDefault();
     });
-    
+    $('.nav-pills li').click(function (e) {
+        $('.nav-pills li').removeClass('active');
+         $(this).addClass('active');
+            elementTab = $(this).attr('id');
+            if(elementTab === "butId"){
+                $('#inputElements').hide();
+                $('#butElements').show();
+            }
+            if(elementTab === "inputId"){
+                $('#butElements').hide();
+                $('#inputElements').show();
+            }
+
+        e.preventDefault();
+    });
+
+    $('#listGroupJava2').click(function (e) {
+        fName.innerHTML = "Biffen";
+        eName.innerHTML = "Karlsson";
+        persNr.innerHTML = "1337";
+        eMail.innerHTML = "Råstek@Bajs.se";
+    });
+
+    $('#listGroupJava1').click(function (e) {
+        fName.innerHTML = "fen";
+        eName.innerHTML = "son";
+        persNr.innerHTML = "1332";
+        eMail.innerHTML = "stek@Bajs.se";
+    });
+
+    $('#listGroupNet1').click(function (e) {
+        fName.innerHTML = "Satan";
+        eName.innerHTML = "Luciferson";
+        persNr.innerHTML = "666";
+        eMail.innerHTML = "Plåga@downtown.se";
+    });
+
+    $('#listGroupNet2').click(function (e) {
+        fName.innerHTML = "Gudars";
+        eName.innerHTML = "Skymningsson";
+        persNr.innerHTML = "777";
+        eMail.innerHTML = "vinTillVattenLOL@upstairs.se";
+    });
+
     $('#saveAnsRow').click(function (e) {
         $('.btn-group').prepend('<button type="button" class="btn btn-default">'+butValue+'</button>');
     })
