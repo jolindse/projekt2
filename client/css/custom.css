@@ -3,18 +3,6 @@ body, html {
     background: linear-gradient(rgb(238, 114, 2), rgb(161, 77, 1)) no-repeat;
 }
 
-.thead {
-    background-color: #373A3C;
-    color: white;
-}
-
-/*
-* LOGIN
-*/
-.navbar {
-    border-radius: 0px;
-}
-
 .card-container.card {
     max-width: 350px;
     padding: 40px 40px;
@@ -135,8 +123,14 @@ body, html {
     background-color: #0083A1;
     cursor: pointer;
 }
+.input-group{
+    margin-top: 10px;
+}
+#classContainer{
+    display: none;
+}
+#testContainer{
+    display: none;
+}
 
-/*
-* END OF LOGIN
-*/
 

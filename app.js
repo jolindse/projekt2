@@ -40,11 +40,13 @@ app.all('/*', function (req, res, next) {
     next();
 });
 
+app.use(express.static(__dirname+'/client'));
+
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
 
 // Default endpoint.
-app.get('/', function (req, res) {
+app.get('/api', function (req, res) {
     res.send('System for exam. Please use /api/users, /api/class, /api/exams, /api/question, /api/submitted');
 });
 
@@ -111,6 +113,22 @@ app.put('/api/user/:id', function (req, res) {
 
 // Log in
 app.post('/api/user/login/:id', function (req, res) {
+    var id = req.params.id;
+    User.loginUser(id, function (err, user) {
+        if (err) {
+            res.status(405).json({login: false, message: 'Error connecting to db'});
+        } else {
+            if (user.password === req.body.password) {
+                res.status(200).json({login: true, user: user});
+            } else {
+                res.status(405).json({login: false, message: 'Not logged in. Check id,pw'});
+            }
+        }
+    });
+});
+
+// Log in
+app.post('/api/login/', function (req, res) {
     var id = req.params.id;
     User.loginUser(id, function (err, user) {
         if (err) {
