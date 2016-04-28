@@ -16,8 +16,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var db = require('./components/db');
-var multer = require('multer'),
-    path = require('path');
+var multer = require('multer');
+var path = require('path');
+var correction = require('./components/correction');
 
 
 // Models import
@@ -336,7 +337,7 @@ app.get('/api/question/:id', function (req, res) {
 });
 
 // Get image (filename)
-app.get('/api/questionImages/:file', function (req, res) {
+app.get('/api/question/images/:file', function (req, res) {
     res.send(path.join('../../questionImages', req.params.file));
 });
 
@@ -353,8 +354,7 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
         }
         res.status(200).json(currQuestion);
     });
-})
-;
+});
 
 // Update question
 app.put('/api/question/:id', function (req, res) {
@@ -426,15 +426,27 @@ app.post('/api/submitted', function (req, res) {
 // Update submitted exam
 app.put('/api/submitted/:id', function (req, res) {
     var currSubmitted = req.body;
-    Submitted.updateSubmitted(req.params.id, currSubmitted, function (err, updatedSubmitted) {
+    Submitted.updateSubmitted(req.params.id, currSubmitted, function (err, updatedExam) {
         if (err) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated exam');
-            res.status(200).json('Exam updated');
+            console.log('rättar');
+            correction.setExamCorrected(req.params.id, function(err) {
+               if (err) {
+                   console.log(err);
+                   res.status(404);
+               } else {
+                   console.log('Skickar');
+                   res.status(200).json('Exam updated');
+               }
+            });
         }
     });
+});
+
+app.get('/api/submitted/autocorrect/:id', function (req, res) {
+   correction.autoCorrect(req, res);
 });
 
 // Delete Submitted
@@ -461,8 +473,8 @@ app.get('/api/submitted/user/:id', function (req, res) {
 });
 
 // Get all exams which needs to be corrected
-app.get('/api/submittedTests/needcorr/', function (req, res) {
-    Submitted.getExamsNeedCorrection(function (err, exam) {
+app.get('/api/submittedneedcorr/', function(req, res) {
+    Submitted.getExamsNeedCorrection(function(err, exam) {
         if (err) {
             res.status(404).json('No exams need correction.');
         } else {
