@@ -41,16 +41,26 @@ class:
     </form>
     <br/>
     <p>Current class:</p>
-    <tt>_id: {{studentClass._id}}</tt><br/>
-    <tt>name: {{studentClass.name}}</tt><br/>
-    <tt>students: {{studentClass.students}}</tt>
+    <div ng-repeat="(key, prop) in studentClass">
+        <table>
+            <tr>
+                <td>{{key}}</td>
+                <td>{{prop}}</td>
+            </tr>
+        </table>
+    </div>
     <br/>
     <p>All classes</p>
     <button ng-click="getAllClasses()">Update class list</button>
     <div ng-repeat="currClass in studentClasses">
-        <tt>_id: {{currClass._id}}</tt><br/>
-        <tt>name: {{currClass.name}}</tt><br/>
-        <tt>students: {{currClass.students}}</tt><br/>
-        <br/>
+            <div ng-repeat="(innerkey, innerprop) in currClass">
+                <table>
+                    <tr>
+                        <td>{{innerkey}}</td>
+                        <td>{{innerprop}}</td>
+                    </tr>
+                </table>
+            </div>
+            <br/>
     </div>
 </article>

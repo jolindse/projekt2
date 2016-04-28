@@ -1,11 +1,5 @@
 <!--
 
-/api/submitted				POST 	submitted	- 				Adds a submitted exam
-/api/submitted/(id)			GET 	- 			submitted 		Gets a specific submitted exam
-/api/submitted/(id) 		PUT 	submitted 	- 				Updates a submitted exam
-/api/submitted/(id) 		DELETE 	- 			-				Deletes a submitted exam
-/api/submitted/user/(id)	GET 	- 			[submitted]		Gets ALL submitted exams by a student
-
 submitted:
 	{
 		_id:				MongoDB id
@@ -27,5 +21,102 @@ submitted:
 -->
 
 <article id="submitted">
-    <p> Submitted </p>
+    <h1> Submitted </h1>
+    <form>
+        <p>id</p>
+        <input ng-model="submitted._id" type="text">
+        <button ng-click="loadSubmitted()">Load submitted</button>
+        <input ng-model="submitted.student" type="text">
+        <button ng-click="getBy()">Load all submitted by student</button>
+        <br/>
+        <br/>
+        <p>exam _id</p>
+        <input ng-model="submitted.exam" type="text">
+        <p>comment</p>
+        <input ng-model="submitted.comment" type="text">
+        <p>grade</p>
+        <input ng-model="submitted.grade" type="text">
+        <p>points</p>
+        <input ng-model="submitted.points" type="text">
+        <p>completedCorrection</p>
+        <input type="checkbox" ng-model="submitted.completedCorrection">
+        <br/>
+        <p>Submitted answerOptions</p>
+        <div ng-repeat="answer in submitted.answers track by $index">
+            text: <input ng-model="answer.text" type="text">
+            comment: <input ng-model="answer.comment" type="text">
+            points: <input ng-model="answer.points" type="text">
+            corrected: <input type="checkbox" ng-model="answer.corrected">
+            correct: <input type="checkbox" ng-model="answer.correct">
+        </div>
+        <br/>
+        <p>Add answer</p>
+        text: <input ng-model="answerToAdd.text" type="text">
+        comment: <input ng-model="answerToAdd.comment" type="text">
+        points: <input ng-model="answerToAdd.points" type="text">
+        corrected: <input type="checkbox" ng-model="answerToAdd.correct">
+        correct: <input type="checkbox" ng-model="answerToAdd.correct">
+        <br/>
+        <br/>
+        <button ng-click="submitSubmitted()">Add/modify submitted</button>
+        <br/>
+        <input type="text" ng-model="deleteId">
+        <button ng-click="deleteSubmitted()">Delete submitted</button>
+    </form>
+    <br/>
+
+    <p>Current submitted:</p>
+    <div ng-repeat="(key, prop) in submitted">
+        <table>
+            <tr>
+                <td>{{key}}</td>
+                <td>{{prop}}</td>
+            </tr>
+        </table>
+    </div>
+    <br/>
+    <br/>
+    <p>All submitteds</p>
+    <button ng-click="getAllSubmitteds()">Update class list</button>
+    <div ng-repeat="currSubmitted in submitteds">
+        <div ng-repeat="(innerkey, innerprop) in currSubmitted">
+            <table>
+                <tr>
+                    <td>{{innerkey}}</td>
+                    <td>{{innerprop}}</td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+    </div>
+    </div>
+    <br/>
+    <p>Submitteds by cre8or ({{submitted.student}})</p>
+    <div ng-repeat="submittedBy in submittedByAuthor">
+        <div ng-repeat="(cr8key, cr8prop) in submittedBy">
+            <table>
+                <tr>
+                    <td>{{cr8key}}</td>
+                    <td>{{cr8prop}}</td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+    </div>
+    <br/>
+    <p>Submitted need correction</p>
+    <button ng-click="getNeedCorr()">Get submitted exams that need correction</button>
+    <br/>
+    <div ng-repeat="needCorr in submittedNeedCorr">
+        <div ng-repeat="(nckey, ncprop) in needCorr">
+            <table>
+                <tr>
+                    <td>{{nckey}}</td>
+                    <td>{{ncprop}}</td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+    </div>
+
 </article>

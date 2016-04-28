@@ -13,72 +13,67 @@ user:
 
 -->
 <article id="user">
-    <h1> User </h1>
-    <br/>
-    <br/>
+	<h1> User </h1>
+	<br/>
+	<br/>
 
-    <form>
-        <p>id</p>
-        <input id="_id" ng-model="user._id" type="text">
-        <br/>
-        <button ng-click="loadUser()">Load user</button>
-        <br/>
-        <p>Name</p>
-        <input id="firstname" ng-model="user.firstName" type="text">
-        <input id="surname" ng-model="user.surName" type="text">
-        <p>Id/Pers.nr</p>
-        <input id="id" ng-model="user.id" type="text">
-        <p>Password</p>
-        <input id="password" ng-model="user.password" type="text">
-        <p>Email</p>
-        <input id="email" ng-model="user.email" type="text">
-        <p>admin</p>
-            <input type="checkbox" ng-model="user.admin" >
-        <br/>
-        <p>Test to take (_id)</p>
-        <div ng-repeat="exam in user.testToTake track by $index">
-            <input ng-model="exam" type="text">
-        </div>
-        <br/>
-        <p>Add student id</p>
-        <input type="text" ng-model="testToAdd">
-        <br/>
-        <button ng-click="addExam()">Add exam</button>
-        <br/>
-        <br/>
-        <button ng-click="submitUser()">Add/modify user</button>
-        <br/>
-        <input type="text" ng-model="deleteId">
-        <button ng-click="deleteUser()">Delete user</button>
-    </form>
-    <br/>
+	<form>
+		<p>id</p>
+		<input id="_id" ng-model="user._id" type="text">
+		<br/>
+		<button ng-click="loadUser()">Load user</button>
+		<br/>
+		<p>Name</p>
+		<input id="firstname" ng-model="user.firstName" type="text">
+		<input id="surname" ng-model="user.surName" type="text">
+		<p>Id/Pers.nr</p>
+		<input id="id" ng-model="user.id" type="text">
+		<p>Password</p>
+		<input id="password" ng-model="user.password" type="text">
+		<p>Email</p>
+		<input id="email" ng-model="user.email" type="text">
+		<p>admin</p>
+		<input type="checkbox" ng-model="user.admin">
+		<br/>
+		<p>Test to take (_id)</p>
+		<div ng-repeat="exam in user.testToTake track by $index">
+			<input ng-model="exam" type="text">
+		</div>
+		<br/>
+		<p>Add student id</p>
+		<input type="text" ng-model="testToAdd">
+		<br/>
+		<button ng-click="addExam()">Add exam</button>
+		<br/>
+		<br/>
+		<button ng-click="submitUser()">Add/modify user</button>
+		<br/>
+		<input type="text" ng-model="deleteId">
+		<button ng-click="deleteUser()">Delete user</button>
+	</form>
+	<br/>
 
-    <p>TEST:</p>
-    <div ng-repeat="(key, prop) in user">
-        <tt>{{key}} : {{prop}}</tt>
-    </div>
+	<p>Current user:</p>
+	<div ng-repeat="(key, prop) in user">
+		<table>
+			<tr>
+				<td>{{key}}</td>
+				<td>{{prop}}</td>
+			</tr>
+		</table>
+	</div>
 
-    <p>Current user:</p>
-    <tt>_id: {{user._id}}</tt><br/>
-    <tt>firstName: {{user.firstName}}</tt><br/>
-    <tt>surName: {{user.surName}}</tt><br/>
-    <tt>id: {{user.id}}</tt><br/>
-    <tt>password: {{user.password}}</tt><br/>
-    <tt>email: {{user.email}}</tt><br/>
-    <tt>admin: {{user.admin}}</tt><br/>
-    <tt>testToTake: {{user.testToTake}}</tt><br/>
-    <br/>
-    <p>All users</p>
-    <button ng-click="getAllUsers()">Update class list</button>
-    <div ng-repeat="currUser in users">
-        <tt>_id: {{currUser._id}}</tt><br/>
-        <tt>firstName: {{currUser.firstName}}</tt><br/>
-        <tt>surName: {{currUser.surName}}</tt><br/>
-        <tt>id: {{currUser.id}}</tt><br/>
-        <tt>password: {{currUser.password}}</tt><br/>
-        <tt>email: {{currUser.email}}</tt><br/>
-        <tt>admin: {{currUser.admin}}</tt><br/>
-        <tt>testToTake: {{currUser.testToTake}}</tt><br/>
-        <br/>
-    </div>
+	<p>All users:</p>
+	<button ng-click="getAllUsers()">Update class list</button>
+	<div ng-repeat="currUser in users">
+		<div ng-repeat="(innerkey, innerprop) in currUser">
+			<table>
+				<tr>
+					<td>{{innerkey}}</td>
+					<td>{{innerprop}}</td>
+				</tr>
+			</table>
+		</div>
+		<br/>
+	</div>
 </article>

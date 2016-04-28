@@ -46,6 +46,14 @@ uat.controller('classCtrl', ['$scope', 'StudentClassManager', function ($scope, 
 
     // Update and add
     $scope.submitClass = function () {
+        for (var property in $scope.studentClass) {
+            if ($scope.studentClass.hasOwnProperty(property)) {
+                if (property === ""){
+                    delete $scope.studentClass.property;
+                }
+            }
+        }
+        
         if ($scope.studentClass._id) {
             StudentClassManager.setStudentClass($scope.studentClass);
         } else {
@@ -80,6 +88,10 @@ uat.controller('examCtrl', ['$scope', 'ExamManager', function ($scope, ExamManag
     $scope.exams = [];
     $scope.examByAuthor = [];
     $scope.deleteId = "";
+    $scope.interval1 = "";
+    $scope.interval2 = "";
+    $scope.gradePercentageG = "";
+    $scope.gradePercentageVG = "";
 
     // Load a exam
     $scope.loadExam = function () {
@@ -93,6 +105,19 @@ uat.controller('examCtrl', ['$scope', 'ExamManager', function ($scope, ExamManag
         $scope.exam.questions.push($scope.questionToAdd);
     };
 
+    $scope.fillArrays = function () {
+        if ($scope.interval1 !== "" && $scope.interval2 !== "") {
+            $scope.exam.interval = [];
+            $scope.exam.interval.push($scope.interval1);
+            $scope.exam.interval.push($scope.interval2);
+        }
+        if ($scope.gradePercentageG !== "" && $scope.gradePercentageVG !== "") {
+            $scope.exam.gradePercentage = [];
+            $scope.exam.gradePercentage.push($scope.gradePercentageG);
+            $scope.exam.gradePercentage.push($scope.gradePercentageVG);
+        }
+    }
+
     // Show all exams
     $scope.getAllExams = function () {
         ExamManager.getAllExams(function (data) {
@@ -102,6 +127,16 @@ uat.controller('examCtrl', ['$scope', 'ExamManager', function ($scope, ExamManag
 
     // Update and add
     $scope.submitExam = function () {
+        $scope.fillArrays();
+        // Make sure no zero value properties of object gets posted.
+        for (var property in $scope.exam) {
+            if ($scope.exam.hasOwnProperty(property)) {
+                if (property === ""){
+                    delete $scope.exam.property;
+                }
+            }
+        }
+
         if ($scope.exam._id) {
             ExamManager.setExam($scope.exam);
         } else {
@@ -120,7 +155,7 @@ uat.controller('examCtrl', ['$scope', 'ExamManager', function ($scope, ExamManag
 
     // Get exams by author
     $scope.getByAuthor = function () {
-        ExamManager.getExamBy($scope.exam.cre8or, function(data){
+        ExamManager.getExamBy($scope.exam.cr8or, function(data){
            $scope.examByAuthor = data;
         });
     };
@@ -133,7 +168,9 @@ uat.controller('examCtrl', ['$scope', 'ExamManager', function ($scope, ExamManag
  **********************************************************************************************************************/
 
 uat.controller('questionCtrl',['$scope','QuestionManager', function ($scope, QuestionManager) {
-    $scope.question = '';
+    $scope.question = {
+        answerOptions: []
+    };
     $scope.answerToAdd = {};
     $scope.questions = [];
     $scope.questionByAuthor = [];
@@ -148,7 +185,17 @@ uat.controller('questionCtrl',['$scope','QuestionManager', function ($scope, Que
 
     // Add question to question
     $scope.addAnswer = function () {
-        $scope.question.answerOptions.push($scope.answerToAdd);
+        var answerObject = function(textQ, correctQ) {
+            this.text = textQ;
+            if (!correctQ) {
+                this.correct = false;
+            } else {
+                this.correct = correctQ;
+            }
+        }
+
+        var currAnswer = new answerObject($scope.answerToAdd.text, $scope.answerToAdd.correct);
+        $scope.question.answerOptions.push(currAnswer);
     };
 
     // Show all questions
@@ -160,6 +207,15 @@ uat.controller('questionCtrl',['$scope','QuestionManager', function ($scope, Que
 
     // Update and add
     $scope.submitQuestion = function () {
+        // Make sure no zero value properties of object gets posted.
+        for (var property in $scope.question) {
+            if ($scope.question.hasOwnProperty(property)) {
+                if (property === ""){
+                    delete $scope.question.property;
+                }
+            }
+        }
+        
         if ($scope.question._id) {
             QuestionManager.setQuestion($scope.question);
         } else {
@@ -190,9 +246,77 @@ uat.controller('questionCtrl',['$scope','QuestionManager', function ($scope, Que
  * SUBMITTED
  **********************************************************************************************************************/
 
-uat.controller('submittedCtrl', function ($scope) {
+uat.controller('submittedCtrl',['$scope','SubmittedManager', function ($scope, SubmittedManager) {
+    $scope.submitted = '';
+    $scope.answerToAdd = {};
+    $scope.submitteds = [];
+    $scope.submittedByAuthor = [];
+    $scope.submittedNeedCorr = [];
+    $scope.deleteId = "";
 
-});
+    // Load a submitted
+    $scope.loadSubmitted = function () {
+        SubmittedManager.getSubmitted($scope.submitted._id, function (currSubmitted) {
+            $scope.submitted = currSubmitted;
+        });
+    };
+
+    // Add submitted to submitted
+    $scope.addAnswer = function () {
+        $scope.submitted.answerOptions.push($scope.answerToAdd);
+    };
+
+    // Show all submitteds
+    $scope.getAllSubmitteds = function () {
+        SubmittedManager.getAllSubmitted(function (data) {
+            $scope.submitteds = data;
+        });
+    };
+
+    // Update and add
+    $scope.submitSubmitted = function () {
+        // Make sure no zero value properties of object gets posted.
+        for (var property in $scope.submitted) {
+            if ($scope.submitted.hasOwnProperty(property)) {
+                if (property === ""){
+                    delete $scope.submitted.property;
+                }
+            }
+        }
+        
+        if ($scope.submitted._id) {
+            SubmittedManager.setSubmitted($scope.submitted);
+        } else {
+            console.log('Submitted should post. '+JSON.stringify($scope.submitted));
+            delete $scope.submitted._id; // Need to remove this in order for MongoDB integrity.
+            SubmittedManager.addSubmitted($scope.submitted, function (newSubmitted) {
+                $scope.submitted = newSubmitted;
+            });
+        }
+        $scope.getAllSubmitteds();
+    };
+
+    // Delete a submitted
+    $scope.deleteSubmitted = function () {
+        SubmittedManager.deleteSubmitted($scope.deleteId);
+    };
+
+    // Get submitteds by author
+    $scope.getBy = function () {
+        SubmittedManager.getSubmittedBy($scope.submitted.cre8or, function(data){
+            $scope.submittedByAuthor = data;
+        });
+    };
+
+    // Get need correction
+    $scope.getNeedCorr = function () {
+        SubmittedManager.getNeedCorrection(function (data){
+            $scope.submittedNeedCorr = data;
+        });
+    }
+
+    $scope.getAllSubmitteds();
+}]);
 
 /***********************************************************************************************************************
  * USER
@@ -231,6 +355,14 @@ uat.controller('userCtrl', ['$scope','UserManager',function ($scope, UserManager
     
     // Update and add
     $scope.submitUser = function () {
+        for (var property in $scope.user) {
+            if ($scope.user.hasOwnProperty(property)) {
+                if (property === ""){
+                    delete $scope.user.property;
+                }
+            }
+        }
+        
         if ($scope.user._id) {
             UserManager.setUser($scope.user);
         } else {
