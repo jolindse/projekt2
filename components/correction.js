@@ -52,34 +52,47 @@ module.exports.setExamCorrected = function(id, callback) {
     );
 };
 
-/** Try to autocorrect a submitted exam
+/** Try to autocorrect an exam
  *
- * @param id
- * @param callback
+ * @param req
+ * @param res
  */
-module.exports.autoCorrect = function(id,callback) {
-    SubmittedExam.findOne(
-        {_id: id},
-        function (err, subExam) {
-            if (err) {
-                console.log(err);
-            } else {
-                Exam.findOne(
-                    {_id : subExam.exam},
-                    function(err, exam) {
-                        if(err){
-                            console.log(err);
-                        }
-                        else {
-                            exam.questions.forEach(function(questionId) {
-                               Question.findOne(function(err, question) {
-                                   
-                               });
-                            });
-                        }
-                    }
-                )
-            }
+module.exports.autoCorrect = function(req, res) {
+    var submittedExam;
+    var answersArray = [];
+    var questionsArray = [];
+    var corrAnswer = [];
+    console.log(req.params.id);
+    SubmittedExam.getSubmitted(req.params.id, function(err, subEx) {
+        if(err) {
+            res.json(err);
+        } else {
+            subEx.answers.forEach(function (answer) {
+                answersArray.push(answer);
+            });
+            Exam.getExam(subEx.exam, function (err, exam) {
+                if(err) {
+                    res.json(err);
+                } else {
+                    console.log(exam.questions);
+                    exam.questions.forEach(function(question) {
+                        Question.getQuestion(question.id, function(err, currQuestion) {
+                            if(err) {
+                                res.json(err);
+                            } else {
+                                currQuestion.answerOptions.forEach(function(answer) {
+                                    if (answer.correct === 'true') {
+                                        corrAnswer.push(answer.text);
+                                        console.log(corrAnswer);
+                                    }
+                                });
+                            }
+                        });
+
+                    });
+                }
+            });
         }
-    );
-}
+        
+    });
+};
