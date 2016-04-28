@@ -17,13 +17,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <p class="navbar-brand" href="#" >Newton</p>
+            <img id="header-logo" src="img/newtonlogo.svg">
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li ng-show="showAdminNav" class="admin-nav"><a href="#" id="createTestTab">Prov</a></li>
                 <li ng-show="showAdminNav" class="admin-nav"><a href="#" id="sortUserTab">Användare</a></li>
-                <li ng-show="showStudentNav" class="student-nav"><a href="#" id="studentDetailsTab">Hantera uppgifter</a></li>
+                <li ng-show="showStudentNav" class="student-nav"><a href="#/student" id="studentHomeTab">Hem</a></li>
+                <li ng-show="showUserDetailsNav" ><a href="#/user" id="userDetailsTab">Hantera uppgifter</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li ng-show="showLogout" ng-click="logout()" id="logout-nav"><a href="#/login">Logga ut</a></li>

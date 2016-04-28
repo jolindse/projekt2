@@ -9,6 +9,7 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
     $scope.errorMessage = "";
     $scope.username = "";
     $scope.password = "";
+    var counter = 0;
 
     $scope.attemptLogin = function() {
 
@@ -33,7 +34,6 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
                 }
 
                 userService.login(data.user.firstName, data.user.id, data.user.admin, data.user.testToTake);
-                console.log(data.user.testToTake);
 
                 if(!$scope.$$phase) {
                     //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
@@ -42,8 +42,19 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
 
             },
             error: function (errormessage) {
-                $scope.errorMessage = errormessage.responseJSON.message;
-                $scope.loginError = true;
+                if (errormessage.responseJSON.message == "Kontrollera användarnamn och lösenord"){
+                    counter++;
+                }
+                console.log(counter);
+                if (counter == 3){
+                    $scope.loginError = false;
+                    $scope.sendPasswordBtn = true;
+                    counter = 0;
+                }else {
+                    $scope.errorMessage = errormessage.responseJSON.message;
+                    $scope.loginError = true;
+                }
+
 
                 if(!$scope.$$phase) {
                     //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
@@ -57,7 +68,16 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
 /**
  * INDEX-CONTROLLER:
  */
-myApp.controller('indexController', function ($scope, userService) {
+myApp.controller('indexController', function ($scope, $location, userService) {
+
+    $scope.clickLogo = function() {
+        if (userService.admin == true){
+            $location.path("/admin");
+        }
+        else if (userService.admin == false){
+            $location.path("/student");
+        }
+    };
 
     $scope.$on('updateNavbarBroadcast', function () {
 
@@ -66,15 +86,18 @@ myApp.controller('indexController', function ($scope, userService) {
 
             if (userService.admin == true) {
                 $scope.showAdminNav = true;
+                $scope.showUserDetailsNav = true;
             }
             else if (userService.admin == false) {
                 $scope.showStudentNav = true;
+                $scope.showUserDetailsNav = true;
             }
         }
         else {
             $scope.showLogout = false;
             $scope.showAdminNav = false;
             $scope.showStudentNav = false;
+            $scope.showUserDetailsNav = false;
         }
     });
 
@@ -90,7 +113,6 @@ myApp.controller('indexController', function ($scope, userService) {
  */
 myApp.controller('studentController', function ($scope, userService) {
     $scope.name = userService.firstName;
-    console.log(userService.testsToTake);
     $scope.testAmount = userService.testsToTake.length;
     userService.updateNavbar();
 });

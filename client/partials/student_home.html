@@ -3,6 +3,7 @@
     <h1 class="display-3">Välkommen {{name}}</h1>
     <p class="lead">Du har {{testAmount}}st prov att göra.</p>
     <hr class="m-y-2">
+
     <table class="table table-hover">
         <thead class="thead">
         <tr>
@@ -12,29 +13,19 @@
             <th>Tid</th>
             <th>Maxpoäng</th>
             <th>Slutdatum</th>
-
         </tr>
         </thead>
         <tbody>
-        <tr>
+        <tr class="clickable-row">
             <th scope="row">1</th>
             <td>Webbapplikationer</td>
             <td>HTML och CSS</td>
             <td>60min</td>
             <td>120</td>
             <td>2016-05-25</td>
-
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Desktopapplikationer</td>
-            <td>Java FX</td>
-            <td>60min</td>
-            <td>120</td>
-            <td>2016-06-11</td>
-
         </tr>
         </tbody>
     </table>
+    <button type="button" class="btn btn-success">Starta prov</button>
 </div>
 </div>
