@@ -22,18 +22,18 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
 
             success: function (data) {
                 if (data.login == true && data.user.admin == false){
-                    sessionStorage.setItem('userId', data.user.id);
+                    sessionStorage.setItem('userId', data.user._id);
                     $location.path("/student");
                 }
                 else if (data.login == true && data.user.admin == true){
-                    sessionStorage.setItem('userId', data.user.id);
+                    sessionStorage.setItem('userId', data.user._id);
                     $location.path("/admin");
                 }
                 else if (data.login == false){
                     console.log(data);
                 }
 
-                userService.login(data.user.firstName, data.user.id, data.user.admin, data.user.testToTake);
+                userService.login(data.user.firstName, data.user._id, data.user.admin, data.user.testToTake);
 
                 if(!$scope.$$phase) {
                     //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
@@ -124,3 +124,4 @@ myApp.controller('adminController', function ($scope, userService) {
     $scope.name = userService.firstName;
     userService.updateNavbar();
 });
+

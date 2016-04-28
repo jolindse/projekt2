@@ -17,7 +17,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    Godzilla
+                                    {{user.firstName}}
                                 </td>
                                 <td>
                                     <span class="edit-user glyphicon glyphicon-pencil"></span>
@@ -30,7 +30,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    Hårdisksson
+                                    {{user.surName}}
                                 </td>
                                 <td>
                                     <span class="edit-user glyphicon glyphicon-pencil"></span>
@@ -43,7 +43,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    **********
+                                    {{user.password}}
                                 </td>
                                 <td>
                                     <span class="edit-user glyphicon glyphicon-pencil"></span>
@@ -56,7 +56,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    Godzilla@email.com
+                                    {{user.email}}
                                 </td>
                                 <td>
                                     <span class="edit-user glyphicon glyphicon-pencil"></span>
@@ -69,7 +69,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    12345
+                                    {{user.id}}
                                 </td>
                             </tr>
                             <tr>
@@ -79,7 +79,8 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    Student
+                                    <p ng-show="user.admin">Administratör</p>
+                                    <p ng-show="!user.admin">Student</p>
                                 </td>
                             </tr>
 

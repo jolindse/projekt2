@@ -2,41 +2,41 @@
  * Created by Johan on 2016-04-24.
  */
 
-var myApp = angular.module('myApp', ['ngRoute']);
+var uat = angular.module('uat', ['ngRoute']);
 
-myApp.config(function ($routeProvider) {
+uat.config(['$routeProvider', function ($routeProvider) {
     $routeProvider
         .when('/home', {
-            templateUrl: 'partials/home.html',
+            templateUrl: './partials/home.html',
             controller: 'homeCtrl'
         })
 
         .when('/user', {
-            templateUrl: 'partials/user.html',
+            templateUrl: './partials/user.html',
             controller: 'userCtrl'
         })
 
         .when('/class', {
-            templateUrl: 'partials/class.html',
+            templateUrl: './partials/class.html',
             controller: 'classCtrl'
         })
 
         .when('/exam', {
-            templateUrl: 'partials/exam.html',
+            templateUrl: './partials/exam.html',
             controller: 'examCtrl'
         })
 
         .when('/question', {
-            templateUrl: 'partials/question.html',
+            templateUrl: './partials/question.html',
             controller: 'questionCtrl'
         })
 
         .when('/submitted', {
-            templateUrl: 'partials/submitted.html',
+            templateUrl: './partials/submitted.html',
             controller: 'submittedCtrl'
         })
 
         .otherwise({
             redirectTo: '/home'
         });
-});
+}]);
