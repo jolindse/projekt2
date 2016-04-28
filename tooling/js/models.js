@@ -206,7 +206,7 @@ uat.factory('ExamManager', ['$http', '$q', 'Exam', 'APIBASEURL', function ($http
                 .success(function (examArray) {
                     var exams = [];
                     examArray.forEach(function (examData) {
-                        var exam = ExamManager._retriveInstance(ExamData._id, ExamData);
+                        var exam = ExamManager._retriveInstance(examData._id, examData);
                         exams.push(exam);
                     });
                     callback(exams);
@@ -444,7 +444,7 @@ uat.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', funct
                 callback(savedClass);
             });
         },
-        getAllSubmitteds: function (callback) {
+        getAllSubmitted: function (callback) {
             $http.get(APIBASEURL + '/api/submitted')
                 .success(function (submittedArray) {
                     var submitteds = [];
@@ -459,6 +459,12 @@ uat.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', funct
             var submitted = SubmittedManager._retriveInstance(submittedData._id, submittedData);
             submitted.update();
             return submitted;
+        },
+        deleteSubmitted: function (id) {
+            SubmittedManager._load(id, function (currSubmitted) {
+                delete SubmittedManager._pool.id;
+                currSubmitted.delete();
+            });
         },
         getSubmittedBy: function (studentId, callback) {
             var scope = this;

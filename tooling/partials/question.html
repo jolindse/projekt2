@@ -38,7 +38,7 @@ question:
         <br/>
         <p>title</p>
         <input ng-model="question.title" type="text">
-        <p>subject</p>
+        <p>text</p>
         <input ng-model="question.questionText" type="text">
         <p>type</p>
         <input ng-model="question.type" type="text">
@@ -58,9 +58,9 @@ question:
         </div>
         <br/>
         <p>Add answer option</p>
-        text: <input type="text" ng-model="questionToAdd.text">
+        text: <input type="text" ng-model="answerToAdd.text">
         <br/>
-        correct: <input type="checkbox" ng-model="questionToAdd.correct">
+        correct: <input type="checkbox" ng-model="answerToAdd.correct">
         <button ng-click="addAnswer()">Add answer</button>
         <br/>
         <br/>
@@ -72,45 +72,41 @@ question:
     <br/>
 
     <p>Current question:</p>
-    <tt>_id: {{question._id}}</tt><br/>
-    <tt>title: {{question.title}}</tt><br/>
-    <tt>subject: {{question.subject}}</tt><br/>
-    <tt>interval: {{question.interval}}</tt><br/>
-    <tt>time: {{question.time}}</tt><br/>
-    <tt>gradePercentage: {{question.gradePercentage}}</tt><br/>
-    <tt>feedback: {{question.feedback}}</tt><br/>
-    <tt>anonymous: {{question.anonymous}}</tt><br/>
-    <tt>questions: {{question.questions}}</tt><br/>
-    <tt>cre8or: {{question.cre8or}}</tt><br/>
+    <div ng-repeat="(key, prop) in question">
+        <table>
+            <tr>
+                <td>{{key}}</td>
+                <td>{{prop}}</td>
+            </tr>
+        </table>
+    </div>
+    <br/>
     <br/>
     <p>All questions</p>
     <button ng-click="getAllQuestions()">Update class list</button>
     <div ng-repeat="currQuestion in questions">
-        <tt>_id: {{currQuestion._id}}</tt><br/>
-        <tt>title: {{currQuestion.title}}</tt><br/>
-        <tt>subject: {{currQuestion.subject}}</tt><br/>
-        <tt>interval: {{currQuestion.interval}}</tt><br/>
-        <tt>time: {{currQuestion.time}}</tt><br/>
-        <tt>gradePercentage: {{currQuestion.gradePercentage}}</tt><br/>
-        <tt>feedback: {{currQuestion.feedback}}</tt><br/>
-        <tt>anonymous: {{currQuestion.anonymous}}</tt><br/>
-        <tt>questions: {{currQuestion.questions}}</tt><br/>
-        <tt>cre8or: {{currQuestion.cre8or}}</tt><br/>
+        <div ng-repeat="(innerkey, innerprop) in currQuestion">
+            <table>
+                <tr>
+                    <td>{{innerkey}}</td>
+                    <td>{{innerprop}}</td>
+                </tr>
+            </table>
+        </div>
         <br/>
+    </div>
     </div>
     <br/>
     <p>Questions by cre8or ({{question.cre8or}})</p>
-    <div ng-repeat="currQuestion in questionByAuthor">
-        <tt>_id: {{currQuestion._id}}</tt><br/>
-        <tt>title: {{currQuestion.title}}</tt><br/>
-        <tt>subject: {{currQuestion.subject}}</tt><br/>
-        <tt>interval: {{currQuestion.interval}}</tt><br/>
-        <tt>time: {{currQuestion.time}}</tt><br/>
-        <tt>gradePercentage: {{currQuestion.gradePercentage}}</tt><br/>
-        <tt>feedback: {{currQuestion.feedback}}</tt><br/>
-        <tt>anonymous: {{currQuestion.anonymous}}</tt><br/>
-        <tt>questions: {{currQuestion.questions}}</tt><br/>
-        <tt>cre8or: {{currQuestion.cre8or}}</tt><br/>
+    <div ng-repeat="questionCr8Exam in questionByAuthor">
+        <div ng-repeat="(cr8key, cr8prop) in questionCr8Exam">
+            <table>
+                <tr>
+                    <td>{{cr8key}}</td>
+                    <td>{{cr8prop}}</td>
+                </tr>
+            </table>
+        </div>
         <br/>
     </div>
 </article>

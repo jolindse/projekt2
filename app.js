@@ -343,8 +343,9 @@ app.get('/api/questionImages/:file', function (req, res) {
 // Add question
 app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     var currQuestion = req.body;
-    console.log(app.address().address);
-    currQuestion.imageUrl = req.file.filename;
+    if (currQuestion.filename != null) {
+        currQuestion.imageUrl = req.file.filename;
+    }
     Question.addQuestion(currQuestion, function (err, currQuestion) {
         if (err) {
             console.log(err);
@@ -352,7 +353,8 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
         }
         res.status(200).json(currQuestion);
     });
-});
+})
+;
 
 // Update question
 app.put('/api/question/:id', function (req, res) {
