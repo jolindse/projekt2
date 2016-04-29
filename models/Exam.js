@@ -3,6 +3,7 @@
  */
 
 var mongoose = require('mongoose');
+var Question = require('./Question');
 
 Schema = mongoose.Schema;
 
@@ -48,6 +49,11 @@ var examSchema = mongoose.Schema({
     // User id of cre8or
     cre8or: {
         type: String
+    },
+    // Max points for exam
+    maxPoints: {
+        type: Number,
+        default: 0
     }
 });
 
@@ -70,6 +76,11 @@ module.exports.getExam = function (id, callback) {
 
 // Add exam
 module.exports.addExam = function (examData, callback) {
+    examData.questions.forEach(function(question) {
+        Question.getQuestion(question, function(err, question) {
+            examData.maxPoints += question.points;
+        });
+    });
     Exam.create(examData, callback);
 };
 
