@@ -60,6 +60,11 @@ myApp.config(function ($routeProvider) {
             controller: "makeExamCtrl"
         })
 
+        .when('/createquestion', {
+            templateUrl: "partials/create_question.html",
+            controller: 'makeQuestionCtrl'
+        })
+
         .otherwise({
             redirectTo: '/login'
         });
