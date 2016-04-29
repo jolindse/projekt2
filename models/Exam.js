@@ -76,11 +76,6 @@ module.exports.getExam = function (id, callback) {
 
 // Add exam
 module.exports.addExam = function (examData, callback) {
-    examData.questions.forEach(function(question) {
-        Question.getQuestion(question, function(err, question) {
-            examData.maxPoints += question.points;
-        });
-    });
     Exam.create(examData, callback);
 };
 
