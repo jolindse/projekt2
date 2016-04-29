@@ -17,7 +17,7 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input type="text" name="firstname" ng-disabled="firstNameDisabled" placeholder={{firstName}}>
+                                    <input ng-value="user.firstName" type="text" name="firstname" ng-disabled="firstNameDisabled">
                                 </td>
                                 <td>
                                     <span ng-click="changeFirstName()" class="edit-user glyphicon glyphicon-edit"></span>
@@ -30,10 +30,10 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input type="text" name="lastname">
+                                    <input type="text" name="lastname" ng-disabled="lastNameDisabled" ng-value="user.surName">
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changeLastName()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -43,10 +43,10 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input type="text" name="password">
+                                    <input type="password" name="password" ng-disabled="passwordDisabled" ng-value="user.password">
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changePassword()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -56,10 +56,10 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input type="text" name="email">
+                                    <input type="text" name="email" ng-disabled="emailDisabled" ng-value="user.email">
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changeEmail()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -69,7 +69,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    <input type="text" name="firstname" ng-disabled="true" value=12345>
+                                    <input type="text" name="persNumb" ng-disabled="true" ng-value="user.id">
                                 </td>
                             </tr>
                             <tr>
@@ -79,13 +79,13 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    <input type="text" name="firstname" ng-disabled="true" value=Student>
+                                    <input type="text" name="firstname" ng-disabled="true" ng-value="user.admin">
                                 </td>
                             </tr>
 
                             </tbody>
                         </table>
-                        <button type="button" class="btn btn-success">Spara ändringar</button>
+                        <button ng-click="updateUser()" type="button" class="btn btn-success">Spara ändringar</button>
                     </div>
                 </div>
             </div>
