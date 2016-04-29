@@ -68,7 +68,7 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
 /**
  * INDEX-CONTROLLER:
  */
-myApp.controller('indexController', function ($scope, $location, userService) {
+myApp.controller('indexCtrl', function ($scope, $location, userService) {
 
     $scope.clickLogo = function() {
         if (userService.admin == true){
@@ -111,7 +111,7 @@ myApp.controller('indexController', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentController', function ($scope, userService) {
+myApp.controller('studentCtrl', function ($scope, userService) {
     $scope.name = userService.firstName;
     $scope.testAmount = userService.testsToTake.length;
     userService.updateNavbar();
@@ -120,7 +120,20 @@ myApp.controller('studentController', function ($scope, userService) {
 /**
  * ADMIN-CONTROLLER:
  */
-myApp.controller('adminController', function ($scope, userService) {
+myApp.controller('adminCtrl', function ($scope, userService) {
     $scope.name = userService.firstName;
     userService.updateNavbar();
+});
+
+/**
+ * USERDETAIL-CONTROLLER:
+ */
+myApp.controller('userDetailCtrl', function ($scope, userService) {
+    $scope.firstName = userService.firstName;
+    $scope.firstNameDisabled = true;
+
+    $scope.changeFirstName = function () {
+        $scope.firstNameDisabled = false;
+    }
+
 });

@@ -12,12 +12,12 @@ myApp.config(function ($routeProvider) {
 
         .when('/student', {
             templateUrl: 'partials/student_home.html',
-            controller: 'studentController'
+            controller: 'studentCtrl'
         })
 
         .when('/admin', {
             templateUrl: 'partials/admin_home.html',
-            controller: 'adminController'
+            controller: 'adminCtrl'
         })
 
         .when('/home', {
@@ -27,7 +27,7 @@ myApp.config(function ($routeProvider) {
 
         .when('/user', {
             templateUrl: 'partials/user_details.html',
-            controller: 'userCtrl'
+            controller: 'userDetailCtrl'
         })
 
         .when('/class', {

@@ -1,4 +1,4 @@
-<div class="container">
+<article class="container">
     <div class="jumbotron">
         <h1 class="display-3">Dina uppgifter</h1>
         <p class="lead"></p>
@@ -16,11 +16,11 @@
                                         Förnamn:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    Godzilla
+                                <td>
+                                    <input type="text" name="firstname" ng-disabled="firstNameDisabled" placeholder={{firstName}}>
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changeFirstName()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -29,8 +29,8 @@
                                         Efternamn:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    Hårdisksson
+                                <td>
+                                    <input type="text" name="lastname">
                                 </td>
                                 <td>
                                     <span class="edit-user glyphicon glyphicon-pencil"></span>
@@ -42,8 +42,8 @@
                                         Lösenord:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    **********
+                                <td>
+                                    <input type="text" name="password">
                                 </td>
                                 <td>
                                     <span class="edit-user glyphicon glyphicon-pencil"></span>
@@ -55,8 +55,8 @@
                                         Email:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    Godzilla@email.com
+                                <td>
+                                    <input type="text" name="email">
                                 </td>
                                 <td>
                                     <span class="edit-user glyphicon glyphicon-pencil"></span>
@@ -69,7 +69,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    12345
+                                    <input type="text" name="firstname" ng-disabled="true" value=12345>
                                 </td>
                             </tr>
                             <tr>
@@ -79,15 +79,16 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    Student
+                                    <input type="text" name="firstname" ng-disabled="true" value=Student>
                                 </td>
                             </tr>
 
                             </tbody>
                         </table>
+                        <button type="button" class="btn btn-success">Spara ändringar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</article>
