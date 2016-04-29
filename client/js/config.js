@@ -1,7 +1,7 @@
 /**
  * Created by Jonas on 2016-04-22.
  */
-var myApp = angular.module('myApp', ['ngRoute']);
+var myApp = angular.module('myApp', ['ngRoute','datetimepicker']);
 
 myApp.config(function ($routeProvider) {
     $routeProvider
@@ -53,6 +53,11 @@ myApp.config(function ($routeProvider) {
         .when("/login", {
             templateUrl: "partials/login.html",
             controller: "loginCtrl"
+        })
+
+        .when('/createexam', {
+            templateUrl: "partials/create_exam.html",
+            controller: "makeExamCtrl"
         })
 
         .otherwise({

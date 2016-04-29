@@ -1,6 +1,8 @@
 body, html {
-    height: 100%;
+    height: 100vh;
     background: linear-gradient(rgb(238, 114, 2), rgb(161, 77, 1)) no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
 }
 
 .jumbotron h1 {

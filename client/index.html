@@ -5,6 +5,8 @@
     <title>Newton Yrkeshögskola - Testverktyg</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
+
 </head>
 <body>
 
@@ -23,6 +25,8 @@
             <ul class="nav navbar-nav">
                 <li ng-show="showAdminNav" class="admin-nav"><a href="#" id="createTestTab">Prov</a></li>
                 <li ng-show="showAdminNav" class="admin-nav"><a href="#" id="sortUserTab">Användare</a></li>
+                <li ng-show="showAdminNav" class="admin-nav"><a href="#/createexam" id="createExam">Skapa prov</a></li>
+
                 <li ng-show="showStudentNav" class="student-nav"><a href="#/student" id="studentHomeTab">Hem</a></li>
                 <li ng-show="showUserDetailsNav" ><a href="#/user" id="userDetailsTab">Hantera uppgifter</a></li>
             </ul>
@@ -41,17 +45,22 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
 
 <script src="js/config.js"></script>
 <script src="js/controllers.js"></script>
 <script src="js/services.js"></script>
+<script src="js/models.js"></script>
+<script src="js/angular-bootstrap-datetimepicker-directive.min.js"></script>
 
 <script src="controllers/class.js"></script>
 <script src="controllers/exam.js"></script>
 <script src="controllers/question.js"></script>
 <script src="controllers/submittedexam.js"></script>
 <script src="controllers/user.js"></script>
-
+<script src="controllers/createExam.js"></script>
 
 </body>
 </html>
