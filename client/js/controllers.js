@@ -33,7 +33,7 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
                     console.log(data);
                 }
 
-                userService.login(data.user.firstName, data.user.id, data.user.admin, data.user.testToTake);
+                userService.login(data.user.firstName, data.user._id, data.user.admin, data.user.testToTake);
 
                 if(!$scope.$$phase) {
                     //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
@@ -111,10 +111,30 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentCtrl', function ($scope, userService) {
-    $scope.name = userService.firstName;
-    $scope.testAmount = userService.testsToTake.length;
+myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, userService) {
     userService.updateNavbar();
+
+    $scope.user = "";
+
+    UserManager.getUser(userService.id, function (data) {
+        $scope.user = data;
+
+        $scope.tests = [];
+        $scope.user.testToTake.forEach(function(testId) {
+            ExamManager.getExam(testId, function (test) {
+                $scope.tests.push(test);
+                console.log(test);
+            });
+        });
+    });
+
+
+
+
+
+
+
+
 });
 
 /**
@@ -128,12 +148,37 @@ myApp.controller('adminCtrl', function ($scope, userService) {
 /**
  * USERDETAIL-CONTROLLER:
  */
-myApp.controller('userDetailCtrl', function ($scope, userService) {
-    $scope.firstName = userService.firstName;
+myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
+    $scope.user = "";
+
     $scope.firstNameDisabled = true;
+    $scope.lastNameDisabled = true;
+    $scope.passwordDisabled = true;
+    $scope.emailDisabled = true;
+
+    UserManager.getUser(userService.id, function (data) {
+        $scope.user = data;
+    });
 
     $scope.changeFirstName = function () {
         $scope.firstNameDisabled = false;
-    }
+    };
+
+    $scope.changeLastName = function () {
+        $scope.lastNameDisabled = false;
+    };
+
+    $scope.changePassword = function () {
+        $scope.passwordDisabled = false;
+    };
+
+    $scope.changeEmail = function () {
+        $scope.emailDisabled = false;
+    };
+
+    $scope.updateUser = function () {
+        UserManager.setUser($scope.user);
+        console.log("hej");
+    };
 
 });

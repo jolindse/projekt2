@@ -1,4 +1,4 @@
-<div class="container">
+<article class="container">
     <div class="jumbotron">
         <h1 class="display-3">Dina uppgifter</h1>
         <p class="lead"></p>
@@ -16,11 +16,11 @@
                                         Förnamn:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    {{user.firstName}}
+                                <td>
+                                    <input ng-model="user.firstName" type="text" name="firstname" ng-disabled="firstNameDisabled">
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changeFirstName()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -29,11 +29,11 @@
                                         Efternamn:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    {{user.surName}}
+                                <td>
+                                    <input type="text" name="lastname" ng-disabled="lastNameDisabled" ng-model="user.surName">
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changeLastName()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -42,11 +42,11 @@
                                         Lösenord:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    {{user.password}}
+                                <td>
+                                    <input type="password" name="password" ng-disabled="passwordDisabled" ng-model="user.password">
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changePassword()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -55,11 +55,11 @@
                                         Email:
                                     </strong>
                                 </td>
-                                <td class="text-primary">
-                                    {{user.email}}
+                                <td>
+                                    <input type="text" name="email" ng-disabled="emailDisabled" ng-model="user.email">
                                 </td>
                                 <td>
-                                    <span class="edit-user glyphicon glyphicon-pencil"></span>
+                                    <span ng-click="changeEmail()" class="edit-user glyphicon glyphicon-edit"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -69,7 +69,10 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    {{user.id}}
+                                    <input type="text" name="persNumb" ng-disabled="true" ng-model="user.id">
+                                </td>
+                                <td>
+                                    <span class="glyphicon glyphicon-lock"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -79,16 +82,19 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    <p ng-show="user.admin">Administratör</p>
-                                    <p ng-show="!user.admin">Student</p>
+                                    <input type="text" name="firstname" ng-disabled="true" ng-model="user.admin">
+                                </td>
+                                <td>
+                                    <span class="glyphicon glyphicon-lock"></span>
                                 </td>
                             </tr>
 
                             </tbody>
                         </table>
+                        <button ng-click="updateUser()" type="button" class="btn btn-success">Spara ändringar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</article>

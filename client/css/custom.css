@@ -4,19 +4,36 @@ body, html {
     background-size: cover;
     -webkit-background-size: cover;
 }
+#header-logo {
+    height: auto;
+    width: 120px;
+    padding: 0;
+}
 
 .jumbotron h1 {
     font-size: 50px;
 }
 
-.table tbody tr.highlight td {
-    background-color: red;
+.navbar {
+    border-radius: 0px;
+}
+.nav {
+    margin-top: 10px;
 }
 
-#header-logo {
-    height: auto;
-    width: 120px;
-    padding: 0;
+/*
+* USER DETAILS
+*/
+.m-y-2 {
+    margin-bottom: 0;
+}
+
+.panel-body {
+    padding-left: 0;
+}
+
+.table tbody tr.highlight td {
+    background-color: red;
 }
 
 .thead {
@@ -28,12 +45,9 @@ body, html {
     cursor: pointer;
 }
 
-.navbar {
-    border-radius: 0px;
-}
-.nav {
-    margin-top: 10px;
-}
+/*
+* END OF USER DETAILS
+*/
 
 /*
 * LOGIN
@@ -177,7 +191,6 @@ input[type=number]::-webkit-outer-spin-button {
     padding: 10px;
     margin-bottom: 0;
 }
-
 /*
 * END OF LOGIN
 */
