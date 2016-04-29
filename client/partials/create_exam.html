@@ -7,24 +7,30 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label>Namn på prov</label>
-            <input ng-model = "exam.title" type="text">
+            <div class="input-group">
+                <span class="input-group-addon" id="testTitle">Prov titel</span>
+                <input class="form-control" aria-describedby="testTitle" type="text" ng-model="exam.title" >
+            </div>
         </div>
         <div class="col-md-4"></div>
         <div class="col-md-4"></div>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label>Ämne på prov</label>
-            <input ng-model= "exam.subject" type="text">
+            <div class="input-group">
+            <span class="input-group-addon" id="testSubject">Ämne</span>
+            <input class="form-control" aria-describedby="testSubject" type="text" ng-model= "exam.subject" >
+            </div>
         </div>
         <div class="col-md-4"></div>
         <div class="col-md-4"></div>
     </div>
         <div class="row">
             <div class="col-md-4">
-                <input type="number" ng-model="exam.time">
-                    Provlängd i minuter
+                <div class="input-group">
+                <span class="input-group-addon" id="basic-addon3">Provlängd</span>
+                <input class="form-control" aria-describedby="basic-addon3" type="number" ng-model="exam.time">
+                </div>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4"></div>
@@ -77,9 +83,7 @@
             <div class="col-md-4">
                 <button ng-click="saveExam()">Spara prov</button>
             </div>
-            <div class="col-md-4">
-                <button ng-click="">Spara prov</button>
-            </div>
+            <div class="col-md-4"></div>
             <div class="col-md-4"></div>
         </div>
     </div>
