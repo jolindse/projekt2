@@ -52,47 +52,62 @@ module.exports.setExamCorrected = function(id, callback) {
     );
 };
 
-/** Try to autocorrect an exam
+/** Fetch submitted answers and correct answers
  *
  * @param req
  * @param res
+ * @param callback
  */
-module.exports.autoCorrect = function(req, res) {
-    var submittedExam;
-    var answersArray = [];
-    var questionsArray = [];
-    var corrAnswer = [];
-    console.log(req.params.id);
-    SubmittedExam.getSubmitted(req.params.id, function(err, subEx) {
-        if(err) {
-            res.json(err);
-        } else {
-            subEx.answers.forEach(function (answer) {
-                answersArray.push(answer);
+module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
+    var subexam; // The _id of the exam that is submitted
+    var questionsId = []; // The _id's of questions in exam
+    var questions = []; // The questions in exam
+    // Fetch the submitted exam
+    SubmittedExam.getSubmitted(req.params.id, function(err, submittedExam) {
+        subexam = submittedExam.exam;
+        // Fetch the exam
+        Exam.getExam(subexam, function(err, exam) {
+            questionsId = exam.questions;
+            questionsId.forEach(function(id) {
+                // Fetch the questions in exam
+                Question.getQuestion(id.id, function(err, question) {
+                    questions.push(question);
+                    // If all questions is inserted in array, go back
+                    if(questions.length === questionsId.length) {
+                        callback(questions, submittedExam);
+                    }
+                });
             });
-            Exam.getExam(subEx.exam, function (err, exam) {
-                if(err) {
-                    res.json(err);
-                } else {
-                    console.log(exam.questions);
-                    exam.questions.forEach(function(question) {
-                        Question.getQuestion(question.id, function(err, currQuestion) {
-                            if(err) {
-                                res.json(err);
-                            } else {
-                                currQuestion.answerOptions.forEach(function(answer) {
-                                    if (answer.correct === 'true') {
-                                        corrAnswer.push(answer.text);
-                                        console.log(corrAnswer);
-                                    }
-                                });
-                            }
-                        });
-
-                    });
-                }
-            });
-        }
-        
+        });
     });
+};
+
+/** Autocorrect a submitted exam
+ *
+ * @param question
+ * @param submittedExam
+ * @param callback
+ */
+module.exports.autoCorrect = function(question, submittedExam, callback) {
+    var type; // Type of question; radiobuttons, checkboxes or rank
+    for (var i = 0; i < question.length; i++) {
+        type = question[i].type;
+        if (type === 'radio' || type === 'check' || type === 'rank') { // These types are autocorrectable
+            // Set student's answer as corrected
+            submittedExam.answers[i].corrected = true;
+            // Loop through the question's answerOptions
+            for (var j = 0; j < question[i].answerOptions.length; j++) {
+                if (question[i].answerOptions[j].correct === true) {
+                    // If student's answer and correct answer mathes set student's answer to correct
+                    if (submittedExam.answers[i].text === question[i].answerOptions[j].text) {
+                        submittedExam.answers[i].correct = true;
+
+                    } else {
+                        submittedExam.answers[i].correct = false;
+                    }
+                }
+            }
+        }
+    }
+    callback(submittedExam);
 };

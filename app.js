@@ -456,8 +456,16 @@ app.put('/api/submitted/:id', function (req, res) {
     });
 });
 
+// Try to autocorrect exam
 app.get('/api/submitted/autocorrect/:id', function (req, res) {
-   correction.autoCorrect(req, res);
+    correction.getSubmittedAndCorrectAnswers(req, res, function(question, subExam) {
+        correction.autoCorrect(question, subExam, function(submittedExam) {
+            // Update the submitted exam in db
+            Submitted.updateSubmitted(submittedExam.id, submittedExam, function() {
+                res.json(submittedExam);
+            });
+        });
+    });
 });
 
 // Delete Submitted
