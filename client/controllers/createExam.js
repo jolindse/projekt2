@@ -23,6 +23,7 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', functi
     };
 
     $scope.saveExam = function () {
+        exam.cre8or = userService.id;
         ExamManager.addExam($scope.exam, function (data) {
             $scope.exam = data;
             $scope.getAllExams();
