@@ -111,10 +111,30 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentCtrl', function ($scope, userService) {
-    $scope.name = userService.firstName;
-    $scope.testAmount = userService.testsToTake.length;
+myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, userService) {
     userService.updateNavbar();
+
+    $scope.user = "";
+
+    UserManager.getUser(userService.id, function (data) {
+        $scope.user = data;
+
+        $scope.tests = [];
+        $scope.user.testToTake.forEach(function(testId) {
+            ExamManager.getExam(testId, function (test) {
+                $scope.tests.push(test);
+                console.log(test);
+            });
+        });
+    });
+
+
+
+
+
+
+
+
 });
 
 /**
@@ -138,7 +158,6 @@ myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
 
     UserManager.getUser(userService.id, function (data) {
         $scope.user = data;
-        console.log($scope.user.email);
     });
 
     $scope.changeFirstName = function () {
