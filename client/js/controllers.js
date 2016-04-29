@@ -22,18 +22,18 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
 
             success: function (data) {
                 if (data.login == true && data.user.admin == false){
-                    sessionStorage.setItem('userId', data.user._id);
+                    sessionStorage.setItem('userId', data.user.id);
                     $location.path("/student");
                 }
                 else if (data.login == true && data.user.admin == true){
-                    sessionStorage.setItem('userId', data.user._id);
+                    sessionStorage.setItem('userId', data.user.id);
                     $location.path("/admin");
                 }
                 else if (data.login == false){
                     console.log(data);
                 }
 
-                userService.login(data.user.firstName, data.user._id, data.user.admin, data.user.testToTake);
+                userService.login(data.user.firstName, data.user.id, data.user.admin, data.user.testToTake);
 
                 if(!$scope.$$phase) {
                     //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
@@ -68,7 +68,7 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
 /**
  * INDEX-CONTROLLER:
  */
-myApp.controller('indexController', function ($scope, $location, userService) {
+myApp.controller('indexCtrl', function ($scope, $location, userService) {
 
     $scope.clickLogo = function() {
         if (userService.admin == true){
@@ -111,7 +111,7 @@ myApp.controller('indexController', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentController', function ($scope, userService) {
+myApp.controller('studentCtrl', function ($scope, userService) {
     $scope.name = userService.firstName;
     $scope.testAmount = userService.testsToTake.length;
     userService.updateNavbar();
@@ -120,8 +120,20 @@ myApp.controller('studentController', function ($scope, userService) {
 /**
  * ADMIN-CONTROLLER:
  */
-myApp.controller('adminController', function ($scope, userService) {
+myApp.controller('adminCtrl', function ($scope, userService) {
     $scope.name = userService.firstName;
     userService.updateNavbar();
 });
 
+/**
+ * USERDETAIL-CONTROLLER:
+ */
+myApp.controller('userDetailCtrl', function ($scope, userService) {
+    $scope.firstName = userService.firstName;
+    $scope.firstNameDisabled = true;
+
+    $scope.changeFirstName = function () {
+        $scope.firstNameDisabled = false;
+    }
+
+});

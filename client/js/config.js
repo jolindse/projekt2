@@ -1,7 +1,7 @@
 /**
  * Created by Jonas on 2016-04-22.
  */
-var myApp = angular.module('myApp', ['ngRoute']);
+var myApp = angular.module('myApp', ['ngRoute','datetimepicker']);
 
 myApp.config(function ($routeProvider) {
     $routeProvider
@@ -12,12 +12,12 @@ myApp.config(function ($routeProvider) {
 
         .when('/student', {
             templateUrl: 'partials/student_home.html',
-            controller: 'studentController'
+            controller: 'studentCtrl'
         })
 
         .when('/admin', {
             templateUrl: 'partials/admin_home.html',
-            controller: 'adminController'
+            controller: 'adminCtrl'
         })
 
         .when('/home', {
@@ -27,7 +27,7 @@ myApp.config(function ($routeProvider) {
 
         .when('/user', {
             templateUrl: 'partials/user_details.html',
-            controller: 'userCtrl'
+            controller: 'userDetailCtrl'
         })
 
         .when('/class', {
@@ -53,6 +53,11 @@ myApp.config(function ($routeProvider) {
         .when("/login", {
             templateUrl: "partials/login.html",
             controller: "loginCtrl"
+        })
+
+        .when('/createexam', {
+            templateUrl: "partials/create_exam.html",
+            controller: "makeExamCtrl"
         })
 
         .otherwise({
