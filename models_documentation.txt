@@ -1,0 +1,42 @@
+MODELS:
+-------------------------------------------------------------------
+		Method:										Returns:
+-------------------------------------------------------------------
+UserManager:
+		.getUser(_id, callback())					User
+		.deleteUser(_id)							-
+		.addUser(userData, callback())				User
+		.getAllUsers(callback())					[User]
+		.setUser(userData)							-		
+
+ExamManager:
+		.getExam(_id, callback())					Exam
+		.deleteExam(_id)							-
+		.addExam(examData, callback())				Exam
+		.getAllExams(callback())					[Exam]
+		.setExam(examData)							-
+		.getExamBy(cre8or_id, callback())			[Exam]
+
+QuestionManager:
+		.getQuestion(_id, callback())				Question
+		.deleteQuestion(_id)						-
+		.addQuestion(questionData, callback())		Question
+		.getAllQuestions(callback())				[Question]
+		.setQuestion(questionData)					-
+		.getQuestionBy(cre8or_id, callback())		[Question]
+
+SubmittedManager:
+		.getSubmitted(_id, callback())				Submitted
+		.deleteSubmitted(_id)						-
+		.addSubmitted(submittedData, callback())	Submitted
+		.getAllSubmitteds(callback())				[Submitted]
+		.setSubmitted(submittedData)				-
+		.getSubmittedBy(student_id, callback())		[Submitted]
+		.getNeedCorrection(callback())				[Submitted]
+
+StudentClassManager:
+		.getStudentClass(_id, callback())			StudentClass
+		.deleteStudentClass(_id)					-
+		.addStudentClass(classData, callback())		StudentClass
+		.getAllStudentClasss(callback())			[StudentClass]
+		.setStudentClass(classData)					-		

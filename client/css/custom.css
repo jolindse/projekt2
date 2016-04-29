@@ -1,9 +1,14 @@
 body, html {
     height: 100vh;
-    background: linear-gradient(rgb(238, 114, 2), rgb(161, 77, 1)) no-repeat;
+    /*background: linear-gradient(rgb(238, 114, 2), rgb(161, 77, 1)) no-repeat;
     background-size: cover;
-    -webkit-background-size: cover;
+    -webkit-background-size: cover;*/
 }
+
+.navbar-inverse {
+    background-color: rgb(238, 114, 2);
+}
+
 #header-logo {
     height: auto;
     width: 120px;

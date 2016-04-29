@@ -374,6 +374,5 @@ uat.controller('userCtrl', ['$scope','UserManager',function ($scope, UserManager
         $scope.getAllUsers();
     };
 
-
     $scope.getAllUsers();
 }]);
