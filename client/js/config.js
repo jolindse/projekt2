@@ -1,7 +1,11 @@
 /**
  * Created by Jonas on 2016-04-22.
  */
-var myApp = angular.module('myApp', ['ngRoute','datetimepicker']);
+var myApp = angular.module('myApp', [
+    'ngRoute',
+    'datetimepicker',
+    'ui.bootstrap'
+]);
 
 myApp.config(function ($routeProvider) {
     $routeProvider
@@ -50,18 +54,18 @@ myApp.config(function ($routeProvider) {
             controller: 'submittedCtrl'
         })
 
-        .when("/login", {
-            templateUrl: "partials/login.html",
-            controller: "loginCtrl"
+        .when('/login', {
+            templateUrl: 'partials/login.html',
+            controller: 'loginCtrl'
         })
 
         .when('/createexam', {
-            templateUrl: "partials/create_exam.html",
-            controller: "makeExamCtrl"
+            templateUrl: 'partials/create_exam.html',
+            controller: 'makeExamCtrl'
         })
 
         .when('/createquestion', {
-            templateUrl: "partials/create_question.html",
+            templateUrl: 'partials/create_question.html',
             controller: 'makeQuestionCtrl'
         })
 

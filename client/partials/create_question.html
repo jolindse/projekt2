@@ -1,18 +1,105 @@
+<!--
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4"></div>
+</div>
+-->
+
+
 <article class="container">
-	<div class="jumbotron">
-		<div class="row">
-			<div class="col-md-12">
-				<h1>Skapa fråga</h1>
-			</div>
-			<div class="row">
-				<div class="col-md-4"></div>
-				<div class="col-md-4">
-					<div class="input-group">
-						<span class="input-group-addon" id="qTitle">Frågetitel</span>
-						<input class="form-control" aria-describedby="qTitle" type="text" ng-model="question.title">
-					</div>
-				</div>
-				<div class="col-md-4"></div>
-			</div>
-		</div>
+    <div class="jumbotron">
+
+        <!-- Header -->
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Skapa/ändra fråga</h1>
+            </div>
+        </div>
+        <!-- Title -->
+        <div class="row">
+            <!-- Image drag and drop area -->
+            <div class="col-md-8 col-md-offset-4 input-group">
+                <input class="form-control" aria-describedby="qTitle" type="text" ng-model="question.title"
+                       placeholder="Ange eventuell frågetitel här.">
+            </div>
+        </div>
+
+        <!-- Text -->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-4 input-group">
+
+                    <textarea id="qText" class="form-control input-block-level" aria-describedby="qText" rows="5"
+                              ng-model="question.questionText" placeholder="Ange frågetexten här."></textarea>
+
+            </div>
+        </div>
+
+        <!-- Question type & points & VG question-->
+        <div class="row input-group">
+            <div class="form-group">
+                <div class="col-md-3 col-md-offset-4 form-inline">
+                    <div class="btn-group" uib-dropdown keyboard-nav>
+                        <button id="qTypeDropDown" type="button" class="btn btn-primary" uib-dropdown-toggle>
+                            {{qTypeText}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="qTypeDropDownNav">
+                            <li ng-repeat="qType in questionTypes" ng-click="pickType($index)"><a
+                                    href="">{{qType.text}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-3 form-inline">
+                    <div class="btn-group" uib-dropdown keyboard-nav>
+                        <button id="qGradeDropDown" type="button" class="btn btn-primary" uib-dropdown-toggle>
+                            {{question.vgQuestion? 'VG-fråga' : 'G-fråga'}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" uib-dropdown-menu role="menu"
+                            aria-labelledby="simple-btn-keyboard-nav">
+                            <li ng-click="question.vgQuestion=false"><a href="">G-fråga</a></li>
+                            <li ng-click="question.vgQuestion=true"><a href="">VG-fråga</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-2 form-inline">
+                    <input class="form-control" aria-describedby="qPoints" type="number" ng-model="question.points"
+                           placeholder="Poäng">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra info -->
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-4 input-group">
+
+            <input class="form-control" aria-describedby="qExtraInfo" type="text" ng-model="question.extraInfo"
+                   placeholder="Ange eventuell extra information om frågan här.">
+        </div>
+
+    </div>
+
+    <!-- Answer options -->
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+
+
+    </div>
+
+    <div ng-repeat="(key, prop) in question">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+
 </article>

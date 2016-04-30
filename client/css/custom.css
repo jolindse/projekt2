@@ -26,6 +26,11 @@ body, html {
     margin-top: 10px;
 }
 
+/* Fix for ui-bootstrap components */
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
 /*
 * USER DETAILS
 */
@@ -200,3 +205,20 @@ input[type=number]::-webkit-outer-spin-button {
 * END OF LOGIN
 */
 
+/*
+* QUESTION CREATE/EDIT
+*/
+
+#qTypeDropDown {
+    min-width: 130px;
+    max-with: 230px;
+}
+
+#qGradeDropDown {
+    min-width: 130px;
+    max-with: 230px;
+}
+
+/*
+* END OF QUESTION CREATE/EDIT
+*/
