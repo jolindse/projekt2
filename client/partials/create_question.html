@@ -38,10 +38,9 @@
         </div>
 
         <!-- Question type & points & VG question-->
-        <div class="row input-group">
-            <div class="form-group">
-                <div class="col-md-3 col-md-offset-4 form-inline">
-                    <div class="btn-group" uib-dropdown keyboard-nav>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-4 input-group">
+                    <div class="input-group-btn" uib-dropdown keyboard-nav>
                         <button id="qTypeDropDown" type="button" class="btn btn-primary" uib-dropdown-toggle>
                             {{qTypeText}} <span class="caret"></span>
                         </button>
@@ -50,11 +49,9 @@
                                     href="">{{qType.text}}</a>
                             </li>
                         </ul>
-                    </div>
                 </div>
 
-                <div class="col-md-3 form-inline">
-                    <div class="btn-group" uib-dropdown keyboard-nav>
+                    <div class="input-group-btn" uib-dropdown keyboard-nav>
                         <button id="qGradeDropDown" type="button" class="btn btn-primary" uib-dropdown-toggle>
                             {{question.vgQuestion? 'VG-fråga' : 'G-fråga'}} <span class="caret"></span>
                         </button>
@@ -63,15 +60,9 @@
                             <li ng-click="question.vgQuestion=false"><a href="">G-fråga</a></li>
                             <li ng-click="question.vgQuestion=true"><a href="">VG-fråga</a></li>
                         </ul>
-                    </div>
                 </div>
 
-                <div class="col-md-2 form-inline">
-                    <input class="form-control" aria-describedby="qPoints" type="number" ng-model="question.points"
-                           placeholder="Poäng">
 
-                </div>
-            </div>
         </div>
     </div>
 
