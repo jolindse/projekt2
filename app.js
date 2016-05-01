@@ -40,7 +40,7 @@ app.all('/*', function (req, res, next) {
     next();
 });
 
-app.use(express.static(__dirname+'/client'));
+app.use(express.static(__dirname + '/client'));
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
@@ -354,8 +354,26 @@ app.get('/api/question/images/:file', function (req, res) {
 
 // Add question
 app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
+
     var currQuestion = req.body;
-    if (currQuestion.filename != null) {
+
+    // Workaround for the multipart upload array problem.
+    var questionToFormat = req.body;
+
+    if (questionToFormat.type !== 'text') {
+        if (questionToFormat.answerOptions.text) {
+            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
+            currQuestion.answerOptions = [];
+            for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
+                currQuestion.answerOptions[i] = {
+                    text: questionToFormat.answerOptions.text[i],
+                    correct: questionToFormat.answerOptions.correct[i]
+                };
+            }
+        }
+    }
+
+    if (req.file) {
         currQuestion.imageUrl = req.file.filename;
     }
     Question.addQuestion(currQuestion, function (err, currQuestion) {
@@ -443,14 +461,14 @@ app.put('/api/submitted/:id', function (req, res) {
             res.status(404);
         } else {
             console.log('rättar');
-            correction.setExamCorrected(req.params.id, function(err) {
-               if (err) {
-                   console.log(err);
-                   res.status(404);
-               } else {
-                   console.log('Skickar');
-                   res.status(200).json('Exam updated');
-               }
+            correction.setExamCorrected(req.params.id, function (err) {
+                if (err) {
+                    console.log(err);
+                    res.status(404);
+                } else {
+                    console.log('Skickar');
+                    res.status(200).json('Exam updated');
+                }
             });
         }
     });
@@ -458,10 +476,10 @@ app.put('/api/submitted/:id', function (req, res) {
 
 // Try to autocorrect exam
 app.get('/api/submitted/autocorrect/:id', function (req, res) {
-    correction.getSubmittedAndCorrectAnswers(req, res, function(question, subExam, orgExam) {
-        correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
+    correction.getSubmittedAndCorrectAnswers(req, res, function (question, subExam, orgExam) {
+        correction.autoCorrect(question, subExam, orgExam, function (submittedExam) {
             // Update the submitted exam in db
-            Submitted.updateSubmitted(submittedExam.id, submittedExam, function() {
+            Submitted.updateSubmitted(submittedExam.id, submittedExam, function () {
                 res.json(submittedExam);
             });
         });
@@ -492,8 +510,8 @@ app.get('/api/submitted/user/:id', function (req, res) {
 });
 
 // Get all exams which needs to be corrected
-app.get('/api/submittedneedcorr/', function(req, res) {
-    Submitted.getExamsNeedCorrection(function(err, exam) {
+app.get('/api/submittedneedcorr/', function (req, res) {
+    Submitted.getExamsNeedCorrection(function (err, exam) {
         if (err) {
             res.status(404).json('No exams need correction.');
         } else {

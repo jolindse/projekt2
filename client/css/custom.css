@@ -219,6 +219,47 @@ input[type=number]::-webkit-outer-spin-button {
     max-with: 230px;
 }
 
+ul.draggableUl {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.icon-center {
+    vertical-align: middle;
+}
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: 200px;
+    height: 200px;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 25px;
+    margin: 10px;
+}
+
+.drop-box.imageUploaded {
+    background: transparent;
+    border: none;
+    width: 200px;
+    height: 200px;
+    vertical-align: middle;
+    text-align: left;
+    padding-top: 25px;
+    margin: 10px;
+}
+
+.dragover {
+    border: 5px dashed blue;
+}
+
+.previewImage {
+    max-height: 200px;
+    max-width: 200px;
+}
+
 /*
 * END OF QUESTION CREATE/EDIT
 */

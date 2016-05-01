@@ -19,11 +19,10 @@ var questionSchema = mongoose.Schema({
         required: true
     },
     type: {
-        type: String,
-        required: true
+        type: {type: String},
     },
     answerOptions: {
-        type: Array
+          type: Array
     },
     vgQuestion: {
         type: Boolean,

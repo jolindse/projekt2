@@ -4,7 +4,10 @@
 var myApp = angular.module('myApp', [
     'ngRoute',
     'datetimepicker',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ui.checkbox',
+    'ui.sortable',
+    'ngFileUpload'
 ]);
 
 myApp.config(function ($routeProvider) {
