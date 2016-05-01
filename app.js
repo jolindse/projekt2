@@ -506,7 +506,11 @@ app.get('/api/submittedneedcorr/', function(req, res) {
 // Send email
 app.post('/api/mail', function(req, res) {
     sendMail.sendMail(req.body, function(success) {
-        res.status(200).json(success);
+        if(success.success === true) {
+            res.status(200).json(success);
+        } else {
+            res.status(404).json(success);
+        }
     });
 });
 

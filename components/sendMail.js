@@ -14,13 +14,13 @@ module.exports.sendMail = function(recipients, callback) {
         secureConnection : false,
         port : 587,
         auth : {
-            user : 'mattias.larsson75@outlook.com',
-            pass : 'mus00ven'
+            user : 'newtonexam@outlook.com',
+            pass : 'N3wt0n#x4m'
         }
     });
     
     var mailOptions = {
-        from : '"Newton Testsystem" <test@newton.se>',
+        from : '"Newton Testsystem" <newtonexam@hotmail.com>',
         to : '',
         subject : 'Du har ett test att skriva',
         html : '<h1>Du har ett test att skriva</h1> ' +
