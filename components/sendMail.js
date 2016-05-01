@@ -5,9 +5,11 @@
 
 var mailer = require('nodemailer');
 var User = require('../models/User');
+var Exam = require('../models/Exam');
 
 module.exports.sendMail = function(recipients, callback) {
     var transporter = mailer.createTransport("SMTP", {
+        pool: true,
         host : "smtp-mail.outlook.com",
         secureConnection : false,
         port : 587,
@@ -16,16 +18,19 @@ module.exports.sendMail = function(recipients, callback) {
             pass : 'mus00ven'
         }
     });
-
+    
     var mailOptions = {
         from : '"Newton Testsystem" <test@newton.se>',
         to : '',
         subject : 'Du har ett test att skriva',
         html : '<h1>Du har ett test att skriva</h1> ' +
-        'Klicka på <a href="länk till testet">länken</a> för att komma dit'
+        'Var vänlig och logga in på <a href="http://localhost:3000">testportalen</a>' +
+        ' för att se vilka test som finns tillgängliga för dig.'
     }
     
+    
     var recMail = [];
+    
     recipients.rec.forEach(function(rec) {
         User.getUser(rec, function(err, user) {
             recMail.push(user.email);
