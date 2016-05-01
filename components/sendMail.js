@@ -27,21 +27,22 @@ module.exports.sendMail = function(recipients, callback) {
         'Var vänlig och logga in på <a href="http://localhost:3000">testportalen</a>' +
         ' för att se vilka test som finns tillgängliga för dig.'
     }
-    
-    
+
     var recMail = [];
-    
-    recipients.rec.forEach(function(rec) {
-        User.getUser(rec, function(err, user) {
+    var recArray = [].concat(recipients.rec);
+    recArray.forEach(function (rec) {
+        User.getUser(rec, function (err, user) {
             recMail.push(user.email);
-            if (recMail.length === recipients.rec.length) {
+            if (recMail.length === recArray.length) {
                 mailOptions.to = recMail;
-                transporter.sendMail(mailOptions, function(err, info) {
+                transporter.sendMail(mailOptions, function (err, info) {
                     if (err) {
                         console.log(err);
-                        callback({success: false});
+                        callback({
+                            success: false,
+                            error: err
+                        });
                     } else {
-                        console.log('Meddelande sänt');
                         callback({success: true});
                     }
                 });
