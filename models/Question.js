@@ -19,7 +19,7 @@ var questionSchema = mongoose.Schema({
         required: true
     },
     type: {
-        type: {type: String},
+        type: String,
     },
     answerOptions: {
           type: Array

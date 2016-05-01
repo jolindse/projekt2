@@ -2,7 +2,7 @@
  * Created by Johan on 2016-04-29.
  */
 
-myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService', 'Upload','APIBASEURL', function ($scope, QuestionManager, userService, Upload, APIBASEURL) {
+myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService', 'Upload', 'APIBASEURL', function ($scope, QuestionManager, userService, Upload, APIBASEURL) {
 
     // FUNCTIONS
 
@@ -34,6 +34,7 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
             current: '',
             latest: ''
         };
+        $scope.pickType(0);
     };
 
     $scope.removeAnswer = function () {
@@ -75,10 +76,15 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
         $scope.okForm = true;
 
         // Check that a question text is present.
-        if ($scope.question.questionText === '') {
-            $scope.qTextError = 'En frågetext är nödvändig.';
+        if ($scope.question.questionText) {
+            if ($scope.question.questionText === '') {
+                $scope.qTextError = 'En frågetext är nödvändig.';
+                $scope.okForm = false;
+            }
+        } else {
             $scope.okForm = false;
         }
+        $scope.qTextError = '';
 
         // Check that the multi/single/rank-questions have answers.
         if ($scope.question.type !== 'text') {
@@ -98,12 +104,13 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
                         $scope.okForm = false;
                         $scope.qAnswersError = 'Ett riktigt svar måste anges.'
                     }
+                    $scope.qAnswersError = '';
                 }
             }
         }
 
         // Add cre8or to question
-        //$scope.question.cre8or = userService.id;
+        $scope.question.cre8or = userService.id;
 
 
         if ($scope.okForm) {
@@ -112,12 +119,10 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
                 if ($scope.question.hasOwnProperty(property)) {
                     if (property === "") {
                         if (property !== 'answerOptions')
-                        delete $scope.question.property;
+                            delete $scope.question.property;
                     }
                 }
             }
-
-            console.log(JSON.stringify($scope.question));
 
             // Upload using multipart if image file is present.
             if ($scope.questionImage !== '') {
@@ -134,18 +139,16 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
 
                 // Upload complete
                 uploadForm.success(function (data, status, headers, config) {
-                    console.log('Upload complete. Response data: ' + JSON.stringify(data));
-                })
+                    $scope.question = data;
+                    QuestionManager.setQuestion($scope.question);
+                });
             } else {
                 // Standard add question to database.
-                console.log('Trying to post standard question (no image). Data: ' + JSON.stringify($scope.question));
                 QuestionManager.addQuestion($scope.question, function (data) {
                     $scope.question = data;
-                    console.log('Added Q no-image: ' + JSON.stringify($scope.question));
-                })
+                });
             }
         }
-
     };
 
     // Standard actions
@@ -187,7 +190,6 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
             text: 'Rangordning',
             value: 'rank'
         }];
-
 
 
     $scope.newQuestion();

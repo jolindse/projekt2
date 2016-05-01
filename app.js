@@ -114,7 +114,6 @@ app.put('/api/user/:id', function (req, res) {
 // Log in
 app.post('/api/user/login/:id', function (req, res) {
     var id = req.params.id;
-    console.log(req.body.password);
     User.loginUser(id, function (err, user) {
         if (err) {
             res.status(405).json({login: false, message: 'Error connecting to db'});
@@ -271,7 +270,6 @@ app.put('/api/exam/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated user');
             res.status(200).json(updatedExam);
         }
 
@@ -393,7 +391,6 @@ app.put('/api/question/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('Updated question');
             res.status(200).json(updatedQuestion);
         }
     });
@@ -466,7 +463,6 @@ app.put('/api/submitted/:id', function (req, res) {
                     console.log(err);
                     res.status(404);
                 } else {
-                    console.log('Skickar');
                     res.status(200).json('Exam updated');
                 }
             });
