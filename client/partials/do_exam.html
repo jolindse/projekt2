@@ -1,46 +1,89 @@
 <article class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <p>Fråga {{qIndex+1}} av {{questions.length}}</p>
+        </div>
+        <div class="col-md-8">
+            <!-- Circles representing questions -->
+        </div>
+        <div class="col-md-2 text-right">
+            <button class="btn btn-primary btn-lg">Lämna in <span class="glyphicon glyphicon-arrow-up"></span></button>
+        </div>
+    </div>
+
     <div class="jumbotron">
         <!-- Title -->
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
-                <!-- Display question title -->
+                <h1>{{currQuestion.title}}</h1>
             </div>
         </div>
 
         <!-- Question text -->
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
-                <!-- Display question text -->
+                <p>{{currQuestion.questionText}}</p>
             </div>
         </div>
 
         <!-- Question multi/single input -->
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-
+        <div ng-show="currQuestion.type === 'multi' || currQuestion.type === 'single'" class="row">
+            <div ng-repeat="currAnswer in currQuestion.answerOptions track by $index">
+                <div class="form-group">
+                    <div class="col-md-7 col-md-offset-2 text-left">
+                        <p>{{currAnswer.text}}</p>
+                    </div>
+                    <div class="col-md-1">
+                        <checkbox large ng-change="checkboxChange($index)"
+                                  ng-model="currSubmittedAnswer.checked[$index]"></checkbox>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Question rank input -->
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-
+        <div ng-show="currQuestion.type === 'rank'" class="row">
+            <div class="col-md-offset-2 col-md-8 form-group">
+                <div ng-repeat="currAnswer in currQuestion.answerOptions track by $index">
+                    {{currAnswer.text}}
+                </div>
             </div>
         </div>
 
         <!-- Question text input -->
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-
+        <div ng-show="currQuestion.type === 'text'" class="row">
+            <div class="col-md-offset-2 col-md-8 form-group">
+                <textarea class="form-control" placeholder="Skriv ditt svar här"></textarea>
             </div>
         </div>
-
-        <!-- Button back/front and time -->
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-
-            </div>
+    </div>
+    <!-- Button back/front and time -->
+    <div class="row">
+        <div class="col-md-2 text-left">
+            <button ng-show="hasPreviousQ" class="btn btn-primary btn-lg" ng-click="previousQuestion()"><p><span
+                    class="glyphicon glyphicon-circle-arrow-left"></span>
+                Tillbaka</p></button>
         </div>
-
+        <div class="col-md-8">
+            <!-- Time -->
+        </div>
+        <div class="col-md-2 text-right">
+            <button ng-show="hasNextQ" class="btn btn-primary btn-lg" ng-click="nextQuestion()"><p>Nästa <span
+                    class="glyphicon glyphicon-circle-arrow-right"></span>
+            </p></button>
+        </div>
+    </div>
+    qIndex: {{qIndex}}<br/>
+    currSubmittedAnswer:<bn/>
+    <div ng-repeat="(key, prop) in currSubmittedAnswer">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    currQuestion:<br/>
+    <div ng-repeat="(key, prop) in currQuestion">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    currExam:<br/>
+    <div ng-repeat="(key, prop) in currExam">
+        <tt>{{key}} : {{prop}}</tt>
     </div>
 </article>

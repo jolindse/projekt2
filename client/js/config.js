@@ -37,6 +37,11 @@ myApp.config(function ($routeProvider) {
             controller: 'userDetailCtrl'
         })
 
+        .when('/doexam', {
+            templateUrl: 'partials/do_exam.html',
+            controller: 'doExamCtrl'
+        })
+
         .when('/class', {
             templateUrl: 'partials/class.html',
             controller: 'classCtrl'

@@ -1,8 +1,10 @@
 body, html {
-    height: 100vh;
+    /*height: 100vh;
     background: linear-gradient(rgb(238, 114, 2), rgb(161, 77, 1)) no-repeat;
     background-size: cover;
     -webkit-background-size: cover;
+    */
+    background-color: white;
 }
 
 .navbar-inverse {
@@ -68,7 +70,6 @@ checkbox:focus {
     outline: none;
     background-color: inherit;
 }
-
 
 /*
 * END OF COMMON ELEMENT STYLING
