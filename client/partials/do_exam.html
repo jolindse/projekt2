@@ -44,9 +44,16 @@
         <!-- Question rank input -->
         <div ng-show="currQuestion.type === 'rank'" class="row">
             <div class="col-md-offset-2 col-md-8 form-group">
-                <div ng-repeat="currAnswer in currQuestion.answerOptions track by $index">
-                    {{currAnswer.text}}
-                </div>
+                    <ul class="draggableUl" ui-sortable ng-model="question.answerOptions">
+                        <li ng-repeat="currAnswer in currQuestion.answerOptions track by $index">
+                            <div class="input-group">
+                                    <span class="input-group-addon"><label for="{{'qAnswerRankOption'+$index}}"
+                                                                           class="control-label">{{$index+1}}</label></span>
+                                <input id="{{'qAnswerRankOption'+$index}}" type="text" class="form-control"
+                                       ng-model="currSubmittedAnswer.rank" value="{{currAnswer.txt}}" readonly>
+                            </div>
+                        </li>
+                    </ul>
             </div>
         </div>
 
@@ -74,7 +81,7 @@
         </div>
     </div>
     qIndex: {{qIndex}}<br/>
-    currSubmittedAnswer:<bn/>
+    currSubmittedAnswer:<br/>
     <div ng-repeat="(key, prop) in currSubmittedAnswer">
         <tt>{{key}} : {{prop}}</tt>
     </div>

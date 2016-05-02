@@ -1,0 +1,35 @@
+<article class="container">
+
+    <div class="alert alert-info">
+        <p>Sort Type: {{ sortType }}</p>
+        <p>Sort Reverse: {{ sortReverse }}</p>
+        <p>Search Query: {{ searchFish }}</p>
+    </div>
+
+    <table class="table table-bordered table-striped">
+
+        <thead>
+        <tr>
+            <td>
+                Sushi Roll
+            </td>
+            <td>
+                Fish Type
+            </td>
+            <td>
+                Taste Level
+            </td>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="roll in sushi">
+            <td>{{ roll.name }}</td>
+            <td>{{ roll.fish }}</td>
+            <td>{{ roll.tastiness }}</td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</article>

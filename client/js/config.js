@@ -27,6 +27,21 @@ myApp.config(function ($routeProvider) {
             controller: 'adminCtrl'
         })
 
+        .when('/adminExams', {
+            templateUrl: 'partials/admin_exams.html',
+            controller: 'adminCtrl'
+        })
+
+        .when('/adminUsers', {
+            templateUrl: 'partials/admin_users.html',
+            controller: 'adminCtrl'
+        })
+
+        .when('/userTable', {
+            templateUrl: 'partials/usertable.html',
+            controller: 'adminCtrl'
+        })
+
         .when('/home', {
             templateUrl: 'partials/home.html',
             controller: 'homeCtrl'
