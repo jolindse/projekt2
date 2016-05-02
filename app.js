@@ -18,9 +18,11 @@ var bodyParser = require('body-parser');
 var db = require('./components/db');
 var multer = require('multer');
 var path = require('path');
+
+// Components import
 var correction = require('./components/correction');
 var sendMail = require('./components/sendMail');
-
+var stat = require('./components/statistics');
 
 // Models import
 var User = require('./models/User');
@@ -524,6 +526,34 @@ app.post('/api/mail', function(req, res) {
         }
     });
 });
+
+// Send password to user
+app.post('/api/sendpass', function(req, res) {
+   sendMail.sendPassword(req.body.id, function(success) {
+      if(success.success === true) {
+          res.status(200).json(success);
+      } else {
+          res.status(404).json(success);
+      }
+   });
+});
+
+/*
+---------------------------------
+            STATISTICS
+---------------------------------
+*/
+
+app.post('/api/statistics', function(req, res) {
+    stat.statistics(req, function(returnObject) {
+        if(returnObject.success === true) {
+            res.status(200).json(returnObject);
+        } else if(returnObject.success === false) {
+            res.status(404).json(returnObject);
+        }
+    });
+});
+
 
 // Start listening and log start.
 var listener = app.listen(3000, function () {

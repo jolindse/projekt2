@@ -35,6 +35,7 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/submitted/needcorr     GET     -           [submitted]         Gets all exams which needs to be corrected
 
 /api/mail                   POST    [id]        success:boolean     Expects an array with user id's, returns boolean
+/api/sendpass               POST    id          success:boolean     Sends login and password to user. Expects a user's loginId
 
 all (id) except for the login one refers to MongoDB _id.
 
