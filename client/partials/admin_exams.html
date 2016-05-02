@@ -77,11 +77,11 @@
                     </thead>
 
                     <tbody>
-                    <tr ng-repeat="user in users | orderBy:sortType:sortReverse | filter:searchUser">
-                        <td><input type="checkbox" ng-model="checkboxes.id[user._id]"/></td>
-                        <td>{{user.firstName}}</td>
-                        <td>{{user.surName}}</td>
-                        <td></td>
+                    <tr ng-repeat="user in selectedStudents | orderBy:sortType:sortReverse | filter:searchUser">
+                        <td><input type="checkbox" ng-model="user.selected"/></td>
+                        <td>{{user.user.firstName}}</td>
+                        <td>{{user.user.surName}}</td>
+                        <td>{{user.studentClass}}</td>
 
                     </tr>
                     </tbody>

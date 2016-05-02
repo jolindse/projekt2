@@ -137,55 +137,97 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
 myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager, ExamManager, userService) {
     userService.updateNavbar();
 
-    //User:
+    //Current user:
     $scope.user = "";
 
-    //Testtable:
+    //All exams:
     $scope.tests = [];
+
+    //The selected exam (for sharing):
     $scope.selectedTest = "";
 
     //Usertable:
     $scope.users = [];
+
+    //All studentclasses:
     $scope.studentClasses = [];
+
+    //Array holding students, studentclasses and a boolean if selected or not in the table:
+    $scope.selectedStudents = [];
+
+    //For sorting the usertable when sharing an exam:
     $scope.sortType     = 'name';
     $scope.sortReverse  = false;
     $scope.searchUser   = '';
 
-    //Sharetest-modal:
-    $scope.checkboxes = {
-        'checked': false,
-        id: {}
-    };
-
-
+    //Get the user who has logged in:
     UserManager.getUser(userService.id, function (data) {
         $scope.user = data;
     });
 
+    //Get all users (shows in table):
     UserManager.getAllUsers(function (data) {
         $scope.users = data;
+
+        //Loop trough users and add to the array "selectedStudents":
+        $scope.users.forEach(function (student) {
+            $scope.selectedStudents.push(
+                {
+                    user: student,
+                    studentClass: "",
+                    selected: false
+                }
+            )
+        });
+
+        //Get all studentClasses:
+        StudentClassManager.getAllStudentClasses(function (data) {
+            $scope.studentClasses = data;
+
+            //Add classes to the array "selectedStudents":
+            $scope.selectedStudents.forEach(function (student) {
+                $scope.studentClasses.forEach(function (studentClass) {
+                    studentClass.students.forEach(function (studentId) {
+                        if (student.user._id == studentId){
+                            student.studentClass = studentClass.name;
+                        }
+                    })
+                })
+
+            });
+        });
     });
 
-    StudentClassManager.getAllStudentClasses(function (data) {
-        $scope.studentClasses = data;
-        console.log($scope.studentClasses[0].students);
-    });
-
+    //Get all exams:
     ExamManager.getAllExams(function (test) {
         $scope.tests = test;
     });
 
+    //Get selected exam when sharing an exam:
     $scope.selectExam = function (data) {
         ExamManager.getExam(data._id, function (data) {
             $scope.selectedTest = data;
         });
     };
 
+    //Listener for the button "share exam":
     $scope.shareExam = function () {
-        console.log($scope.checkboxes);
+        console.log($scope.selectedStudents);
 
+        //Loop trough the array selectedStudents:
+        $scope.selectedStudents.forEach(function (student) {
+
+            //If the variable "selected" is true, then the student was selected in the list:
+           if (student.selected == true) {
+
+               //Push to the array "testToTake" and update the student in the database:
+               student.user.testToTake.push($scope.selectedTest._id);
+               UserManager.setUser(student);
+           }
+        });
     };
 
+    //Selected row in table:
     $('.table').on('click', '.clickable-row', function() {
         if($(this).hasClass('active-row')){
             $(this).removeClass('active-row');
@@ -193,8 +235,6 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
             $(this).addClass('active-row').siblings().removeClass('active-row');
         }
     });
-
-
 });
 
 /**
