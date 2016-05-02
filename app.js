@@ -119,15 +119,12 @@ app.post('/api/user/login/:id', function (req, res) {
         if (err) {
             res.status(405).json({login: false, message: 'Error connecting to db'});
         } else {
-
             if (user != null) {
-
                 if (user.password === req.body.password) {
                     res.status(200).json({login: true, user: user});
                 } else {
                     res.status(405).json({login: false, message: 'Kontrollera användarnamn och lösenord'});
                 }
-
             }
             else {
                 res.status(405).json({login: false, message: 'Hittar inte användarnamnet.'});
