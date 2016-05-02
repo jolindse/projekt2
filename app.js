@@ -42,6 +42,8 @@ app.all('/*', function (req, res, next) {
 });
 
 app.use(express.static(__dirname + '/client'));
+app.use(express.static(__dirname + '/questionImages'));
+
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));
@@ -346,11 +348,6 @@ app.get('/api/question/:id', function (req, res) {
     });
 });
 
-// Get image (filename)
-app.get('/api/question/images/:file', function (req, res) {
-    res.send(path.join('../../questionImages', req.params.file));
-});
-
 // Add question
 app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
 
@@ -518,9 +515,9 @@ app.get('/api/submittedneedcorr/', function (req, res) {
 });
 
 // Send email
-app.post('/api/mail', function(req, res) {
-    sendMail.sendMail(req.body, function(success) {
-        if(success.success === true) {
+app.post('/api/mail', function (req, res) {
+    sendMail.sendMail(req.body, function (success) {
+        if (success.success === true) {
             res.status(200).json(success);
         } else {
             res.status(404).json(success);

@@ -98,3 +98,5 @@ myApp.run(function($rootScope, $location) {
         }
     });
 });
+
+myApp.constant('APIBASEURL', 'http://localhost:3000');

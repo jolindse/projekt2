@@ -1,7 +1,7 @@
 /**
  * Created by Johan on 2016-05-01.
  */
-myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'SubmittedManager', 'QuestionManager', function ($scope, userService, ExamManager, SubmittedManager, QuestionManager) {
+myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'SubmittedManager', 'QuestionManager','APIBASEURL', function ($scope, userService, ExamManager, SubmittedManager, QuestionManager,APIBASEURL) {
 
     /*
      FUNCTIONS
@@ -45,6 +45,9 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
         }
     };
 
+    /*
+    Sets 
+     */
     $scope.setNextPrev = function () {
         if ($scope.qIndex === $scope.currExam.questions.length - 1) {
             $scope.hasNextQ = false;
@@ -59,6 +62,9 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
         }
     };
 
+    /*
+    Make sure rank-questions have all answers.
+     */
     $scope.setupRanking = function() {
         // If first time this question is being displayed make a copy of the answers.
         if ($scope.currSubmitted.answers[$scope.qIndex].text.length < 1){
@@ -74,8 +80,11 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
             $scope.currSubmitted.answers[$scope.qIndex].text[j] = temp;
         }
 
-    }
-
+    };
+    
+    /*
+    Get next question
+     */
     $scope.nextQuestion = function () {
         if ($scope.qIndex < $scope.currExam.questions.length) {
             $scope.qIndex++;
@@ -89,6 +98,9 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
         }
     };
 
+    /*
+    Get previous question
+     */
     $scope.previousQuestion = function () {
         if ($scope.qIndex >= 0) {
             $scope.qIndex--;
@@ -100,6 +112,10 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
             });
             $scope.setNextPrev();
         }
+    };
+    
+    $scope.submitExam = function() {
+        // SUBMIT
     };
 
     /*

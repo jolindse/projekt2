@@ -6,13 +6,13 @@ SERVER:
 FRONTEND:
 
 * Question-creation/editing
-
+- Error messages
 - Deletea svarsalternativ.
-- Drag-n-drop bilder.
-- Validering innan postning.
-	- om fritext -> answerOption = [];
-	- om flerval/enkelval -> kolla att något alternativ är valt.
+- Update question
 
 * Exam-taking routine
+* Nolla svarsalternativ vid inlämning där studenten inte svarat.
+* Timer
 
 
+* stylea answerOptions css
