@@ -19,6 +19,7 @@ var db = require('./components/db');
 var multer = require('multer');
 var path = require('path');
 var correction = require('./components/correction');
+var sendMail = require('./components/sendMail');
 
 
 // Models import
@@ -512,6 +513,17 @@ app.get('/api/submittedneedcorr/', function (req, res) {
             res.status(404).json('No exams need correction.');
         } else {
             res.status(200).json(exam);
+        }
+    });
+});
+
+// Send email
+app.post('/api/mail', function(req, res) {
+    sendMail.sendMail(req.body, function(success) {
+        if(success.success === true) {
+            res.status(200).json(success);
+        } else {
+            res.status(404).json(success);
         }
     });
 });
