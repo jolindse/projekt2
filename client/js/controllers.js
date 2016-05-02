@@ -45,7 +45,6 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
                 if (errormessage.responseJSON.message == "Kontrollera användarnamn och lösenord"){
                     counter++;
                 }
-                console.log(counter);
                 if (counter == 3){
                     $scope.loginError = false;
                     $scope.sendPasswordBtn = true;
@@ -123,7 +122,6 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
         $scope.user.testToTake.forEach(function(testId) {
             ExamManager.getExam(testId, function (test) {
                 $scope.tests.push(test);
-                console.log(test);
             });
         });
     });
@@ -178,7 +176,6 @@ myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
 
     $scope.updateUser = function () {
         UserManager.setUser($scope.user);
-        console.log("hej");
     };
 
 });

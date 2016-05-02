@@ -1,8 +1,18 @@
-API:
-
-* Get all tests that needs correction.
-
 SERVER:
 
-* Auto correction routines.
+* Delete student crashes when iterating over submitted array.
+* Delete class with all students crash -> same issue.
+
+FRONTEND:
+
+* Question-creation/editing
+
+- Deletea svarsalternativ.
+- Drag-n-drop bilder.
+- Validering innan postning.
+	- om fritext -> answerOption = [];
+	- om flerval/enkelval -> kolla att något alternativ är valt.
+
+* Exam-taking routine
+
 
