@@ -146,10 +146,17 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
 
     //Usertable:
     $scope.users = [];
-    $scope.classes = [];
+    $scope.studentClasses = [];
     $scope.sortType     = 'name';
     $scope.sortReverse  = false;
     $scope.searchUser   = '';
+
+    //Sharetest-modal:
+    $scope.checkboxes = {
+        'checked': false,
+        id: {}
+    };
+
 
     UserManager.getUser(userService.id, function (data) {
         $scope.user = data;
@@ -160,7 +167,8 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
     });
 
     StudentClassManager.getAllStudentClasses(function (data) {
-       $scope.classes = data;
+        $scope.studentClasses = data;
+        console.log($scope.studentClasses[0].students);
     });
 
     ExamManager.getAllExams(function (test) {
@@ -168,17 +176,17 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
     });
 
     $scope.selectExam = function (data) {
-        console.log(data._id);
         ExamManager.getExam(data._id, function (data) {
             $scope.selectedTest = data;
         });
     };
 
     $scope.shareExam = function () {
+        console.log($scope.checkboxes);
 
     };
 
-    $('#examTable').on('click', '.clickable-row', function() {
+    $('.table').on('click', '.clickable-row', function() {
         if($(this).hasClass('active-row')){
             $(this).removeClass('active-row');
         } else {

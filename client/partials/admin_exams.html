@@ -50,9 +50,14 @@
                     </div>
                 </form>
 
-                <table class="table table-hover">
+                <table class="table">
                     <thead class="thead">
                     <tr>
+                        <th ng-click="sortType = 'checked'; sortReverse = !sortReverse">
+                            Markera
+                            <span ng-show="sortType == 'checked' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'checked' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
                         <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
                             Förnamn
                             <span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
@@ -73,9 +78,11 @@
 
                     <tbody>
                     <tr ng-repeat="user in users | orderBy:sortType:sortReverse | filter:searchUser">
-                        <td>{{ user.firstName }}</td>
-                        <td>{{ user.surName }}</td>
-                        <td>{{ user.admin }}</td>
+                        <td><input type="checkbox" ng-model="checkboxes.id[user._id]"/></td>
+                        <td>{{user.firstName}}</td>
+                        <td>{{user.surName}}</td>
+                        <td></td>
+
                     </tr>
                     </tbody>
 
@@ -83,7 +90,9 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+                <button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal">Dela</button>
+
             </div>
         </div>
 

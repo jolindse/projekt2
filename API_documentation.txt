@@ -11,7 +11,6 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/user/login/(id)		POST	user.id		login:bool		    Login, returns true or false
 
 
-
 /api/exam					GET 	- 			[exam]			    Gets ALL exams
 /api/exam 					POST 	exam 		-				    Adds a exam
 /api/exam/(id)				PUT 	exam 		- 				    Updates a exam
