@@ -7,6 +7,9 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
      FUNCTIONS
      */
 
+    /*
+    Init exam and set up submit object.
+     */
     $scope.startExam = function (id) {
         // Get current exam
         ExamManager.getExam(id, function (data) {
@@ -30,6 +33,9 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
         });
     };
 
+    /*
+    Select and save answer to questions of multi and single type
+     */
     $scope.selectAnswer = function (index) {
         if ($scope.currQuestion.type === 'single') {
             $scope.currSubmitted.answers[$scope.qIndex].text[0] = $scope.currQuestion.answerOptions[index].text;
@@ -46,23 +52,6 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
     };
 
     /*
-    Sets 
-     */
-    $scope.setNextPrev = function () {
-        if ($scope.qIndex === $scope.currExam.questions.length - 1) {
-            $scope.hasNextQ = false;
-        } else {
-            $scope.hasNextQ = true;
-        }
-
-        if ($scope.qIndex === 0) {
-            $scope.hasPreviousQ = false;
-        } else {
-            $scope.hasPreviousQ = true;
-        }
-    };
-
-    /*
     Make sure rank-questions have all answers.
      */
     $scope.setupRanking = function() {
@@ -71,15 +60,14 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
             $scope.currQuestion.answerOptions.forEach(function(data){
                 $scope.currSubmitted.answers[$scope.qIndex].text.push(data.text);
             });
+            // Randomize the order of the answers.
+            for (var i = $scope.currSubmitted.answers[$scope.qIndex].text.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = $scope.currSubmitted.answers[$scope.qIndex].text[i];
+                $scope.currSubmitted.answers[$scope.qIndex].text[i] = $scope.currSubmitted.answers[$scope.qIndex].text[j];
+                $scope.currSubmitted.answers[$scope.qIndex].text[j] = temp;
+            }
         }
-        // Randomize the order of the answers.
-        for (var i = $scope.currSubmitted.answers[$scope.qIndex].text.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = $scope.currSubmitted.answers[$scope.qIndex].text[i];
-            $scope.currSubmitted.answers[$scope.qIndex].text[i] = $scope.currSubmitted.answers[$scope.qIndex].text[j];
-            $scope.currSubmitted.answers[$scope.qIndex].text[j] = temp;
-        }
-
     };
     
     /*
@@ -94,7 +82,6 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
                     $scope.setupRanking();
                 }
             });
-            $scope.setNextPrev();
         }
     };
 
@@ -110,7 +97,6 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
                     $scope.setupRanking();
                 }
             });
-            $scope.setNextPrev();
         }
     };
     
@@ -129,12 +115,6 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
     $scope.currQuestion = '';
     $scope.currSubmitted = '';
 
-    $scope.startExam('572657c22e854865189929c6');
-
-/*    $scope.startExam('572657c22e854865189929c6', function () {
-        QuestionManager.getQuestion($scope.currExam.questions[$scope.qIndex], function (data) {
-            $scope.currQuestion = data;
-        });
-    });*/
+    $scope.startExam(userService.currentExam);
 
 }]);
