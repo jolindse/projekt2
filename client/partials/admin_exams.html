@@ -1,0 +1,91 @@
+<article class="container">
+    <div class="jumbotron">
+        <h1 class="display-3">Prov</h1>
+        <p class="lead">Det finns för tillfället {{tests.length}}st prov.</p>
+        <hr class="m-y-2">
+
+        <table class="table" id="examTable">
+            <thead class="thead">
+            <tr>
+                <th>Ämne</th>
+                <th>Provnamn</th>
+                <th>Tid</th>
+                <th>Maxpoäng</th>
+                <th>Tillgänglig</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="test in tests">
+            <tr ng-click="selectExam(tests[$index])" class="clickable-row">
+                <td>{{test.subject}}</td>
+                <td>{{test.title}}</td>
+                <td>{{test.time}}</td>
+                <td></td>
+                <td>{{test.interval[0]}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
+    </div>
+</article>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Dela provet {{selectedTest.title}} till:</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+
+                            <input type="text" class="form-control" placeholder="Filtrera användare" ng-model="searchUser">
+
+                        </div>
+                    </div>
+                </form>
+
+                <table class="table table-hover">
+                    <thead class="thead">
+                    <tr>
+                        <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
+                            Förnamn
+                            <span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'firstName' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'surName';  sortReverse = !sortReverse">
+                            Efternamn
+                            <span ng-show="sortType == 'surName' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'surName' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'studentClass';  sortReverse = !sortReverse">
+                            Klass
+                            <span ng-show="sortType == 'studentClass' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'studentClass' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat="user in users | orderBy:sortType:sortReverse | filter:searchUser">
+                        <td>{{ user.firstName }}</td>
+                        <td>{{ user.surName }}</td>
+                        <td>{{ user.admin }}</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -126,27 +126,73 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
         });
     });
 
-
-
-
-
-
-
-
+    $scope.selectExam = function (data) {
+        console.log(data);
+    }
 });
 
 /**
  * ADMIN-CONTROLLER:
  */
-myApp.controller('adminCtrl', function ($scope, userService) {
-    $scope.name = userService.firstName;
+myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager, ExamManager, userService) {
     userService.updateNavbar();
+
+    //User:
+    $scope.user = "";
+
+    //Testtable:
+    $scope.tests = [];
+    $scope.selectedTest = "";
+
+    //Usertable:
+    $scope.users = [];
+    $scope.classes = [];
+    $scope.sortType     = 'name';
+    $scope.sortReverse  = false;
+    $scope.searchUser   = '';
+
+    UserManager.getUser(userService.id, function (data) {
+        $scope.user = data;
+    });
+
+    UserManager.getAllUsers(function (data) {
+        $scope.users = data;
+    });
+
+    StudentClassManager.getAllStudentClasses(function (data) {
+       $scope.classes = data;
+    });
+
+    ExamManager.getAllExams(function (test) {
+        $scope.tests = test;
+    });
+
+    $scope.selectExam = function (data) {
+        console.log(data._id);
+        ExamManager.getExam(data._id, function (data) {
+            $scope.selectedTest = data;
+        });
+    };
+
+    $scope.shareExam = function () {
+
+    };
+
+    $('#examTable').on('click', '.clickable-row', function() {
+        if($(this).hasClass('active-row')){
+            $(this).removeClass('active-row');
+        } else {
+            $(this).addClass('active-row').siblings().removeClass('active-row');
+        }
+    });
+
+
 });
 
 /**
  * USERDETAIL-CONTROLLER:
  */
-myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
+myApp.controller('userDetailCtrl', function ($scope, $route, UserManager, userService) {
     $scope.user = "";
 
     $scope.firstNameDisabled = true;
@@ -176,6 +222,7 @@ myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
 
     $scope.updateUser = function () {
         UserManager.setUser($scope.user);
+        $route.reload();
     };
 
 });

@@ -15,7 +15,7 @@
             </tr>
             </thead>
             <tbody ng-repeat="test in tests">
-            <tr class="clickable-row">
+            <tr ng-click="selectExam(tests[$index])">
                 <td>{{test.subject}}</td>
                 <td>{{test.title}}</td>
                 <td>{{test.time}}</td>

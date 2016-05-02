@@ -7,6 +7,10 @@ body, html {
     background-color: white;
 }
 
+.active-row {
+    background-color: #337AB7;
+}
+
 .navbar-inverse {
     background-color: black;
     /*background-color: rgb(238, 114, 2);*/
@@ -43,6 +47,10 @@ body, html {
 
 .panel-body {
     padding-left: 0;
+}
+
+input {
+  width: 80%;
 }
 
 .table tbody tr.highlight td {
