@@ -343,7 +343,7 @@ ul.draggableUl {
     padding: 10px;
     border: 1px solid rgb(200,200,200);
     border-radius: 4px;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
 }
 
 .answerOptions.ranking {
