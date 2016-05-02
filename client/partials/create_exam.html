@@ -29,32 +29,42 @@
             <div class="col-md-4">
                 <div class="input-group">
                 <span class="input-group-addon" id="basic-addon3">Provlängd</span>
-                <input class="form-control" aria-describedby="basic-addon3" type="number" ng-model="exam.time">
+                <input class="form-control" placeholder="Minuter" aria-describedby="basic-addon3" type="number" ng-model="exam.time">
                 </div>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4"></div>
         </div>
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-4">
+            <div class="input-group">
+               <span class="input-group-addon">Start Datum</span>
            <input type="text" class="form-control input-sm"
                    datetimepicker
                    datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
                    placeholder="..."
                    name="startTime"
                    ng-model="exam.interval[0]">
-        </div>
-        <div class="col-md-2">
-            <input type="text" class="form-control input-sm"
-                   datetimepicker
-                   datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
-                   placeholder="..."
-                   name="stopTime"
-                   ng-model="exam.interval[1]">
+            </div>
         </div>
         <div class="col-md-4"></div>
         <div class="col-md-4"></div>
     </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-addon">Slut Datum</span>
+                <input type="text" class="form-control input-sm"
+                       datetimepicker
+                       datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
+                       placeholder="..."
+                       name="stopTime"
+                       ng-model="exam.interval[1]">
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+        </div>
     <div class="row">
         <div class="col-md-4">
             <label>
@@ -71,9 +81,9 @@
     </div>
         <div class="row">
             <div class="col-md-4">
-                <input type="number" ng-model="exam.gradePercentage[0]">
+                <input class="procentInput" type="number" ng-model="exam.gradePercentage[0]">
                     Procentgräns för G
-                <input type="number" ng-model="exam.gradePercentage[1]">
+                <input class="procentInput" type="number" ng-model="exam.gradePercentage[1]">
                     Procentgräns för VG
             </div>
             <div class="col-md-4"></div>

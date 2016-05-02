@@ -1,4 +1,33 @@
-<article id="class">
-
-
+<article class="container">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Skolklasser</h1>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h1>Användare</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-addon" id="foreName">Klassnamn</span>
+                    <input class="form-control" aria-describedby="foreName" type="text" ng-model="class.name" >
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <button ng-click="saveSchoolClass">Spara Skolklass</button>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+    <div ng-repeat="(key, prop) in class">
+        <tt>{{key}}; {{prop}}</tt>
+    </div>
 </article>
