@@ -83,7 +83,6 @@ module.exports.statistics = function(req, callback) {
                                                 }
                                             });
                                         });
-                                        
                                     }
                                 }
                             });
@@ -92,6 +91,10 @@ module.exports.statistics = function(req, callback) {
                 }
             });
             break;
+        case 'class':
+            
+            
+            
         
     }
 }
