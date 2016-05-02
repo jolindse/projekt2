@@ -1,0 +1,167 @@
+<article class="container">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Skolklasser</h1>
+            </div>
+            <div class="col-md-8">
+                <h1>Användare</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Skolklasser</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="class in classes">
+                            <tr>
+                                <th>{{class.name}}</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-success" id="newClassModal">Skapa ny klass</button>
+            </div>
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Personnummer</th>
+                                <th>Förnamn</th>
+                                <th>Efternamn</th>
+                                <th>Användarnamn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Kiss</th>
+                                <th>Bajs</th>
+                                <th>hare</th>
+                                <th>Kanin</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-success" id="newStudentModal">Lägg till elev</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="modal" id="createStudentModal">
+            <div class="modal-content">
+                <span class="close">x</span>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-condensed table-responsive table-user-information">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            Förnamn:
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <input ng-model="user.firstName" type="text" name="firstname">
+                                    </td>
+                                    <td>
+                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            Efternamn:
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="lastname" ng-model="user.surName">
+                                    </td>
+                                    <td>
+                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            Lösenord:
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <input type="password" name="password" ng-model="user.password">
+                                    </td>
+                                    <td>
+                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            Email:
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="email" ng-model="user.email">
+                                    </td>
+                                    <td>
+                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            Personnummer:
+                                        </strong>
+                                    </td>
+                                    <td class="text-primary">
+                                        <input type="text" name="persNumb" ng-model="user.id">
+                                    </td>
+                                    <td>
+                                        <span class="glyphicon glyphicon-lock"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            Behörighet:
+                                        </strong>
+                                    </td>
+                                    <td class="text-primary">
+                                        <input type="text" name="firstname" ng-model="user.admin">
+                                    </td>
+                                    <td>
+                                        <span class="glyphicon glyphicon-lock"></span>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <button ng-click="" type="button" id="sparaStudent" class="btn btn-success">Spara ändringar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="createClassModal" class="modal">
+            <div class="modal-content">
+                <span class="close">x</span>
+            <div class="input-group">
+                <span class="input-group-addon" id="foreName">Klassnamn</span>
+                <input class="form-control" aria-describedby="foreName" type="text" ng-model="class.name" >
+            </div>
+            <button class="btn btn-success" id="saveSchoolClass" ng-click="saveSchoolClass()">Spara Skolklass</button>
+            </div>
+        </div>
+    </div>
+    <div ng-repeat="(key, prop) in class">
+        <tt>{{key}}; {{prop}}</tt>
+    </div>
+</article>

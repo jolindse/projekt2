@@ -2,13 +2,32 @@
  * Created by Jonas on 2016-04-25.
  */
 
-myApp.controller('makeSchoolClassCtrl', ['$scope', 'userService', 'ClassManager', function($scope, userService, ClassManager){
+myApp.controller('classCtrl', function($scope, userService, StudentClassManager){
+
+
 
     $scope.saveSchoolClass = function () {
-        ClassManager.addClass($scope.class, function (data) {
+        StudentClassManager.addStudentClass($scope.class, function (data) {
             $scope.class = data;
-            $scope.getAllClasses()
+            $scope.getAllClasses();
         })
     };
+    $('#newStudentModal').click(function () {
+        $('#createStudentModal').show();
+    });
+    $('.close').click(function () {
+        $('.modal').hide();
+    });
+    $('#sparaStudent').click(function () {
+        $('#createStudentModal').hide();
+    });
+    $('#newClassModal').click(function () {
+       $('#createClassModal').show();
+    });
+    $('#saveSchoolClass').click(function () {
+        $('#createClassModal').hide();
+    });
+    
 
-}]);
+});
+

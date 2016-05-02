@@ -43,7 +43,7 @@ myApp.config(function ($routeProvider) {
         })
 
         .when('/class', {
-            templateUrl: 'partials/class.html',
+            templateUrl: 'partials/manage_class.html',
             controller: 'classCtrl'
         })
 
