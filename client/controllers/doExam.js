@@ -79,7 +79,7 @@ myApp.controller('doExamCtrl',['$scope','userService','ExamManager','SubmittedMa
     $scope.questions = [];
     $scope.currQuestion = '';
 
-    $scope.getExam('572657c22e854865189929c6', function(){
+    $scope.getExam('572707f02e2e28d82ae8a6fd', function(){
         $scope.currSubmitted = {
             exam: $scope.currExam._id,
             student: userService.id,
