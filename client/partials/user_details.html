@@ -91,10 +91,29 @@
 
                             </tbody>
                         </table>
-                        <button ng-click="updateUser()" type="button" class="btn btn-success">Spara ändringar</button>
+                        <button ng-click="updateUser()" type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmationModal">Spara ändringar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </article>
+
+<!-- Confirmation-Modal -->
+<div id="confirmationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Dina uppgifter är nu uppdaterade.</h4>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+            </div>
+        </div>
+
+    </div>
+</div>

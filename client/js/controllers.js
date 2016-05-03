@@ -161,6 +161,11 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
     $scope.sortReverse  = false;
     $scope.searchUser   = '';
 
+    //Get all exams:
+    ExamManager.getAllExams(function (test) {
+        $scope.tests = test;
+    });
+
     //Get the user who has logged in:
     UserManager.getUser(userService.id, function (data) {
         $scope.user = data;
@@ -202,13 +207,9 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
         });
     });
 
-    //Get all exams:
-    ExamManager.getAllExams(function (test) {
-        $scope.tests = test;
-    });
-
     //Get selected exam when sharing an exam:
     $scope.selectExam = function (data) {
+
         ExamManager.getExam(data._id, function (data) {
             $scope.selectedTest = data;
         });
@@ -224,7 +225,6 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
 
     //Listener for the button "share exam":
     $scope.shareExam = function () {
-        console.log($scope.selectedStudents);
 
         //Loop trough the array selectedStudents:
         $scope.selectedStudents.forEach(function (student) {
@@ -233,24 +233,19 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
             if (student.selected == true) {
 
                 //Push to the array "testToTake" and update the student in the database:
-                student.user.testToTake.push($scope.selectedTest._id);
-                UserManager.setUser(student.user);
+                if (student.user.testToTake.indexOf($scope.selectedTest._id) == -1){
+                    student.user.testToTake.push($scope.selectedTest._id);
+                    UserManager.setUser(student.user);
+                }
             }
             else if(student.selected == false){
 
+                //Remove the test and update student:
+                student.user.testToTake.splice(student.user.testToTake.indexOf($scope.selectedTest._id), 1);
+                UserManager.setUser(student.user);
             }
         });
     };
-
-
-    //Selected row in table:
-    $('.table').on('click', '.clickable-row', function() {
-        if($(this).hasClass('active-row')){
-            $(this).removeClass('active-row');
-        } else {
-            $(this).addClass('active-row').siblings().removeClass('active-row');
-        }
-    });
 });
 
 /**

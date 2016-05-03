@@ -1,7 +1,7 @@
 <article class="container">
     <div class="jumbotron">
         <h1 class="display-3">Prov</h1>
-        <p class="lead">Det finns för tillfället {{tests.length}}st prov.</p>
+        <p class="lead">Det finns för tillfället {{tests.length}}st prov att administrera.</p>
         <hr class="m-y-2">
 
         <table class="table" id="examTable">
@@ -15,12 +15,12 @@
             </tr>
             </thead>
             <tbody ng-repeat="test in tests">
-            <tr ng-click="selectExam(tests[$index])" class="clickable-row">
+            <tr ng-click="selectExam(tests[$index])" ng-class="{activerow: tests[$index] === selectedTest}" class="clickable-row">
                 <td>{{test.subject}}</td>
                 <td>{{test.title}}</td>
                 <td>{{test.time}}</td>
                 <td></td>
-                <td>{{test.interval[0]}}</td>
+                <td>{{test.interval[0]}} - {{test.interval[1]}} </td>
             </tr>
             </tbody>
         </table>
@@ -28,7 +28,7 @@
     </div>
 </article>
 
-<!-- Modal -->
+<!-- Share test-Modal -->
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
@@ -89,8 +89,61 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
-                <button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#confirmationModal">OK</button>
 
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Confirmation-Modal -->
+<div id="confirmationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delat provet {{selectedTest.title}} till:</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="table">
+                    <thead class="thead">
+                    <tr>
+                        <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
+                            Förnamn
+                            <span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'firstName' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'surName';  sortReverse = !sortReverse">
+                            Efternamn
+                            <span ng-show="sortType == 'surName' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'surName' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'studentClass';  sortReverse = !sortReverse">
+                            Klass
+                            <span ng-show="sortType == 'studentClass' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'studentClass' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat="user in selectedStudents | orderBy:sortType:sortReverse | filter:searchUser" ng-if="user.selected == true">
+                        <td>{{user.user.firstName}}</td>
+                        <td>{{user.user.surName}}</td>
+                        <td>{{user.studentClass}}</td>
+
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
             </div>
         </div>
 
