@@ -421,6 +421,16 @@ ul.draggableUl {
     padding: 0;
 }
 
+
+.has-feedback .form-control {
+    padding-left: 30px;
+    padding-right: 10px;
+}
+
+.form-control-feedback {
+    display: inline-block;
+    left: 12px;
+}
 /*
 * END OF CREATE EXAM
 */

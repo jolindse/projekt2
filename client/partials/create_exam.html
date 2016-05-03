@@ -38,26 +38,25 @@
 
 			<!-- Test time interval -->
 			<div class="row">
-				<div class="col-md-3 col-md-offset-4 form-group">
-					<label class="smallLabeltext" for="startTime">
+				<div class="col-md-3 col-md-offset-4 form-group has-feedback">
+					<label for="startTime" class="control-label">Startdatum</label>
 						<input id="startTime" type="text" class="form-control"
 							   datetimepicker
 							   datetimepicker-options="{icons:{next:'glyphicon glyphicon-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
-							   placeholder="Startdatum och tid"
+							   placeholder="..."
 							   name="startTime"
-							   ng-model="exam.interval[0]"></label>
-					<i class="glyphicon glyphicon-time col-sm-pull-2"></i>
+							   ng-model="exam.interval[0]"/>
+					<span class="glyphicon glyphicon-time form-control-feedback"></span>
 				</div>
-				<div class="col-md-3 form-group">
-					<label class="smallLabeltext" for="endTime">
+				<div class="col-md-3 form-group has-feedback">
+						<label for="endTime" class="control-label">Slutdatum</label>
 						<input id="endTime" type="text" class="form-control"
 							   datetimepicker
 							   datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
-							   placeholder="Slutdatum och tid"
+							   placeholder="..."
 							   name="stopTime"
-							   ng-model="exam.interval[1]">
-					</label>
-
+							   ng-model="exam.interval[1]"/>
+					<span class="glyphicon glyphicon-time form-control-feedback"></span>
 				</div>
 			</div>
 
@@ -70,7 +69,8 @@
 				</div>
 
 				<div class="col-md-1">
-					<checkbox large ng-class="{btn-success': exam.anonymous}" class="form-control"
+					<checkbox large ng-class="{btn-success': exam.anonymous}"
+							  class="form-control"
 							  ng-model="exam.anonymous"></checkbox>
 				</div>
 				<div class="col-md-2">
