@@ -17,14 +17,14 @@
                                 <th>Skolklasser</th>
                             </tr>
                         </thead>
-                        <tbody ng-repeat="class in classes">
+                        <tbody>
                             <tr>
-                                <th>{{class.name}}</th>
+                                <td>Java 1</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <button class="btn btn-success" id="newClassModal">Skapa ny klass</button>
+                <button class="btn btn-success" id="newClassModal" data-toggle="modal" data-target="#createClassModal">Skapa ny klass</button>
             </div>
             <div class="col-md-8">
                 <div class="panel panel-default">
@@ -39,15 +39,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <td>1945/12/24-5078</td>
+                                <td>Lemmy</td>
+                                <td>Kilmister</td>
+                                <td>King of Warts</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <button class="btn btn-success" id="newStudentModal">Lägg till elev</button>
+                <button class="btn btn-success" id="newStudentModal" data-toggle="modal" data-target="#createStudentModal">Lägg till elev</button>
             </div>
         </div>
         <div class="row">
@@ -55,11 +55,15 @@
             <div class="col-md-4"></div>
             <div class="col-md-4"></div>
         </div>
-        <div class="modal" id="createStudentModal">
+
+        <div class="modal fade" id="createStudentModal" role="dialog">
+            <div class="modal-dialog">
             <div class="modal-content">
-                <span class="close">x</span>
-                <div class="row">
-                    <div class="col-md-6">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"> Lägg till Användare </h4>
+                </div>
+                <div class="modal-body">
                         <div class="table-responsive">
                             <table class="table table-condensed table-responsive table-user-information">
                                 <tbody>
@@ -72,9 +76,6 @@
                                     <td>
                                         <input ng-model="user.firstName" type="text" name="firstname">
                                     </td>
-                                    <td>
-                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
-                                    </td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -84,9 +85,6 @@
                                     </td>
                                     <td>
                                         <input type="text" name="lastname" ng-model="user.surName">
-                                    </td>
-                                    <td>
-                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -98,8 +96,15 @@
                                     <td>
                                         <input type="password" name="password" ng-model="user.password">
                                     </td>
+                                </tr>
+                                <tr>
                                     <td>
-                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
+                                        <strong>
+                                            Bekräfta lösenord:
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <input type="password" name="password" ng-model="user.password">
                                     </td>
                                 </tr>
                                 <tr>
@@ -111,9 +116,6 @@
                                     <td>
                                         <input type="text" name="email" ng-model="user.email">
                                     </td>
-                                    <td>
-                                        <span ng-click="" class="edit-user glyphicon glyphicon-edit"></span>
-                                    </td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -123,9 +125,6 @@
                                     </td>
                                     <td class="text-primary">
                                         <input type="text" name="persNumb" ng-model="user.id">
-                                    </td>
-                                    <td>
-                                        <span class="glyphicon glyphicon-lock"></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -137,27 +136,34 @@
                                     <td class="text-primary">
                                         <input type="text" name="firstname" ng-model="user.admin">
                                     </td>
-                                    <td>
-                                        <span class="glyphicon glyphicon-lock"></span>
-                                    </td>
                                 </tr>
-
                                 </tbody>
                             </table>
-                            <button ng-click="" type="button" id="sparaStudent" class="btn btn-success">Spara ändringar</button>
                         </div>
+                    <div class="modal-footer">
+                        <button ng-click="" type="button" id="sparaStudent" class="btn btn-success" data-dismiss="modal">Spara ändringar</button>
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-        <div id="createClassModal" class="modal">
-            <div class="modal-content">
-                <span class="close">x</span>
+        <div id="createClassModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Lägg till skolklass</h4>
+                </div>
+                <div class="modal-body">
             <div class="input-group">
                 <span class="input-group-addon" id="foreName">Klassnamn</span>
                 <input class="form-control" aria-describedby="foreName" type="text" ng-model="class.name" >
             </div>
-            <button class="btn btn-success" id="saveSchoolClass" ng-click="saveSchoolClass()">Spara Skolklass</button>
+                </div>
+                <div class="modal-footer">
+            <button class="btn btn-success" id="saveSchoolClass" ng-click="saveSchoolClass()" data-dismiss="modal">Spara Skolklass</button>
+                </div>
+             </div>
             </div>
         </div>
     </div>

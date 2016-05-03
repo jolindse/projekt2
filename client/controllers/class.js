@@ -2,29 +2,29 @@
  * Created by Jonas on 2016-04-25.
  */
 
-myApp.controller('classCtrl', function($scope, userService, StudentClassManager){
-    
+myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager', function($scope, userService, StudentClassManager){
+
+    $scope.allStudentClasses = [];
+
+    $scope.getAllStudentClasses = function () {
+        StudentClassManager.getAllStudentClasses (function (data) {
+            $scope.allStudentClasses = data;
+        })
+    };
+
+    $scope.loadClass = function (id) {
+        StudentClassManager.getStudentClass(id, function (data) {
+            $scope.studentClass = data;
+        })
+    };
+
     $scope.saveSchoolClass = function () {
-        StudentClassManager.addStudentClass($scope.class, function (data) {
+        StudentClassManager.addClass($scope.class, function (data) {
             $scope.class = data;
+            $scope.getAllStudentClasses();
         })
     };
     
-    $('#newStudentModal').click(function () {
-        $('#createStudentModal').show();
-    });
-    $('.close').click(function () {
-        $('.modal').hide();
-    });
-    $('#sparaStudent').click(function () {
-        $('#createStudentModal').hide();
-    });
-    $('#newClassModal').click(function () {
-       $('#createClassModal').show();
-    });
-    $('#saveSchoolClass').click(function () {
-        $('#createClassModal').hide();
-    });
-    
-});
+    $scope.getAllStudentClasses();
+}]);
 

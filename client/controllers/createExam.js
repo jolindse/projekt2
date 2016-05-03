@@ -47,5 +47,5 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager','Questi
     $scope.allQuestions = [];
     
     $scope.getAllExams();
-
+    
 }]);

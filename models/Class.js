@@ -32,7 +32,7 @@ module.exports.getClasses = function (callback) {
 // Get a class
 module.exports.getClass = function (id, callback) {
     Class.findById(id, callback);
-}
+};
 
 // Add a class
 module.exports.addClass = function (classData, callback) {
