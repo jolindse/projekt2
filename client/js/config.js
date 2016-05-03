@@ -27,13 +27,8 @@ myApp.config(function ($routeProvider) {
             controller: 'adminCtrl'
         })
 
-        .when('/adminExams', {
+        .when('/adminexams', {
             templateUrl: 'partials/admin_exams.html',
-            controller: 'adminCtrl'
-        })
-
-        .when('/adminUsers', {
-            templateUrl: 'partials/admin_users.html',
             controller: 'adminCtrl'
         })
 

@@ -56,8 +56,8 @@ var User = module.exports = mongoose.model('User', userSchema);
  */
 
 // Get multiple users
-module.exports.getUsers = function (callback, limit) {
-    User.find(callback).limit(limit);
+module.exports.getUsers = function (callback) {
+    User.find(callback);
 };
 
 // Get single user
