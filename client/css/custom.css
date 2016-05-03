@@ -56,12 +56,6 @@ body, html {
 .panel-body {
     padding-left: 0;
 }
-/*
-INPUT MERGE
-*/
-input {
-  width: 80%;
-}
 
 .table tbody tr.highlight td {
     background-color: red;
@@ -253,13 +247,6 @@ input[type=number]::-webkit-outer-spin-button {
 */
 
 /*
-INPUT GROUP MERGE
-*/
-.input-group-addon{
-    min-width: 100px;
-}
-
-/*
 * QUESTION CREATE/EDIT
 */
 
@@ -380,7 +367,6 @@ ul.draggableUl {
 
 }
 
-
 /*
 
 
@@ -416,4 +402,25 @@ ul.draggableUl {
     cursor: pointer;
 }
 
+*/
+
+/*
+* CREATE EXAM
+*/
+
+.smallLabeltext {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.pLabel {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+    margin-top:10px;
+    padding: 0;
+}
+
+/*
+* END OF CREATE EXAM
 */

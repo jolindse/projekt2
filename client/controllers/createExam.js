@@ -1,25 +1,33 @@
 /**
  * Created by robin on 2016-04-29.
  */
-myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', function($scope, userService, ExamManager){
+myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager','QuestionManager', function($scope, userService, ExamManager, QuestionManager){
+
+    /*
+    FUNCTIONS
+     */
 
     $scope.exam = {
         gradePercentage: [],
-        interval: [],
+        interval: []
     };
 
-    $scope.allExams = [];
+    $scope.getAllQuestions = function() {
+        QuestionManager.getAllQuestions(function (data){
+           $scope.allQuestions = data;
+        });
+    };
 
     $scope.getAllExams = function () {
-        ExamManager.getAllExams( function (data) {
+        ExamManager.getAllExams(function (data) {
             $scope.allExams = data;
-        })
+        });
     };
 
     $scope.loadExam = function (id) {
         ExamManager.getExam(id, function(data){
             $scope.exam = data;
-        })
+        });
     };
 
     $scope.saveExam = function () {
@@ -27,8 +35,16 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', functi
         ExamManager.addExam($scope.exam, function (data) {
             $scope.exam = data;
             $scope.getAllExams();
-        })
+        });
     };
+
+    $scope.exam = {
+        gradePercentage: [],
+        interval: []
+    };
+
+    $scope.allExams = [];
+    $scope.allQuestions = [];
     
     $scope.getAllExams();
 

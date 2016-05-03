@@ -1,103 +1,121 @@
 <article class="container">
-    <div class="jumbotron">
-    <div class="row">
-        <div class="col-md-4">
-            <h1>Skapa prov</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="input-group">
-                <span class="input-group-addon" id="testTitle">Prov titel</span>
-                <input class="form-control" aria-describedby="testTitle" type="text" ng-model="exam.title" >
-            </div>
-        </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="input-group">
-            <span class="input-group-addon" id="testSubject">Ämne</span>
-            <input class="form-control" aria-describedby="testSubject" type="text" ng-model= "exam.subject" >
-            </div>
-        </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
-    </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="input-group">
-                <span class="input-group-addon" id="basic-addon3">Provlängd</span>
-                <input class="form-control" placeholder="Minuter" aria-describedby="basic-addon3" type="number" ng-model="exam.time">
-                </div>
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-        </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="input-group">
-               <span class="input-group-addon">Start Datum</span>
-           <input type="text" class="form-control input-sm"
-                   datetimepicker
-                   datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
-                   placeholder="..."
-                   name="startTime"
-                   ng-model="exam.interval[0]">
-            </div>
-        </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
-    </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-addon">Slut Datum</span>
-                <input type="text" class="form-control input-sm"
-                       datetimepicker
-                       datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
-                       placeholder="..."
-                       name="stopTime"
-                       ng-model="exam.interval[1]">
-                </div>
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-        </div>
-    <div class="row">
-        <div class="col-md-4">
-            <label>
-            <input type="checkbox" name="checkboxes" ng-model="exam.anonymous">
-                Anonym
-            </label>
-            <label>
-                <input type="checkbox" name="checkboxes" ng-model="exam.feedback">
-                Feedback
-            </label>
-        </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
-    </div>
-        <div class="row">
-            <div class="col-md-4">
-                <input class="procentInput" type="number" ng-model="exam.gradePercentage[0]">
-                    Procentgräns för G
-                <input class="procentInput" type="number" ng-model="exam.gradePercentage[1]">
-                    Procentgräns för VG
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <button class="btn btn-success" ng-click="saveExam()">Spara prov</button>
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-        </div>
-    </div>
-    <div ng-repeat="(key, prop) in exam">
-        <tt>{{key}}; {{prop}}</tt>
-    </div>
+	<div class="jumbotron">
+		<!-- Heading -->
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<h1>Skapa prov</h1>
+			</div>
+		</div>
+		<form>
+			<!-- Test title -->
+			<div class="row form-group">
+				<div class="col-md-6 col-md-offset-4">
+					<label for="examTitle" class="form">Prov titel</label>
+					<input id="examTitle" class="form-control" aria-describedby="testTitle" type="text"
+						   ng-model="exam.title">
+				</div>
+			</div>
+			<!-- Test subject -->
+			<div class="row form-group">
+				<div class="col-md-6 col-md-offset-4">
+					<label for="examSubject">Ämne</label>
+					<input id="examSubject" class="form-control" aria-describedby="testSubject" type="text"
+						   ng-model="exam.subject">
+				</div>
+			</div>
+			<!-- Test timeframe -->
+			<div class="row form-group">
+				<div class="col-md-3 col-md-offset-6 text-right">
+					<div class="pLabel">Provlängd i minuter</div>
+				</div>
+				<div class="col-md-1">
+					<input id="examTime" ng-init="exam.time=0" class="form-control text-right"
+						   aria-describedby="basic-addon3"
+						   type="number"
+						   ng-model="exam.time">
+				</div>
+			</div>
+
+			<!-- Test time interval -->
+			<div class="row">
+				<div class="col-md-3 col-md-offset-4 form-group">
+					<label class="smallLabeltext" for="startTime">
+						<input id="startTime" type="text" class="form-control"
+							   datetimepicker
+							   datetimepicker-options="{icons:{next:'glyphicon glyphicon-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
+							   placeholder="Startdatum och tid"
+							   name="startTime"
+							   ng-model="exam.interval[0]"></label>
+					<i class="glyphicon glyphicon-time col-sm-pull-2"></i>
+				</div>
+				<div class="col-md-3 form-group">
+					<label class="smallLabeltext" for="endTime">
+						<input id="endTime" type="text" class="form-control"
+							   datetimepicker
+							   datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
+							   placeholder="Slutdatum och tid"
+							   name="stopTime"
+							   ng-model="exam.interval[1]">
+					</label>
+
+				</div>
+			</div>
+
+			<!-- Test anonymous and feedback -->
+			<div class="row">
+				<div class="col-md-2 col-md-offset-3">
+					<div class="pLabel">
+						Anonym rättning
+					</div>
+				</div>
+
+				<div class="col-md-1">
+					<checkbox large ng-class="{btn-success': exam.anonymous}" class="form-control"
+							  ng-model="exam.anonymous"></checkbox>
+				</div>
+				<div class="col-md-2">
+					<div class="pLabel">
+						Feedback
+					</div>
+				</div>
+				<div class="col-md-2">
+					<checkbox large ng-class="{'btn-success': exam.feedback}"
+							  class="form-control"
+							  ng-model="exam.feedback"></checkbox>
+				</div>
+			</div>
+			<!-- Test grade percentages -->
+			<div class="row">
+			<div class="col-md-2 col-md-offset-3">
+				<div class="pLabel">
+					Gräns för G
+				</div>
+				</div>
+					<div class="col-md-1">
+					<input class="procentInput" type="number" ng-model="exam.gradePercentage[0]" placeholder="%">
+					</div>
+
+				<div class="col-md-2">
+					<div class="pLabel">
+					Gräns för VG
+							</div>
+					</div>
+				<div class="col-md-1">
+				<input class="procentInput" type="number" ng-model="exam.gradePercentage[1]" placeholder="%">
+				</div>
+			</div>
+			<!-- Question list -->
+
+			<!-- Submit -->
+			<div class="row">
+				<div class="col-md-3 col-md-offset-6">
+					<button class="btn btn-success" ng-click="saveExam()">Spara prov</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<div ng-repeat="(key, prop) in exam">
+		<tt>{{key}}; {{prop}}</tt>
+	</div>
 </article>
