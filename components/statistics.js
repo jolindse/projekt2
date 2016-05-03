@@ -21,6 +21,7 @@ module.exports.statistics = function(req, callback) {
             var subExams = [];
             var returnObject = {
                 success: "",
+                error: "",
                 user: "",
                 numExams: 0,
                 numGExams: 0,
@@ -37,6 +38,7 @@ module.exports.statistics = function(req, callback) {
             User.getUser(id, function (err, user) {
                 if (err) {
                     returnObject.success = false;
+                    returnObject.error = err;
                     callback(returnObject);
                 } else {
                     returnObject.success = true;
@@ -53,6 +55,7 @@ module.exports.statistics = function(req, callback) {
                             Exam.getExam(exam.exam, function (err, orgExam) {
                                 if (err) {
                                     returnObject.success = false;
+                                    returnObject.error = err;
                                     callback(returnObject);
                                 } else {
                                     returnObject.testTime.push({
@@ -65,8 +68,8 @@ module.exports.statistics = function(req, callback) {
                                         orgExam.questions.forEach(function(question) {
                                             Question.getQuestion(question.id, function(err, q) {
                                                 if (err) {
-                                                    console.log(err);
                                                     returnObject.success = false;
+                                                    returnObject.error = err;
                                                     callback(returnObject);
                                                 } else {
                                                     if (q.vgQuestion === true) {
@@ -76,6 +79,7 @@ module.exports.statistics = function(req, callback) {
                                                         questionG++;
                                                     }
                                                     if (questionVG + questionG === orgExam.questions.length) {
+
                                                         returnObject.percentageGExams = ((returnObject.numGExams / returnObject.numExams)*100);
                                                         returnObject.percentageVGExams = ((returnObject.numVGExams / returnObject.numExams)*100);
                                                         callback(returnObject);
