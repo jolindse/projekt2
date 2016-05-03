@@ -15,7 +15,7 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', functi
             $scope.allExams = data;
         })
     };
-
+    
     $scope.loadExam = function (id) {
         ExamManager.getExam(id, function(data){
             $scope.exam = data;

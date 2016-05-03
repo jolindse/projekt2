@@ -17,14 +17,15 @@
                                 <th>Skolklasser</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Java 1</td>
+                        <tbody ng-repeat="data in studentClasses">
+                            <tr ng-click="selectedClass(data[$index])" class="clickable-row">
+                                <td>{{data.name}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <button class="btn btn-success" id="newClassModal" data-toggle="modal" data-target="#createClassModal">Skapa ny klass</button>
+                <button class="btn btn-danger" id="deleteClass" ng-click="deleteSelectedClass()">Ta bort klass</button>
             </div>
             <div class="col-md-8">
                 <div class="panel panel-default">
@@ -55,7 +56,6 @@
             <div class="col-md-4"></div>
             <div class="col-md-4"></div>
         </div>
-
         <div class="modal fade" id="createStudentModal" role="dialog">
             <div class="modal-dialog">
             <div class="modal-content">

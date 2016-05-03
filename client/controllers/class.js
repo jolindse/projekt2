@@ -3,12 +3,13 @@
  */
 
 myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager', function($scope, userService, StudentClassManager){
-
-    $scope.allStudentClasses = [];
+    
+    
+    $scope.studentClasses = [];
 
     $scope.getAllStudentClasses = function () {
         StudentClassManager.getAllStudentClasses (function (data) {
-            $scope.allStudentClasses = data;
+            $scope.studentClasses = data;
         })
     };
 
@@ -19,10 +20,20 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager', fu
     };
 
     $scope.saveSchoolClass = function () {
-        StudentClassManager.addClass($scope.class, function (data) {
+        StudentClassManager.addStudentClass($scope.class, function (data) {
+            console.log($scope.studentClasses);
             $scope.class = data;
             $scope.getAllStudentClasses();
         })
+    };
+    $scope.selectedClass = function () {
+        
+    };
+    
+    $scope.deleteSelectedClass = function () {
+        StudentClassManager.deleteClass($scope.class, function () {
+
+        })  
     };
     
     $scope.getAllStudentClasses();
