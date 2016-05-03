@@ -24,7 +24,7 @@
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">OK</button>
     </div>
 </article>
 
@@ -50,9 +50,12 @@
                     </div>
                 </form>
 
-                <table class="table table-hover">
+                <table class="table">
                     <thead class="thead">
                     <tr>
+                        <th ng-click="">
+                            <input class="checkbox" id="selectAll" type="checkbox"/>
+                        </th>
                         <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
                             Förnamn
                             <span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
@@ -72,10 +75,12 @@
                     </thead>
 
                     <tbody>
-                    <tr ng-repeat="user in users | orderBy:sortType:sortReverse | filter:searchUser">
-                        <td>{{ user.firstName }}</td>
-                        <td>{{ user.surName }}</td>
-                        <td>{{ user.admin }}</td>
+                    <tr ng-repeat="user in selectedStudents | orderBy:sortType:sortReverse | filter:searchUser">
+                        <td><input class="checkbox" type="checkbox" ng-model="user.selected"/></td>
+                        <td>{{user.user.firstName}}</td>
+                        <td>{{user.user.surName}}</td>
+                        <td>{{user.studentClass}}</td>
+
                     </tr>
                     </tbody>
 
@@ -83,7 +88,9 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+                <button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal">Dela</button>
+
             </div>
         </div>
 

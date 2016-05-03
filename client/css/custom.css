@@ -10,9 +10,13 @@ body, html {
     font-family: 'Noto Sans', sans-serif;
     font-size: 14px;
 }
-
+/* SHARE TEST MODAL */
 .active-row {
     background-color: #337AB7;
+}
+
+.checkbox {
+    cursor: pointer;
 }
 
 .navbar-inverse {

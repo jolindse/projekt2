@@ -138,56 +138,119 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
 myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager, ExamManager, userService) {
     userService.updateNavbar();
 
-    //User:
+    //Current user:
     $scope.user = "";
 
-    //Testtable:
+    //All exams:
     $scope.tests = [];
+
+    //The selected exam (for sharing):
     $scope.selectedTest = "";
 
     //Usertable:
     $scope.users = [];
-    $scope.classes = [];
+
+    //All studentclasses:
+    $scope.studentClasses = [];
+
+    //Array holding students, studentclasses and a boolean if selected or not in the table:
+    $scope.selectedStudents = [];
+
+    //For sorting the usertable when sharing an exam:
     $scope.sortType     = 'name';
     $scope.sortReverse  = false;
     $scope.searchUser   = '';
 
+    //Get the user who has logged in:
     UserManager.getUser(userService.id, function (data) {
         $scope.user = data;
     });
 
+    //Get all users (shows in table):
     UserManager.getAllUsers(function (data) {
         $scope.users = data;
+
+        //Loop trough users and add students(not admin), classes and a selected boolean to the array "selectedStudents":
+        $scope.users.forEach(function (student) {
+            if (student.admin == false) {
+                $scope.selectedStudents.push(
+                    {
+                        user: student,
+                        studentClass: "",
+                        selected: false
+                    }
+                );
+            }
+
+        });
+
+        //Get all studentClasses:
+        StudentClassManager.getAllStudentClasses(function (data) {
+            $scope.studentClasses = data;
+
+            //Add classes to the array "selectedStudents":
+            $scope.selectedStudents.forEach(function (student) {
+                $scope.studentClasses.forEach(function (studentClass) {
+                    studentClass.students.forEach(function (studentId) {
+                        if (student.user._id == studentId){
+                            student.studentClass = studentClass.name;
+                        }
+                    })
+                })
+
+            });
+        });
     });
 
-    StudentClassManager.getAllStudentClasses(function (data) {
-       $scope.classes = data;
-    });
-
+    //Get all exams:
     ExamManager.getAllExams(function (test) {
         $scope.tests = test;
     });
 
+    //Get selected exam when sharing an exam:
     $scope.selectExam = function (data) {
-        console.log(data._id);
         ExamManager.getExam(data._id, function (data) {
             $scope.selectedTest = data;
         });
+
+        $scope.selectedStudents.forEach(function (selectedStudent) {
+            selectedStudent.user.testToTake.forEach(function (selectedTest) {
+                if (selectedTest == $scope.selectedTest._id){
+                    selectedStudent.selected = true;
+                }
+            });
+        });
     };
 
+    //Listener for the button "share exam":
     $scope.shareExam = function () {
+        console.log($scope.selectedStudents);
 
+        //Loop trough the array selectedStudents:
+        $scope.selectedStudents.forEach(function (student) {
+
+            //If the variable "selected" is true, then the student was selected in the list:
+            if (student.selected == true) {
+
+                //Push to the array "testToTake" and update the student in the database:
+                student.user.testToTake.push($scope.selectedTest._id);
+                UserManager.setUser(student.user);
+            }
+            else if(student.selected == false){
+
+            }
+        });
     };
 
-    $('#examTable').on('click', '.clickable-row', function() {
+
+    //Selected row in table:
+    $('.table').on('click', '.clickable-row', function() {
         if($(this).hasClass('active-row')){
             $(this).removeClass('active-row');
         } else {
             $(this).addClass('active-row').siblings().removeClass('active-row');
         }
     });
-
-
 });
 
 /**
