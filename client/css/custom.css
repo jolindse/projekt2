@@ -6,9 +6,13 @@ body, html {
     */
     background-color: white;
 }
-
+/* SHARE TEST MODAL */
 .active-row {
     background-color: #337AB7;
+}
+
+.checkbox {
+    cursor: pointer;
 }
 
 .navbar-inverse {

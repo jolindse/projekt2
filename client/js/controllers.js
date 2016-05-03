@@ -169,15 +169,18 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
     UserManager.getAllUsers(function (data) {
         $scope.users = data;
 
-        //Loop trough users and add to the array "selectedStudents":
+        //Loop trough users and add students(not admin), classes and a selected boolean to the array "selectedStudents":
         $scope.users.forEach(function (student) {
-            $scope.selectedStudents.push(
-                {
-                    user: student,
-                    studentClass: "",
-                    selected: false
-                }
-            )
+            if (student.admin == false) {
+                $scope.selectedStudents.push(
+                    {
+                        user: student,
+                        studentClass: "",
+                        selected: false
+                    }
+                );
+            }
+
         });
 
         //Get all studentClasses:
@@ -208,6 +211,14 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
         ExamManager.getExam(data._id, function (data) {
             $scope.selectedTest = data;
         });
+
+        $scope.selectedStudents.forEach(function (selectedStudent) {
+            selectedStudent.user.testToTake.forEach(function (selectedTest) {
+                if (selectedTest == $scope.selectedTest._id){
+                    selectedStudent.selected = true;
+                }
+            });
+        });
     };
 
     //Listener for the button "share exam":
@@ -218,14 +229,18 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
         $scope.selectedStudents.forEach(function (student) {
 
             //If the variable "selected" is true, then the student was selected in the list:
-           if (student.selected == true) {
+            if (student.selected == true) {
 
-               //Push to the array "testToTake" and update the student in the database:
-               student.user.testToTake.push($scope.selectedTest._id);
-               UserManager.setUser(student);
-           }
+                //Push to the array "testToTake" and update the student in the database:
+                student.user.testToTake.push($scope.selectedTest._id);
+                UserManager.setUser(student.user);
+            }
+            else if(student.selected == false){
+
+            }
         });
     };
+
 
     //Selected row in table:
     $('.table').on('click', '.clickable-row', function() {

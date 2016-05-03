@@ -24,7 +24,7 @@
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">OK</button>
     </div>
 </article>
 
@@ -53,10 +53,8 @@
                 <table class="table">
                     <thead class="thead">
                     <tr>
-                        <th ng-click="sortType = 'checked'; sortReverse = !sortReverse">
-                            Markera
-                            <span ng-show="sortType == 'checked' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'checked' && sortReverse" class="fa fa-caret-up"></span>
+                        <th ng-click="">
+                            <input class="checkbox" id="selectAll" type="checkbox"/>
                         </th>
                         <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
                             Förnamn
@@ -78,7 +76,7 @@
 
                     <tbody>
                     <tr ng-repeat="user in selectedStudents | orderBy:sortType:sortReverse | filter:searchUser">
-                        <td><input type="checkbox" ng-model="user.selected"/></td>
+                        <td><input class="checkbox" type="checkbox" ng-model="user.selected"/></td>
                         <td>{{user.user.firstName}}</td>
                         <td>{{user.user.surName}}</td>
                         <td>{{user.studentClass}}</td>
