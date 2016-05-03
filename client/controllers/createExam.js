@@ -31,5 +31,5 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', functi
     };
     
     $scope.getAllExams();
-
+    
 }]);

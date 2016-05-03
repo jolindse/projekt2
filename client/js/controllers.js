@@ -187,7 +187,6 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
         //Get all studentClasses:
         StudentClassManager.getAllStudentClasses(function (data) {
             $scope.studentClasses = data;
-
             //Add classes to the array "selectedStudents":
             $scope.selectedStudents.forEach(function (student) {
                 $scope.studentClasses.forEach(function (studentClass) {
