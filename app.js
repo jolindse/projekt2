@@ -528,8 +528,8 @@ app.post('/api/mail', function(req, res) {
 });
 
 // Send password to user
-app.post('/api/sendpass', function(req, res) {
-   sendMail.sendPassword(req.body.id, function(success) {
+app.get('/api/sendpass/:id', function(req, res) {
+   sendMail.sendPassword(req.params.id, function(success) {
       if(success.success === true) {
           res.status(200).json(success);
       } else {
@@ -544,7 +544,7 @@ app.post('/api/sendpass', function(req, res) {
 ---------------------------------
 */
 
-app.post('/api/statistics', function(req, res) {
+app.get('/api/statistics/:scope/:id', function(req, res) {
     stat.statistics(req, function(returnObject) {
         if(returnObject.success === true) {
             res.status(200).json(returnObject);

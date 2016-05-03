@@ -12,7 +12,7 @@ var Question = require('../models/Question');
 
 
 module.exports.statistics = function(req, callback) {
-    switch (req.body.scope) {
+    switch (req.params.scope) {
         case 'user':
             var questionG = 0;
             var questionStudentG = 0;
@@ -33,7 +33,7 @@ module.exports.statistics = function(req, callback) {
                 percentageVGQuestions: 0,
                 testTime: []
             };
-            var id = req.body.id;
+            var id = req.params.id;
             User.getUser(id, function (err, user) {
                 if (err) {
                     returnObject.success = false;
