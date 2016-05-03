@@ -45,7 +45,7 @@ app.all('/*', function (req, res, next) {
 
 app.use(express.static(__dirname + '/client'));
 app.use(express.static(__dirname + '/questionImages'));
-
+app.use(express.static(__dirname + '/client/partials'));
 
 // Init body-parser to handle request params.
 app.use(bodyParser.urlencoded({extended: false}));

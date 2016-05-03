@@ -1,20 +1,15 @@
 /**
  * Created by robin on 2016-04-29.
  */
-myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager','QuestionManager', function($scope, userService, ExamManager, QuestionManager){
+myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'QuestionManager', '$uibModal', function ($scope, userService, ExamManager, QuestionManager, $uibModal) {
 
     /*
-    FUNCTIONS
+     FUNCTIONS
      */
 
-    $scope.exam = {
-        gradePercentage: [],
-        interval: []
-    };
-
-    $scope.getAllQuestions = function() {
-        QuestionManager.getAllQuestions(function (data){
-           $scope.allQuestions = data;
+    $scope.getAllQuestions = function () {
+        QuestionManager.getAllQuestions(function (data) {
+            $scope.allQuestions = data;
         });
     };
 
@@ -25,7 +20,7 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager','Questi
     };
 
     $scope.loadExam = function (id) {
-        ExamManager.getExam(id, function(data){
+        ExamManager.getExam(id, function (data) {
             $scope.exam = data;
         });
     };
@@ -38,14 +33,57 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager','Questi
         });
     };
 
+    $scope.addQuestion = function (currQuestion) {
+        $scope.exam.questions.push(currQuestion);
+    };
+
+    $scope.dateParams = {
+        icons: {
+            next: 'glyphicon glyphicon-right',
+            previous: 'glyphicon glyphicon-arrow-left',
+            up: 'glyphicon glyphicon-arrow-up',
+            down: 'glyphicon glyphicon-arrow-down'
+        },
+        format: 'YYYY-MM-DD HH:mm',
+        stepping: 10,
+        sideBySide: true,
+        calendarWeeks: true
+    };
+
     $scope.exam = {
         gradePercentage: [],
         interval: []
     };
 
+    // MODAL
+
+    $scope.newQuestion = function () {
+        var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'modalviews/newquestion.html',
+            controller: 'makeQuestionCtrl',
+            size: 'lg'
+        });
+
+        modalInstance.result.then(function (data) {
+            $scope.addQuestion(data);
+        });
+    };
+
+
+    /*
+     INIT
+     */
+
     $scope.allExams = [];
     $scope.allQuestions = [];
-    
+
+    $scope.exam = {
+        gradePercentage: [],
+        interval: [],
+        questions: []
+    };
+
     $scope.getAllExams();
-    
+    $scope.getAllQuestions();
 }]);

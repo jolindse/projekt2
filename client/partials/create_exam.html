@@ -1,121 +1,164 @@
 <article class="container">
-	<div class="jumbotron">
-		<!-- Heading -->
-		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
-				<h1>Skapa prov</h1>
-			</div>
-		</div>
-		<form>
-			<!-- Test title -->
-			<div class="row form-group">
-				<div class="col-md-6 col-md-offset-4">
-					<label for="examTitle" class="form">Prov titel</label>
-					<input id="examTitle" class="form-control" aria-describedby="testTitle" type="text"
-						   ng-model="exam.title">
-				</div>
-			</div>
-			<!-- Test subject -->
-			<div class="row form-group">
-				<div class="col-md-6 col-md-offset-4">
-					<label for="examSubject">Ämne</label>
-					<input id="examSubject" class="form-control" aria-describedby="testSubject" type="text"
-						   ng-model="exam.subject">
-				</div>
-			</div>
-			<!-- Test timeframe -->
-			<div class="row form-group">
-				<div class="col-md-3 col-md-offset-6 text-right">
-					<div class="pLabel">Provlängd i minuter</div>
-				</div>
-				<div class="col-md-1">
-					<input id="examTime" ng-init="exam.time=0" class="form-control text-right"
-						   aria-describedby="basic-addon3"
-						   type="number"
-						   ng-model="exam.time">
-				</div>
-			</div>
+    <div class="jumbotron">
+        <!-- Heading -->
+        <div class="row">
+            <div class="col-md-10 text-left">
+                <h1>Prov</h1>
+            </div>
+            <div class="col-md-2 text-right top-buttons">
+                <button class="btn btn-success btn-sm" ng-click="newQuestion()"><span
+                        class="glyphicon glyphicon-plus"></span></button>
+                <button class="btn btn-danger btn-sm" ng-click="deleteQuestion()"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <button class="btn btn-primary btn-sm" ng-click="showQuestions()"><span
+                        class="glyphicon glyphicon-list"></span></button>
+            </div>
+        </div>
 
-			<!-- Test time interval -->
-			<div class="row">
-				<div class="col-md-3 col-md-offset-4 form-group has-feedback">
-					<label for="startTime" class="control-label">Startdatum</label>
-						<input id="startTime" type="text" class="form-control"
-							   datetimepicker
-							   datetimepicker-options="{icons:{next:'glyphicon glyphicon-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
-							   placeholder="..."
-							   name="startTime"
-							   ng-model="exam.interval[0]"/>
-					<span class="glyphicon glyphicon-time form-control-feedback"></span>
-				</div>
-				<div class="col-md-3 form-group has-feedback">
-						<label for="endTime" class="control-label">Slutdatum</label>
-						<input id="endTime" type="text" class="form-control"
-							   datetimepicker
-							   datetimepicker-options="{icons:{next:'glyphicon glyphicon-arrow-right',previous:'glyphicon glyphicon-arrow-left',up:'glyphicon glyphicon-arrow-up',down:'glyphicon glyphicon-arrow-down'}}"
-							   placeholder="..."
-							   name="stopTime"
-							   ng-model="exam.interval[1]"/>
-					<span class="glyphicon glyphicon-time form-control-feedback"></span>
-				</div>
-			</div>
+        <form>
+            <!-- Test title -->
+            <div class="row form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <label for="examTitle" class="form">Prov titel</label>
+                    <input id="examTitle" class="form-control" aria-describedby="testTitle" type="text"
+                           ng-model="exam.title">
+                </div>
+            </div>
+            <!-- Test subject -->
+            <div class="row form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <label for="examSubject">Ämne</label>
+                    <input id="examSubject" class="form-control" aria-describedby="testSubject" type="text"
+                           ng-model="exam.subject">
+                </div>
+            </div>
+            <!-- Test timeframe -->
+            <div class="row form-group">
+                <div class="col-md-3 col-md-offset-8 text-right">
+                    <div class="pLabel">Provlängd i minuter</div>
+                </div>
+                <div class="col-md-1">
+                    <input id="examTime" ng-init="exam.time=0" class="form-control text-right"
+                           aria-describedby="basic-addon3"
+                           type="number"
+                           ng-model="exam.time">
+                </div>
+            </div>
 
-			<!-- Test anonymous and feedback -->
-			<div class="row">
-				<div class="col-md-2 col-md-offset-3">
-					<div class="pLabel">
-						Anonym rättning
-					</div>
-				</div>
+            <!-- Test time interval -->
+            <div class="row">
+                <div class="col-md-3 col-md-offset-6 form-group has-feedback">
+                    <label for="startTime" class="control-label">Startdatum</label>
+                    <input id="startTime" type="text" class="form-control"
+                           datetimepicker
+                           datetimepicker-options="{{dateParams}}"
+                           placeholder="..."
+                           name="startTime"
+                           ng-model="exam.interval[0]"/>
+                    <span class="glyphicon glyphicon-time form-control-feedback"></span>
+                </div>
+                <div class="col-md-3 form-group has-feedback">
+                    <label for="endTime" class="control-label">Slutdatum</label>
+                    <input id="endTime" type="text" class="form-control"
+                           datetimepicker
+                           datetimepicker-options="{{dateParams}}"
+                           placeholder="..."
+                           name="stopTime"
+                           ng-model="exam.interval[1]"/>
+                    <span class="glyphicon glyphicon-time form-control-feedback"></span>
+                </div>
+            </div>
 
-				<div class="col-md-1">
-					<checkbox large ng-class="{btn-success': exam.anonymous}"
-							  class="form-control"
-							  ng-model="exam.anonymous"></checkbox>
-				</div>
-				<div class="col-md-2">
-					<div class="pLabel">
-						Feedback
-					</div>
-				</div>
-				<div class="col-md-2">
-					<checkbox large ng-class="{'btn-success': exam.feedback}"
-							  class="form-control"
-							  ng-model="exam.feedback"></checkbox>
-				</div>
-			</div>
-			<!-- Test grade percentages -->
-			<div class="row">
-			<div class="col-md-2 col-md-offset-3">
-				<div class="pLabel">
-					Gräns för G
-				</div>
-				</div>
-					<div class="col-md-1">
-					<input class="procentInput" type="number" ng-model="exam.gradePercentage[0]" placeholder="%">
-					</div>
+            <!-- Test anonymous and feedback -->
+            <div class="row">
+                <div class="col-md-3 col-md-offset-6 form-group text-right">
+                    <div class="form-inline">
+                        <label for="examAnon" class="control-label">Anonym rättning</label>
+                        <checkbox id="examAnon" large ng-class="{'btn-success': exam.anonymous}"
+                                  class="form-control checkbox-form-inline-right"
+                                  ng-model="exam.anonymous"></checkbox>
+                    </div>
+                </div>
+                <div class="col-md-3 text-right">
+                    <div class="form-inline">
+                        <label for="examFeedback" class="control-label">Direkt feedback efter prov</label>
+                        <checkbox id="examFeedback" large ng-class="{'btn-success': exam.feedback}"
+                                  class="form-control checkbox-form-inline-right"
+                                  ng-model="exam.feedback"></checkbox>
+                    </div>
+                </div>
+            </div>
+            <!-- Test grade percentages -->
+            <div class="row form-group row-extra-space">
+                <div class="col-md-2 text-left">
+                    <button class="btn btn-success btn-sm mini-btn" ng-click="newQuestion()"><span
+                            class="glyphicon glyphicon-plus"></span></button>
+                    <button class="btn btn-danger btn-sm mini-btn" ng-click="deleteQuestion()"><span
+                            class="glyphicon glyphicon-remove"></span></button>
+                    <button class="btn btn-primary btn-sm mini-btn" ng-click="showQuestions()"><span
+                            class="glyphicon glyphicon-list"></span></button>
+                </div>
+                <div class="col-md-2 col-md-offset-4">
+                    <div class="pLabel">
+                        Gräns för G
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <input class="form-control text-right" type="number" ng-model="exam.gradePercentage[0]"
+                           placeholder="%">
+                </div>
 
-				<div class="col-md-2">
-					<div class="pLabel">
-					Gräns för VG
-							</div>
-					</div>
-				<div class="col-md-1">
-				<input class="procentInput" type="number" ng-model="exam.gradePercentage[1]" placeholder="%">
-				</div>
-			</div>
-			<!-- Question list -->
+                <div class="col-md-2">
+                    <div class="pLabel">
+                        Gräns för VG
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <input class="form-control text-right" type="number" ng-model="exam.gradePercentage[1]"
+                           placeholder="%">
+                </div>
+            </div>
+            <!-- Question list -->
 
-			<!-- Submit -->
-			<div class="row">
-				<div class="col-md-3 col-md-offset-6">
-					<button class="btn btn-success" ng-click="saveExam()">Spara prov</button>
-				</div>
-			</div>
-		</form>
+            <div class="row">
+                <div class="col-md-12">
+                   <table class="table table-hover table-form-group draggableUl" ui-sortable ng-model="allQuestions">
+                        <thead class="thead">
+                        <tr>
+                            <th>Titel</th>
+                            <th>G/VG</th>
+                            <th>Poäng</th>
+                            <th>Typ</th>
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="currQuestion in allQuestions">
+                        <tr ng-click="console.log($index)">
+                            <td>{{currQuestion.title}}</td>
+                            <td>{{currQuestion.vgQuestion ? 'VG' : 'G'}}</td>
+                            <td>{{currQuestion.points}}</td>
+                            <td>{{currQuestion.type}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-	</div>
-	<div ng-repeat="(key, prop) in exam">
-		<tt>{{key}}; {{prop}}</tt>
-	</div>
+            <!-- Submit -->
+            <div class="row">
+                <div class="col-md-3 col-md-offset-6">
+                    <button class="btn btn-primary" ng-click="saveExam()">Spara prov</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+<!-- DEBUG INFO -->
+    <tt>CurrExam:</tt><br/>
+    <div ng-repeat="(key, prop) in exam">
+        <tt>{{key}}; {{prop}}</tt>
+    </div>
+    <br/>
+    <br/>
+    {{allQuestions}}
+
 </article>
