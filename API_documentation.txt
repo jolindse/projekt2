@@ -24,7 +24,6 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/question/(id) 			GET 	- 			question 		    Gets a specific question
 /api/question/(id) 			DELETE 	- 			- 				    Deletes a question
 /api/question/cre8or/(id)	GET 	-			[question]		    Gets all questions by a cre8or
-/api/questionImages/(file)  GET     -           path                Gets a path to the specific image
 
 /api/submitted				POST 	submitted	- 				    Adds a submitted exam
 /api/submitted/(id)			GET 	- 			submitted 		    Gets a specific submitted exam
@@ -34,6 +33,9 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/submitted/needcorr     GET     -           [submitted]         Gets all exams which needs to be corrected
 
 /api/mail                   POST    [id]        success:boolean     Expects an array with user id's, returns boolean
+/api/sendpass               GET     id          success:boolean     Sends login and password to user. Expects a user's loginId
+
+/api/statistics/scope/id    GET     scope, id   jsonObject          scope: user, class och exam, id: ObjectId
 
 all (id) except for the login one refers to MongoDB _id.
 

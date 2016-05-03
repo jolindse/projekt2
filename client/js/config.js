@@ -58,7 +58,7 @@ myApp.config(function ($routeProvider) {
         })
 
         .when('/class', {
-            templateUrl: 'partials/class.html',
+            templateUrl: 'partials/manage_class.html',
             controller: 'classCtrl'
         })
 
@@ -113,3 +113,5 @@ myApp.run(function($rootScope, $location) {
         }
     });
 });
+
+myApp.constant('APIBASEURL', 'http://localhost:3000');

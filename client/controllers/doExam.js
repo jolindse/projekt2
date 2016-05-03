@@ -1,92 +1,120 @@
 /**
  * Created by Johan on 2016-05-01.
  */
-myApp.controller('doExamCtrl',['$scope','userService','ExamManager','SubmittedManager','QuestionManager', function($scope,userService,ExamManager,SubmittedManager,QuestionManager){
-
-    $scope.qIndex = 0;
-    $scope.hasNextQ = true;
-    $scope.hasPreviousQ = false;
+myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'SubmittedManager', 'QuestionManager','APIBASEURL', function ($scope, userService, ExamManager, SubmittedManager, QuestionManager,APIBASEURL) {
 
     /*
-    FUNCTIONS
+     FUNCTIONS
      */
 
-    $scope.getExam = function(id, callback){
-        ExamManager.getExam(id, function(data){
+    /*
+    Init exam and set up submit object.
+     */
+    $scope.startExam = function (id) {
+        // Get current exam
+        ExamManager.getExam(id, function (data) {
             $scope.currExam = data;
-            $scope.currExam.questions.forEach(function(currQId){
-                QuestionManager.getQuestion(currQId, function(data){
-                    $scope.questions.push(data);
-                });
+            $scope.currSubmitted = {
+                exam: $scope.currExam._id,
+                student: userService.id,
+                answers: []
+            };
+            // Build submitted exam answers
+            var examLength = $scope.currExam.questions.length;
+            for (var i = 0; i < examLength; i++) {
+                $scope.currSubmitted.answers[i] = {
+                    text: []
+                };
+            }
+            // callback();
+            QuestionManager.getQuestion($scope.currExam.questions[$scope.qIndex], function (data) {
+                $scope.currQuestion = data;
             });
         });
     };
 
-    $scope.submitAnswer = function() {
-        
-
-        currSubmitted.answers[$scope.qIndex] = {
+    /*
+    Select and save answer to questions of multi and single type
+     */
+    $scope.selectAnswer = function (index) {
+        if ($scope.currQuestion.type === 'single') {
+            $scope.currSubmitted.answers[$scope.qIndex].text[0] = $scope.currQuestion.answerOptions[index].text;
         }
-    }
+        if ($scope.currQuestion.type === 'multi') {
 
-    $scope.checkboxChange = function (index) {
-        /*if ($scope.currQuestion.type === 'single') {
-            for (var i = 0; i < $scope.question.answerOptions.length; i++) {
-                if (i !== index) {
-                    $scope.question.answerOptions[i].correct = false;
-                }
+            var currIndex = $scope.currSubmitted.answers[$scope.qIndex].text.indexOf($scope.currQuestion.answerOptions[index].text);
+            if (currIndex >= 0) {
+                $scope.currSubmitted.answers[$scope.qIndex].text.splice(currIndex, 1);
+            } else {
+                $scope.currSubmitted.answers[$scope.qIndex].text.push($scope.currQuestion.answerOptions[index].text);
             }
-        }*/
-    };
-
-    $scope.setNextPrev = function(){
-        if ($scope.qIndex === $scope.questions.length-1){
-            $scope.hasNextQ = false;
-        } else {
-            $scope.hasNextQ = true;
-        }
-
-        if ($scope.qIndex === 0){
-            $scope.hasPreviousQ = false;
-        } else {
-            $scope.hasPreviousQ = true;
-        }
-    };
-
-    $scope.nextQuestion = function(){
-        if ($scope.qIndex < $scope.questions.length){
-            $scope.qIndex++;
-            $scope.currQuestion = $scope.questions[$scope.qIndex];
-            $scope.setNextPrev();
-        }
-    };
-
-    $scope.previousQuestion = function() {
-        if ($scope.qIndex >= 0){
-            $scope.qIndex--;
-            $scope.currQuestion = $scope.questions[$scope.qIndex];
-            $scope.setNextPrev();
         }
     };
 
     /*
-    INIT
+    Make sure rank-questions have all answers.
      */
+    $scope.setupRanking = function() {
+        // If first time this question is being displayed make a copy of the answers.
+        if ($scope.currSubmitted.answers[$scope.qIndex].text.length < 1){
+            $scope.currQuestion.answerOptions.forEach(function(data){
+                $scope.currSubmitted.answers[$scope.qIndex].text.push(data.text);
+            });
+            // Randomize the order of the answers.
+            for (var i = $scope.currSubmitted.answers[$scope.qIndex].text.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = $scope.currSubmitted.answers[$scope.qIndex].text[i];
+                $scope.currSubmitted.answers[$scope.qIndex].text[i] = $scope.currSubmitted.answers[$scope.qIndex].text[j];
+                $scope.currSubmitted.answers[$scope.qIndex].text[j] = temp;
+            }
+        }
+    };
+    
+    /*
+    Get next question
+     */
+    $scope.nextQuestion = function () {
+        if ($scope.qIndex < $scope.currExam.questions.length) {
+            $scope.qIndex++;
+            QuestionManager.getQuestion($scope.currExam.questions[$scope.qIndex], function (data) {
+                $scope.currQuestion = data;
+                if ($scope.currQuestion.type === 'rank'){
+                    $scope.setupRanking();
+                }
+            });
+        }
+    };
+
+    /*
+    Get previous question
+     */
+    $scope.previousQuestion = function () {
+        if ($scope.qIndex >= 0) {
+            $scope.qIndex--;
+            QuestionManager.getQuestion($scope.currExam.questions[$scope.qIndex], function (data) {
+                $scope.currQuestion = data;
+                if ($scope.currQuestion.type === 'rank'){
+                    $scope.setupRanking();
+                }
+            });
+        }
+    };
+    
+    $scope.submitExam = function() {
+        // SUBMIT
+    };
+
+    /*
+     INIT
+     */
+    $scope.qIndex = 0;
+    $scope.hasNextQ = true;
+    $scope.hasPreviousQ = false;
 
     $scope.currExam = '';
+    $scope.currQuestion = '';
     $scope.currSubmitted = '';
 
-    $scope.questions = [];
-    $scope.currQuestion = '';
+    $scope.startExam(userService.currentExam);
 
-    $scope.getExam('572707f02e2e28d82ae8a6fd', function(){
-        $scope.currSubmitted = {
-            exam: $scope.currExam._id,
-            student: userService.id,
-            answers: []
-        }
-        $scope.currQuestion = $scope.questions[0];        
-    });
-
-    
 }]);

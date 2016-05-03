@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,400italic,700,700italic);
+
 body, html {
     /*height: 100vh;
     background: linear-gradient(rgb(238, 114, 2), rgb(161, 77, 1)) no-repeat;
@@ -5,6 +7,8 @@ body, html {
     -webkit-background-size: cover;
     */
     background-color: white;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
 }
 /* SHARE TEST MODAL */
 .active-row {
@@ -52,7 +56,9 @@ body, html {
 .panel-body {
     padding-left: 0;
 }
-
+/*
+INPUT MERGE
+*/
 input {
   width: 80%;
 }
@@ -73,6 +79,14 @@ input {
 /*
 * COMMON ELEMENT STYLING
 */
+
+.bigicon {
+    font-size: 2em;
+}
+
+.grayicon {
+    color: #777777;
+}
 
 .btn:focus {
     outline: none;
@@ -239,6 +253,13 @@ input[type=number]::-webkit-outer-spin-button {
 */
 
 /*
+INPUT GROUP MERGE
+*/
+.input-group-addon{
+    min-width: 100px;
+}
+
+/*
 * QUESTION CREATE/EDIT
 */
 
@@ -259,7 +280,9 @@ ul.draggableUl {
 }
 
 .icon-center {
-    vertical-align: middle;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .drop-box {
@@ -314,3 +337,80 @@ ul.draggableUl {
 /*
 * END OF QUESTION CREATE/EDIT
 */
+
+/*
+* DO EXAM
+*/
+
+.questionImage {
+    right: 0;
+    top: 0;
+    float: right;
+    max-width: 200px;
+    max-height: 200px;
+    margin-left: 10px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.topbtn {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.answerOptions {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid rgb(200,200,200);
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.answerOptions.ranking {
+    background-color: #eeeeee; /* Taken from jumbotron to not make ranking options transparent.*/
+}
+
+.answerOptions > p {
+    padding: 0;
+    margin: 0;
+}
+
+.textcontroll > p {
+
+}
+
+/*
+* END OF QUESTION CREATE/EDIT
+*/
+.modal{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.modal-content{
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+.close{
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover, .close:focus{
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

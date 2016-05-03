@@ -7,18 +7,18 @@ var mailer = require('nodemailer');
 var User = require('../models/User');
 var Exam = require('../models/Exam');
 
+var transporter = mailer.createTransport("SMTP", {
+    pool: true,
+    host : "smtp-mail.outlook.com",
+    secureConnection : false,
+    port : 587,
+    auth : {
+        user : 'newtonexam@outlook.com',
+        pass : 'N3wt0n#x4m'
+    }
+});
+
 module.exports.sendMail = function(recipients, callback) {
-    var transporter = mailer.createTransport("SMTP", {
-        pool: true,
-        host : "smtp-mail.outlook.com",
-        secureConnection : false,
-        port : 587,
-        auth : {
-            user : 'newtonexam@outlook.com',
-            pass : 'N3wt0n#x4m'
-        }
-    });
-    
     var mailOptions = {
         from : '"Newton Testsystem" <newtonexam@hotmail.com>',
         to : '',
@@ -49,4 +49,37 @@ module.exports.sendMail = function(recipients, callback) {
             }
         });
     });
+};
+
+module.exports.sendPassword = function(recipient, callback) {
+  User.getUserByLogin(recipient, function(err, user) {
+      if (err) {
+          console.log(err);
+          callback({success: false, error: err})
+      } else {
+          console.log(user.password);
+          var mailOptions = {
+              from: '"Newton Testsystem" <newtonexam@hotmail.com>',
+              to: user.email,
+              subject: 'Ditt lösenord',
+              html: '<h1>Här kommer ditt lösenord</h1> ' +
+              'Någon har försökt att logga in på ditt konto 3 gånger utan att ha angivit rätt lösenord.' +
+              '<p>Ditt användar-id är ' + user.id + '<br />' +
+              'och ditt lösenord är: ' + user.password + '</p>' +
+              '<p>Med vänlig hälsning<br />' +
+              'Newton Yrkeshögskola'
+          };
+          transporter.sendMail(mailOptions, function (err, info) {
+              if (err) {
+                  console.log(err);
+                  callback({
+                      success: false,
+                      error: err
+                  });
+              } else {
+                  callback({success: true});
+              }
+          })
+      }
+  });
 };

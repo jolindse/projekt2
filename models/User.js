@@ -65,6 +65,13 @@ module.exports.getUser = function(id, callback) {
     User.findById(id, callback);
 };
 
+// Get a user by login-id
+module.exports.getUserByLogin = function(id, callback) {
+    User.findOne(
+        {id: id},
+        callback);
+};
+
 // Updates a user
 module.exports.updateUser = function(id, updatedUser, callback) {
     User.findOneAndUpdate(
