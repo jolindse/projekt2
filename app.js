@@ -18,9 +18,11 @@ var bodyParser = require('body-parser');
 var db = require('./components/db');
 var multer = require('multer');
 var path = require('path');
+
+// Components import
 var correction = require('./components/correction');
 var sendMail = require('./components/sendMail');
-
+var stat = require('./components/statistics');
 
 // Models import
 var User = require('./models/User');
@@ -121,15 +123,12 @@ app.post('/api/user/login/:id', function (req, res) {
         if (err) {
             res.status(405).json({login: false, message: 'Error connecting to db'});
         } else {
-
             if (user != null) {
-
                 if (user.password === req.body.password) {
                     res.status(200).json({login: true, user: user});
                 } else {
                     res.status(405).json({login: false, message: 'Kontrollera användarnamn och lösenord'});
                 }
-
             }
             else {
                 res.status(405).json({login: false, message: 'Hittar inte användarnamnet.'});
@@ -524,6 +523,34 @@ app.post('/api/mail', function (req, res) {
         }
     });
 });
+
+// Send password to user
+app.get('/api/sendpass/:id', function(req, res) {
+   sendMail.sendPassword(req.params.id, function(success) {
+      if(success.success === true) {
+          res.status(200).json(success);
+      } else {
+          res.status(404).json(success);
+      }
+   });
+});
+
+/*
+---------------------------------
+            STATISTICS
+---------------------------------
+*/
+
+app.get('/api/statistics/:scope/:id', function(req, res) {
+    stat.statistics(req, function(returnObject) {
+        if(returnObject.success === true) {
+            res.status(200).json(returnObject);
+        } else if(returnObject.success === false) {
+            res.status(404).json(returnObject);
+        }
+    });
+});
+
 
 // Start listening and log start.
 var listener = app.listen(3000, function () {

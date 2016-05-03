@@ -7,7 +7,8 @@ UserManager:
 		.deleteUser(_id)							-
 		.addUser(userData, callback())				User
 		.getAllUsers(callback())					[User]
-		.setUser(userData)							-		
+		.setUser(userData)							-
+		.getUserByLogin(id, callback())             User
 
 ExamManager:
 		.getExam(_id, callback())					Exam
