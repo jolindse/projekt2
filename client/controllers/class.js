@@ -3,15 +3,13 @@
  */
 
 myApp.controller('classCtrl', function($scope, userService, StudentClassManager){
-
-
-
+    
     $scope.saveSchoolClass = function () {
         StudentClassManager.addStudentClass($scope.class, function (data) {
             $scope.class = data;
-            $scope.getAllClasses();
         })
     };
+    
     $('#newStudentModal').click(function () {
         $('#createStudentModal').show();
     });
@@ -28,6 +26,5 @@ myApp.controller('classCtrl', function($scope, userService, StudentClassManager)
         $('#createClassModal').hide();
     });
     
-
 });
 

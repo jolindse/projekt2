@@ -116,9 +116,10 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
     $scope.user = "";
 
     UserManager.getUser(userService.id, function (data) {
+        
         $scope.user = data;
-
         $scope.tests = [];
+        
         $scope.user.testToTake.forEach(function(testId) {
             ExamManager.getExam(testId, function (test) {
                 $scope.tests.push(test);
