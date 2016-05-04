@@ -6,19 +6,6 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
     /*
      FUNCTIONS
      */
-
-    $scope.getAllQuestions = function () {
-        QuestionManager.getAllQuestions(function (data) {
-            $scope.allQuestions = data;
-        });
-    };
-
-    $scope.getAllExams = function () {
-        ExamManager.getAllExams(function (data) {
-            $scope.allExams = data;
-        });
-    };
-
     $scope.loadExam = function (id) {
         ExamManager.getExam(id, function (data) {
             $scope.exam = data;
@@ -26,15 +13,14 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
     };
 
     $scope.saveExam = function () {
-        exam.cre8or = userService.id;
+        $scope.exam.cre8or = userService.id;
         ExamManager.addExam($scope.exam, function (data) {
             $scope.exam = data;
-            $scope.getAllExams();
         });
     };
 
-    $scope.addQuestion = function (currQuestion) {
-        $scope.exam.questions.push(currQuestion);
+    $scope.addQuestion = function (currQuestionId) {
+        $scope.exam.questions.push(currQuestionId);
     };
 
     $scope.dateParams = {
@@ -66,24 +52,39 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         });
 
         modalInstance.result.then(function (data) {
-            $scope.addQuestion(data);
+            console.log('return from modal: '+JSON.stringify(data)); // TEST
+            $scope.addQuestion(data._id);
+            $scope.exam.questionArray.push(data);
         });
     };
 
+    $scope.userList = function () {
+        var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'modalviews/listModal.html',
+            controller: 'modalListCtrl',
+            size: 'lg',
+            resolve: {
+                listType: function () {
+                    return 'users';
+                }
+            }
+        });
+
+        modalInstance.result.then(function (data) {
+            console.log('return from modal: '+JSON.stringify(data)); // TEST
+        });
+    };
 
     /*
      INIT
      */
 
-    $scope.allExams = [];
-    $scope.allQuestions = [];
-
     $scope.exam = {
         gradePercentage: [],
         interval: [],
-        questions: []
+        questions: [],
+        questionArray: []  // GLÖM INTE TA BORT INNAN EXPORT
     };
 
-    $scope.getAllExams();
-    $scope.getAllQuestions();
 }]);

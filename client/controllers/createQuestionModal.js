@@ -58,13 +58,14 @@ myApp.controller('modalQuestionCtrl', ['$scope', 'QuestionManager', 'userService
     // MODAL FUNCTIONALITY
 
     $scope.ok = function() {
-        $scope.submitQuestion();
-        if ($scope.currQuestion._id) {
-            $uibModalInstance.close($scope.currQuestion);
-        } else {
-            console.log('Could not pass a new question to parent. Data: '+JSON.stringify($scope.currQuestion));
-            $uibModalInstance.dismiss('Unable to send data');
-        }
+        $scope.submitQuestion(function () {
+            if ($scope.question._id) {
+                $uibModalInstance.close($scope.question);
+            } else {
+                console.log('Could not pass a new question to parent. Data: '+JSON.stringify($scope.question));
+                $uibModalInstance.dismiss('Unable to send data');
+            }
+        });
     };
 
     $scope.cancel = function () {
@@ -88,7 +89,7 @@ myApp.controller('modalQuestionCtrl', ['$scope', 'QuestionManager', 'userService
     }
     // END OF REDO
 
-    $scope.submitQuestion = function () {
+    $scope.submitQuestion = function (callback) {
         // Validate all required fields.
         $scope.okForm = true;
 
@@ -158,11 +159,15 @@ myApp.controller('modalQuestionCtrl', ['$scope', 'QuestionManager', 'userService
                 uploadForm.success(function (data, status, headers, config) {
                     $scope.question = data;
                     QuestionManager.setQuestion($scope.question);
+                    console.log('Should have question '+JSON.stringify($scope.question)); // TEST
+                    callback();
                 });
             } else {
                 // Standard add question to database.
                 QuestionManager.addQuestion($scope.question, function (data) {
                     $scope.question = data;
+                    console.log('Should have question '+JSON.stringify($scope.question)); // TEST
+                    callback();
                 });
             }
         }

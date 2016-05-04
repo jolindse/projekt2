@@ -1,0 +1,89 @@
+<!-- Share test-Modal -->
+<div class="modal-dialog">
+
+	<!-- Modal content-->
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">
+				<span ng-if="listType.type === 'users'">Användarlista</span>
+				<span ng-if="listType.type === 'exams'">Provlista</span>
+				<span ng-if="listType.type === 'questions'">Frågelista</span>
+				<span ng-if="listType.type === 'submitted'">Inlämnade prov</span>
+				<span ng-if="listType.type === 'classes'">Klasslista</span>
+			</h4>
+		</div>
+		<div class="modal-body">
+			<form>
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-addon"><i class="fa fa-search"></i></div>
+
+						<input type="text" class="form-control" placeholder="Filtrera lista" ng-model="searchList">
+
+					</div>
+				</div>
+			</form>
+
+			<table class="table">
+				<thead ng-if="listType === 'users'" class="thead">
+				<tr>
+					<th ng-click="">
+						<checkbox class="checkbox-mini" id="selectAll" ng-model="checkAll"/>
+					</th>
+					<!-- USERS
+					<!-- Users firstname-->
+					<th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
+						Förnamn
+						<span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
+						<span ng-show="sortType == 'firstName' && sortReverse" class="fa fa-caret-up"></span>
+					</th>
+
+					<!-- Users surname -->
+					<th ng-click="sortType = 'surName';  sortReverse = !sortReverse">
+						Efternamn
+						<span ng-show="sortType == 'surName' && !sortReverse" class="fa fa-caret-down"></span>
+						<span ng-show="sortType == 'surName' && sortReverse" class="fa fa-caret-up"></span>
+					</th>
+
+					<!-- Studentclass -->
+					<th ng-click="sortType = 'studentClass';  sortReverse = !sortReverse">
+						Klass
+						<span ng-show="sortType == 'studentClass' && !sortReverse" class="fa fa-caret-down"></span>
+						<span ng-show="sortType == 'studentClass' && sortReverse" class="fa fa-caret-up"></span>
+					</th>
+				</tr>
+				</thead>
+				<!-- CLASS -->
+
+				<!-- EXAMS -->
+
+				<!-- QUESTIONS -->
+
+				<!-- SUBMITTED -->
+
+
+				<tbody>
+				<tr ng-repeat="currObject in currentListObjects | orderBy:sortType:sortReverse | filter:searchList">
+					<td><input class="checkbox" type="checkbox" ng-model="user.selected"/></td>
+					<td>{{user.user.firstName}}</td>
+					<td>{{user.user.surName}}</td>
+					<td>{{user.studentClass}}</td>
+
+				</tr>
+				</tbody>
+
+			</table>
+
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+			<button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal"
+					data-toggle="modal" data-target="#confirmationModal">OK
+			</button>
+
+		</div>
+	</div>
+
+</div>
+</div>

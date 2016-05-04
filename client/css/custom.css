@@ -81,6 +81,11 @@ body, html {
     min-height: 33px;
 }
 
+.checkbox-mini {
+    max-width: 20px;
+    max-height: 20px;
+}
+
 .bigicon {
     font-size: 2em;
 }
