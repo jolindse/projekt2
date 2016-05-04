@@ -2,7 +2,7 @@
  * Created by Johan on 2016-04-29.
  */
 
-myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService', 'Upload', 'APIBASEURL', function ($scope, QuestionManager, userService, Upload, APIBASEURL) {
+myApp.controller('modalQuestionCtrl', ['$scope', 'QuestionManager', 'userService', 'Upload', 'APIBASEURL','$uibModalInstance', function ($scope, QuestionManager, userService, Upload, APIBASEURL,$uibModalInstance) {
 
     // FUNCTIONS
 
@@ -54,6 +54,23 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
             correct: false
         };
     };
+
+    // MODAL FUNCTIONALITY
+
+    $scope.ok = function() {
+        $scope.submitQuestion();
+        if ($scope.currQuestion._id) {
+            $uibModalInstance.close($scope.currQuestion);
+        } else {
+            console.log('Could not pass a new question to parent. Data: '+JSON.stringify($scope.currQuestion));
+            $uibModalInstance.dismiss('Unable to send data');
+        }
+    };
+
+    $scope.cancel = function () {
+        $uibModalInstance.dismiss();
+    };
+
 
     // TO BE REDONE!
     $scope.setSelectedAnswer = function (currIndex) {
@@ -151,27 +168,7 @@ myApp.controller('makeQuestionCtrl', ['$scope', 'QuestionManager', 'userService'
         }
     };
 
-    // Standard actions
-
-    $scope.loadQuestion = function (id) {
-        QuestionManager.getQuestion(id, function (data) {
-            $scope.question = data;
-        });
-    };
-
-    $scope.loadAllQuestions = function () {
-        QuestionManager.getAllQuestions(function (data) {
-            $scope.questions = data;
-        });
-    };
-
-    $scope.saveQuestion = function () {
-        QuestionManager.setQuestion($scope.question);
-    };
-
     // INIT
-
-    $scope.questions = [];
 
     $scope.questionTypes = [
         {

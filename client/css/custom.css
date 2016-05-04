@@ -76,6 +76,11 @@ body, html {
 * COMMON ELEMENT STYLING
 */
 
+.checkbox-answer-options {
+    min-width: 33px;
+    min-height: 33px;
+}
+
 .bigicon {
     font-size: 2em;
 }
@@ -411,6 +416,10 @@ ul.draggableUl {
 * CREATE EXAM
 */
 
+.answerModalOptions {
+    margin-bottom: 10px;
+}
+
 .smallLabeltext {
     font-size: 14px;
     font-weight: 400;
@@ -454,9 +463,14 @@ ul.draggableUl {
 .mini-btn {
     font-size: 9px;
     height: 25px;
-    margin-top: 8px;
+    margin-top: 28px;
     padding-left: 7px;
     padding-right: 7px;
+}
+
+.btn-modal-okcancel {
+    min-width: 100px;
+    display: inline-block;
 }
 
 

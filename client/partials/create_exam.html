@@ -90,15 +90,7 @@
             </div>
             <!-- Test grade percentages -->
             <div class="row form-group row-extra-space">
-                <div class="col-md-2 text-left">
-                    <button class="btn btn-success btn-sm mini-btn" ng-click="newQuestion()"><span
-                            class="glyphicon glyphicon-plus"></span></button>
-                    <button class="btn btn-danger btn-sm mini-btn" ng-click="deleteQuestion()"><span
-                            class="glyphicon glyphicon-remove"></span></button>
-                    <button class="btn btn-primary btn-sm mini-btn" ng-click="showQuestions()"><span
-                            class="glyphicon glyphicon-list"></span></button>
-                </div>
-                <div class="col-md-2 col-md-offset-4">
+                <div class="col-md-2 col-md-offset-6">
                     <div class="pLabel">
                         Gräns för G
                     </div>
@@ -121,8 +113,23 @@
             <!-- Question list -->
 
             <div class="row">
+                <div class="text-left col-md-10">
+                    <h2>Frågor</h2>
+                </div>
+                <div class="text-right col-md-2">
+                    <button class="btn btn-success btn-sm mini-btn" ng-click="newQuestion()"><span
+                            class="glyphicon glyphicon-plus"></span></button>
+                    <button class="btn btn-danger btn-sm mini-btn" ng-click="deleteQuestion()"><span
+                            class="glyphicon glyphicon-remove"></span></button>
+                    <button class="btn btn-primary btn-sm mini-btn" ng-click="showQuestions()"><span
+                            class="glyphicon glyphicon-list"></span></button>
+                </div>
+            </div>
+
+
+            <div class="row">
                 <div class="col-md-12">
-                   <table class="table table-hover table-form-group draggableUl" ui-sortable ng-model="allQuestions">
+                    <table class="table table-hover table-form-group draggableUl" ui-sortable ng-model="allQuestions">
                         <thead class="thead">
                         <tr>
                             <th>Titel</th>
@@ -145,20 +152,16 @@
 
             <!-- Submit -->
             <div class="row">
-                <div class="col-md-3 col-md-offset-6">
-                    <button class="btn btn-primary" ng-click="saveExam()">Spara prov</button>
+                <div class="col-md-3 col-md-offset-9 text-right">
+                    <button class="btn btn-success" ng-click="saveExam()">Spara prov</button>
                 </div>
             </div>
         </form>
     </div>
 
-<!-- DEBUG INFO -->
+    <!-- DEBUG INFO -->
     <tt>CurrExam:</tt><br/>
     <div ng-repeat="(key, prop) in exam">
         <tt>{{key}}; {{prop}}</tt>
     </div>
-    <br/>
-    <br/>
-    {{allQuestions}}
-
 </article>

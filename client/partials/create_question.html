@@ -120,8 +120,8 @@
                                        ng-focus="setSelectedAnswer($index)" ng-blur="removeSelectedAnswer($index)"
                                        ng-model="question.answerOptions[$index].text" placeholder="Svarstext">
                             </div>
-                            <div class="col-md-1">
-                                <checkbox large ng-class="{'btn-success': question.answerOptions[$index].correct}"
+                            <div class="col-md-1 text-right">
+                                <checkbox class="checkbox-answer-options" large ng-class="{'btn-success': question.answerOptions[$index].correct}"
                                           ng-model="question.answerOptions[$index].correct"
                                           ng-change="checkboxChange($index)"></checkbox>
                             </div>

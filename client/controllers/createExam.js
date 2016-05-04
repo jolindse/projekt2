@@ -61,7 +61,7 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         var modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'modalviews/newquestion.html',
-            controller: 'makeQuestionCtrl',
+            controller: 'modalQuestionCtrl',
             size: 'lg'
         });
 
