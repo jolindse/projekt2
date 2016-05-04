@@ -81,8 +81,14 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <div ng-show="successShare" class="alert alert-success" role="alert">
+                    <p>{{successMessage}}</p>
+                </div>
+                <div ng-show="errorShare" class="alert alert-danger" role="alert">
+                    <p>{{errorMessage}}</p>
+                </div>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
-                <button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#confirmationModal">OK</button>
+                <button ng-hide="successShare" ng-click="shareExam()" type="button" class="btn btn-primary" ><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> OK</button>
             </div>
         </div>
     </div>

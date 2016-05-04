@@ -204,6 +204,13 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
     $scope.sortType     = 'name';
     $scope.sortReverse  = false;
     $scope.searchUser   = '';
+    //Loading animation when sharing exam:
+    $scope.loading = false;
+    //When a sharing an exam successfully:
+    $scope.successShare = false;
+    $scope.successShare = false;
+    $scope.successMessage = null;
+    $scope.errorMessage = null;
 
     //Get all exams:
     ExamManager.getAllExams(function (test) {
@@ -270,6 +277,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
 
     //Listener for the button "share exam":
     $scope.shareExam = function () {
+        $scope.loading = true;
 
         //Loop trough the array selectedStudents:
         $scope.selectedStudents.forEach(function (student) {
@@ -294,16 +302,40 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
             }
         );
 
-        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <-------------------------
+        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <-------------------------*/
         if (recObj.rec.length > 0) {
             console.log("innan mail " + JSON.stringify(recObj));
 
-            $http.post("/api/mail", JSON.stringify(recObj)).success(function (data, status) {
-                console.log("data = " + data);
+            $http.post("/api/mail", JSON.stringify(recObj))
+                .success(function (data, status) {
                 console.log("status = " + status);
+                console.log("data = " + data);
+
+                if (status == 200){
+                    $scope.loading = false;
+                    $scope.successShare = true;
+                    $scope.successMessage = "Du har nu delat provet " + $scope.selectedTest.title + "och studenterna har informerats via email.";
+                }
+                else {
+                    $scope.loading = false;
+                    $scope.errorShare = true;
+                    $scope.errorMessage = "Du har nu delat provet " + $scope.selectedTest.title + " men tyvärr har inget email skickats iväg, vänligen försök igen..";
+                }
             })
+                .error(function (data, status) {
+                $scope.loading = false;
+
+                $scope.errorShare = true;
+                $scope.errorMessage = "Du har nu delat provet " + $scope.selectedTest.title + " men tyvärr har inget email skickats iväg, vänligen försök igen..";
+
+                console.log(data);
+                console.log(status);
+            });
         }
-        */
+        else {
+            $scope.loading = false;
+        }
+
 
     };
 });
@@ -317,6 +349,9 @@ myApp.controller('userDetailCtrl', function ($scope, $route, UserManager, userSe
     $scope.lastNameDisabled = true;
     $scope.passwordDisabled = true;
     $scope.emailDisabled = true;
+    $scope.detailsChanged = false;
+    $scope.showbutton = false;
+
 
     //Get current user:
     UserManager.getUser(userService.id, function (data) {
@@ -326,27 +361,36 @@ myApp.controller('userDetailCtrl', function ($scope, $route, UserManager, userSe
     //Change first name:
     $scope.changeFirstName = function () {
         $scope.firstNameDisabled = false;
+        $scope.showbutton = true;
     };
 
     //Change last name:
     $scope.changeLastName = function () {
         $scope.lastNameDisabled = false;
+        $scope.showbutton = true;
     };
 
     //Change password:
     $scope.changePassword = function () {
         $scope.passwordDisabled = false;
+        $scope.showbutton = true;
     };
 
     //Change email:
     $scope.changeEmail = function () {
         $scope.emailDisabled = false;
+        $scope.showbutton = true;
     };
 
     //Update the user:
     $scope.updateUser = function () {
         UserManager.setUser($scope.user);
-        $route.reload();
+        $scope.firstNameDisabled = true;
+        $scope.lastNameDisabled = true;
+        $scope.passwordDisabled = true;
+        $scope.emailDisabled = true;
+        $scope.detailsChanged = true;
+        $scope.showbutton = false;
     };
 
 });

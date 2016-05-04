@@ -20,10 +20,64 @@
                 <td>{{test.title}}</td>
                 <td>{{test.time}}</td>
                 <td>{{test.interval[0]}}</td>
-                <td><span class="glyphicon glyphicon-info-sign"></span></td>
+                <td><span data-toggle="modal" data-target="#infoModal" class="glyphicon glyphicon-info-sign"></span></td>
             </tr>
             </tbody>
         </table>
         <button ng-hide="selectedTest == null" ng-click="startExam()" type="button" class="btn btn-success">Starta prov</button>
     </div>
 </article>
+
+<!-- Info-Modal -->
+<div id="infoModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{selectedTest.title}}</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="table">
+                    <thead class="thead">
+                    <tr>
+                        <th>
+                            Titel
+                        </th>
+                        <th>
+                            Ämne
+                        </th>
+                        <th>
+                            Tillgänglig
+                        </th>
+                        <th>
+                            Gräns för godkänt
+                        </th>
+                        <th>
+                            Gräns för väl godkänt
+                        </th>
+                        <th>
+                            Antal frågor
+                        </th>
+                        <th>
+                            Skapare
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{selectedTest.titel}}</td>
+                        <td>{{user.user.surName}}</td>
+                        <td>{{user.studentClass}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+            </div>
+        </div>
+    </div>
+</div>
