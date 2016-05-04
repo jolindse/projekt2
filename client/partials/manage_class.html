@@ -18,7 +18,7 @@
                             </tr>
                         </thead>
                         <tbody ng-repeat="class in studentClasses">
-                            <tr ng-click="loadClass(studentClasses[$index])" class="clickable-row">
+                            <tr ng-class="{'selectedRow':selectedRow === $index},{}" ng-click="loadClass(studentClasses[$index],$index)"  class="clickable-row">
                                 <td>{{class.name}}</td>
                             </tr>
                         </tbody>

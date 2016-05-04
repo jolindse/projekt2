@@ -207,6 +207,7 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
     //Get selected exam when sharing an exam:
     $scope.selectExam = function (data) {
         ExamManager.getExam(data._id, function (data) {
+            console.log(data);
             $scope.selectedTest = data;
         });
 

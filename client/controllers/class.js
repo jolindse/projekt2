@@ -5,6 +5,7 @@
 myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','UserManager', function($scope, userService, StudentClassManager, UserManager){
 
     $scope.studentClass = "";
+    $scope.selectedRow = "";
     $scope.studentClasses = [];
     $scope.users = [];
 
@@ -19,16 +20,14 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             $scope.studentClasses = data;
         })
     };
-    // $scope.selectClass = function (data) {
-    //     StudentClassManager.getStudentClass(data._id, function (data) {
-    //         $scope.studentClass = data;
-    //     })
-    // };
-    
-    $scope.loadClass = function (id) {
-        StudentClassManager.getStudentClass(id._id, function (data) {
-            $scope.studentClass = data;
-        })
+
+    $scope.loadClass = function (currClass, index) {
+        console.log(currClass);
+        console.log(index);
+            $scope.studentClass = currClass;
+            $scope.selectedRow = index;
+
+
     };
     
     $scope.saveUser = function () {
@@ -44,7 +43,7 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             $scope.getAllStudentClasses();
         })
     };
-    
+
     $scope.getAllStudentClasses();
     $scope.getAllUsers();
 }]);
