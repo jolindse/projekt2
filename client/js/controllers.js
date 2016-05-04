@@ -5,12 +5,14 @@
 /**
  * LOGIN-CONTROLLER
  */
-myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', function($scope, $location, $rootScope, userService) {
+myApp.controller("loginCtrl", ['$http','$scope','$location','$rootScope','userService','UserManager', function($http, $scope, $location, $rootScope, userService, UserManager) {
     $scope.errorMessage = "";
     $scope.username = "";
     $scope.password = "";
+    $scope.loading = false;
     var counter = 0;
 
+    //Login:
     $scope.attemptLogin = function() {
 
         $.ajax({
@@ -20,6 +22,7 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
             dataType: "json",
             traditional: true,
 
+            //If student, send to student-site, if admin send to admin-site:
             success: function (data) {
                 if (data.login == true && data.user.admin == false){
                     sessionStorage.setItem('userId', data.user.id);
@@ -33,6 +36,7 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
                     console.log(data);
                 }
 
+                //Add data to userService:
                 userService.login(data.user.firstName, data.user._id, data.user.admin, data.user.testToTake);
 
                 if(!$scope.$$phase) {
@@ -54,7 +58,6 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
                     $scope.loginError = true;
                 }
 
-
                 if(!$scope.$$phase) {
                     //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
                     $scope.$apply();
@@ -62,6 +65,22 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
             }
         });
     };
+    $scope.sendPassword = function () {
+        $scope.loginError = false;
+        $scope.loading = true;
+
+        $http.get("/api/sendpass/" + $scope.username).success(function (data, status) {
+            console.log("status = " + status);
+            if (status == 200){
+                $scope.sendPasswordBtn = false;
+                $scope.loginSuccess = true;
+                $scope.successMessage = "Mail med lösenord skickat!"
+            }
+            else {
+                $scope.errorMessage = "Kunde inte skicka mail, vänligen försök igen.";
+            }
+        });
+    }
 }]);
 
 /**
@@ -69,6 +88,7 @@ myApp.controller("loginCtrl", ['$scope','$location','$rootScope','userService', 
  */
 myApp.controller('indexCtrl', function ($scope, $location, userService) {
 
+    //When clicking the Newton-logo:
     $scope.clickLogo = function() {
         if (userService.admin == true){
             $location.path("/admin");
@@ -78,6 +98,7 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
         }
     };
 
+    //Updating the nav-bar when broadcast is sent:
     $scope.$on('updateNavbarBroadcast', function () {
 
         if (sessionStorage.getItem('userId') != null) {
@@ -100,6 +121,7 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
         }
     });
 
+    //Logout
     $scope.logout = function () {
         sessionStorage.clear();
         userService.updateNavbar();
@@ -110,17 +132,20 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, userService) {
+myApp.controller('studentCtrl', function ($location, $scope, UserManager, ExamManager, userService) {
+    //Update navbar:
     userService.updateNavbar();
 
     $scope.user = "";
-    $scope.selectedTest = "";
+    $scope.selectedTest = null;
 
+    //Get current student:
     UserManager.getUser(userService.id, function (data) {
-        
+
         $scope.user = data;
         $scope.tests = [];
-        
+
+        //Get the active tests for the student:
         $scope.user.testToTake.forEach(function(testId) {
             ExamManager.getExam(testId, function (test) {
                 $scope.tests.push(test);
@@ -128,13 +153,22 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
         });
     });
 
+    //When selecting an exam in the table:
     $scope.selectExam = function (data) {
         userService.currentExam = data._id;
         $scope.selectedTest = data;
+    };
 
-        console.log(userService.currentExam);
-
-
+    //When starting exam, remove the test from the users test-array and update the database, then send to /doexam.
+    $scope.startExam = function () {
+        $scope.user.testToTake.splice($scope.user.testToTake.indexOf(userService.currentExam), 1);
+        var currentDate = new Date();
+        var hours = currentDate.getHours();
+        var minutes = currentDate.getMinutes();
+        var currentTime = hours + ":" + minutes;
+        userService.startTime = currentTime;
+        UserManager.setUser($scope.user);
+        $location.path("/doexam");
     }
 });
 
@@ -151,7 +185,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
     $scope.tests = [];
 
     //The selected exam (for sharing):
-    $scope.selectedTest = "";
+    $scope.selectedTest = null;
     //Array with studentId's (for email-notification)
     var recObj = {
         rec: []
@@ -216,13 +250,15 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
         });
     });
 
-    //Get selected exam when sharing an exam:
+    //Get selected exam from the table when sharing an exam:
     $scope.selectExam = function (data) {
 
+        //Get the exam:
         ExamManager.getExam(data._id, function (data) {
             $scope.selectedTest = data;
         });
 
+        //Check which students have access to the test:
         $scope.selectedStudents.forEach(function (selectedStudent) {
             selectedStudent.user.testToTake.forEach(function (selectedTest) {
                 if (selectedTest == $scope.selectedTest._id){
@@ -258,7 +294,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
             }
         );
 
-        /* MAIL FUNCTION:
+        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <-------------------------
         if (recObj.rec.length > 0) {
             console.log("innan mail " + JSON.stringify(recObj));
 
@@ -269,12 +305,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
         }
         */
 
-
     };
-
-
-
-
 });
 
 /**
@@ -282,32 +313,37 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
  */
 myApp.controller('userDetailCtrl', function ($scope, $route, UserManager, userService) {
     $scope.user = "";
-
     $scope.firstNameDisabled = true;
     $scope.lastNameDisabled = true;
     $scope.passwordDisabled = true;
     $scope.emailDisabled = true;
 
+    //Get current user:
     UserManager.getUser(userService.id, function (data) {
         $scope.user = data;
     });
 
+    //Change first name:
     $scope.changeFirstName = function () {
         $scope.firstNameDisabled = false;
     };
 
+    //Change last name:
     $scope.changeLastName = function () {
         $scope.lastNameDisabled = false;
     };
 
+    //Change password:
     $scope.changePassword = function () {
         $scope.passwordDisabled = false;
     };
 
+    //Change email:
     $scope.changeEmail = function () {
         $scope.emailDisabled = false;
     };
 
+    //Update the user:
     $scope.updateUser = function () {
         UserManager.setUser($scope.user);
         $route.reload();

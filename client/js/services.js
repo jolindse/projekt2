@@ -9,6 +9,7 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     user.admin = "";
     user.testsToTake = [];
     user.currentExam = "";
+    user.startTime = "";
 
     user.login = function (firstName, id, admin, userTestsToTake){
         this.firstName = firstName;
