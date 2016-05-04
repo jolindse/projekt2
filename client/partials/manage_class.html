@@ -2,48 +2,48 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-4">
-                <h1>Skolklasser</h1>
+                <h2>Skolklasser</h2>
             </div>
             <div class="col-md-8">
-                <h1>Användare</h1>
+                <h2>Användare</h2>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <table class="table">
-                        <thead>
+                        <thead class="thead">
                             <tr>
                                 <th>Skolklasser</th>
                             </tr>
                         </thead>
-                        <tbody ng-repeat="data in studentClasses">
-                            <tr ng-click="selectedClass(data[$index])" class="clickable-row">
-                                <td>{{data.name}}</td>
+                        <tbody ng-repeat="class in studentClasses">
+                            <tr ng-click="loadClass(studentClasses[$index])" class="clickable-row">
+                                <td>{{class.name}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <button class="btn btn-success" id="newClassModal" data-toggle="modal" data-target="#createClassModal">Skapa ny klass</button>
-                <button class="btn btn-danger" id="deleteClass" ng-click="deleteSelectedClass()">Ta bort klass</button>
+                <button class="btn btn-danger" id="deleteClass" >Ta bort klass</button>
             </div>
             <div class="col-md-8">
                 <div class="panel panel-default">
                     <table class="table">
-                        <thead>
+                        <thead class="thead">
                             <tr>
                                 <th>Personnummer</th>
                                 <th>Förnamn</th>
                                 <th>Efternamn</th>
-                                <th>Användarnamn</th>
+                                <th>Email</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1945/12/24-5078</td>
-                                <td>Lemmy</td>
-                                <td>Kilmister</td>
-                                <td>King of Warts</td>
+                            <tr ng-repeat="user in users">
+                                <td>{{user.id}}</td>
+                                <td>{{user.firstName}}</td>
+                                <td>{{user.surName}}</td>
+                                <td>{{user.studentClass}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -97,16 +97,16 @@
                                         <input type="password" name="password" ng-model="user.password">
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <strong>
-                                            Bekräfta lösenord:
-                                        </strong>
-                                    </td>
-                                    <td>
-                                        <input type="password" name="password" ng-model="user.password">
-                                    </td>
-                                </tr>
+                                <!--<tr>-->
+                                    <!--<td>-->
+                                        <!--<strong>-->
+                                            <!--Bekräfta lösenord:-->
+                                        <!--</strong>-->
+                                    <!--</td>-->
+                                    <!--<td>-->
+                                        <!--<input type="password" name="password" ng-model="user.password">-->
+                                    <!--</td>-->
+                                <!--</tr>-->
                                 <tr>
                                     <td>
                                         <strong>
@@ -141,7 +141,7 @@
                             </table>
                         </div>
                     <div class="modal-footer">
-                        <button ng-click="" type="button" id="sparaStudent" class="btn btn-success" data-dismiss="modal">Spara ändringar</button>
+                        <button ng-click="saveUser()" type="button" id="sparaStudent" class="btn btn-success" data-dismiss="modal">Spara ändringar</button>
                     </div>
                 </div>
             </div>
