@@ -15,6 +15,10 @@ body, html {
     background-color: #337AB7;
 }
 
+.clickable-row{ /*in a table*/
+    cursor: pointer;
+}
+
 .checkbox {
     cursor: pointer;
 }

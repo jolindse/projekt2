@@ -114,6 +114,7 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
     userService.updateNavbar();
 
     $scope.user = "";
+    $scope.selectedTest = "";
 
     UserManager.getUser(userService.id, function (data) {
         
@@ -128,14 +129,19 @@ myApp.controller('studentCtrl', function ($scope, UserManager, ExamManager, user
     });
 
     $scope.selectExam = function (data) {
-        console.log(data);
+        userService.currentExam = data._id;
+        $scope.selectedTest = data;
+
+        console.log(userService.currentExam);
+
+
     }
 });
 
 /**
  * ADMIN-CONTROLLER:
  */
-myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager, ExamManager, userService) {
+myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassManager, UserManager, ExamManager, userService) {
     userService.updateNavbar();
 
     //Current user:
@@ -146,6 +152,10 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
 
     //The selected exam (for sharing):
     $scope.selectedTest = "";
+    //Array with studentId's (for email-notification)
+    var recObj = {
+        rec: []
+    };
 
     //Usertable:
     $scope.users = [];
@@ -186,7 +196,6 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
                     }
                 );
             }
-
         });
 
         //Get all studentClasses:
@@ -229,23 +238,43 @@ myApp.controller('adminCtrl', function ($scope, StudentClassManager, UserManager
         //Loop trough the array selectedStudents:
         $scope.selectedStudents.forEach(function (student) {
 
-            //If the variable "selected" is true, then the student was selected in the list:
-            if (student.selected == true) {
+                //If the variable "selected" is true, then the student was selected in the list:
+                if (student.selected == true) {
 
-                //Push to the array "testToTake" and update the student in the database:
-                if (student.user.testToTake.indexOf($scope.selectedTest._id) == -1){
-                    student.user.testToTake.push($scope.selectedTest._id);
-                    UserManager.setUser(student.user);
+                    //Push to the array "testToTake" and update the student in the database:
+                    if (student.user.testToTake.indexOf($scope.selectedTest._id) == -1){
+                        student.user.testToTake.push($scope.selectedTest._id);
+                        UserManager.setUser(student.user);
+                        recObj.rec.push(student.user._id);
+                    }
+                }
+                else if(student.selected == false){
+                    //Remove the test and update student:
+                    if (student.user.testToTake.indexOf($scope.selectedTest._id) != -1){
+                        student.user.testToTake.splice(student.user.testToTake.indexOf($scope.selectedTest._id), 1);
+                        UserManager.setUser(student.user);
+                    }
                 }
             }
-            else if(student.selected == false){
+        );
 
-                //Remove the test and update student:
-                student.user.testToTake.splice(student.user.testToTake.indexOf($scope.selectedTest._id), 1);
-                UserManager.setUser(student.user);
-            }
-        });
+        /* MAIL FUNCTION:
+        if (recObj.rec.length > 0) {
+            console.log("innan mail " + JSON.stringify(recObj));
+
+            $http.post("/api/mail", JSON.stringify(recObj)).success(function (data, status) {
+                console.log("data = " + data);
+                console.log("status = " + status);
+            })
+        }
+        */
+
+
     };
+
+
+
+
 });
 
 /**

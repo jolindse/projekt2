@@ -4,26 +4,26 @@
         <p class="lead">Du har {{user.testToTake.length}} st prov att göra.</p>
         <hr class="m-y-2">
 
-        <table class="table table-hover">
+        <table class="table">
             <thead class="thead">
             <tr>
                 <th>Ämne</th>
                 <th>Provnamn</th>
                 <th>Tid</th>
-                <th>Maxpoäng</th>
                 <th>Tillgänglig</th>
+                <th></th>
             </tr>
             </thead>
             <tbody ng-repeat="test in tests">
-            <tr ng-click="selectExam(tests[$index])">
+            <tr ng-click="selectExam(tests[$index])" ng-class="{activerow: tests[$index] === selectedTest}" class="clickable-row">
                 <td>{{test.subject}}</td>
                 <td>{{test.title}}</td>
                 <td>{{test.time}}</td>
-                <td></td>
                 <td>{{test.interval[0]}}</td>
+                <td><span class="glyphicon glyphicon-info-sign"></span></td>
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-success">Starta prov</button>
+        <a href="#/doexam"><button type="button" class="btn btn-success">Starta prov</button></a>
     </div>
 </article>
