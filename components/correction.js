@@ -6,6 +6,7 @@
 var SubmittedExam = require('../models/SubmittedExam');
 var Exam = require('../models/Exam');
 var Question = require('../models/Question');
+var SendMail = require('./sendMail');
 
 /** Set a submitted exam to completely corrected if all answers
  * in that exam is corrected by teacher
@@ -34,6 +35,7 @@ module.exports.setExamCorrected = function(id, callback) {
                         {_id: id},
                         {
                             $set: {completeCorrection: true}
+
                         },
                         {upsert: false}, callback
                     );
@@ -134,6 +136,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 totalPoints += answer.points;
             });
             submittedExam.points = totalPoints;
+            SendMail.sendCorrected(submittedExam);
         }
         if (submittedExam.points < orgExam.gradePercentage[0]) {
             submittedExam.grade = "IG";
