@@ -74,7 +74,7 @@ myApp.controller("loginCtrl", ['$http','$scope','$location','$rootScope','userSe
             if (status == 200){
                 $scope.sendPasswordBtn = false;
                 $scope.loginSuccess = true;
-                $scope.successMessage = "Mail med lösenord skickat!"
+                $scope.successMessage = "Mail med lösenord har skickats!"
             }
             else {
                 $scope.errorMessage = "Kunde inte skicka mail, vänligen försök igen.";
@@ -199,6 +199,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
 
     //Array holding students, studentclasses and a boolean if selected or not in the table:
     $scope.selectedStudents = [];
+    $scope.isSelectAll = false;
 
     //For sorting the usertable when sharing an exam:
     $scope.sortType     = 'name';
@@ -273,6 +274,24 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
                 }
             });
         });
+    };
+
+    $scope.test = function () {
+      console.log($scope.isSelectAll);
+    };
+
+
+    $scope.selectAllStudents = function () {
+        if ($scope.isSelectAll == true) {
+            $scope.selectedStudents.forEach(function (selectedStudent) {
+                selectedStudent.selected = true;
+            });
+        }
+        else if($scope.isSelectAll == false){
+            $scope.selectedStudents.forEach(function (selectedStudent) {
+                selectedStudent.selected = false;
+            });
+        }
     };
 
     //Listener for the button "share exam":
