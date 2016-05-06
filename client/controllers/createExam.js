@@ -9,6 +9,11 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
     $scope.loadExam = function (id) {
         ExamManager.getExam(id, function (data) {
             $scope.exam = data;
+            data.questions.forEach(function (currQuestionId){
+                QuestionManager.getQuestion(currQuestionId, function(data){
+                   $scope.exam.questionArray.push(data);
+                });
+            })
         });
     };
 
@@ -19,8 +24,9 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         });
     };
 
-    $scope.addQuestion = function (currQuestionId) {
-        $scope.exam.questions.push(currQuestionId);
+    $scope.addQuestion = function (currQuestion) {
+        $scope.exam.questionArray.push(currQuestion);
+        $scope.exam.questions.push(currQuestion._id);
     };
 
     $scope.dateParams = {
@@ -52,27 +58,31 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         });
 
         modalInstance.result.then(function (data) {
-            console.log('return from modal: '+JSON.stringify(data)); // TEST
-            $scope.addQuestion(data._id);
-            $scope.exam.questionArray.push(data);
+            console.log('return from modal: ' + JSON.stringify(data)); // TEST
+            $scope.addQuestion(data);
         });
     };
 
-    $scope.userList = function () {
-        var modalInstance = $uibModal.open({
+    $scope.pickQuestions = function () {
+        var listModal = $uibModal.open({
             animation: true,
             templateUrl: 'modalviews/listModal.html',
             controller: 'modalListCtrl',
             size: 'lg',
             resolve: {
-                listType: function () {
-                    return 'users';
+                listType: {
+                    type: 'questions',
+                    multi: true
                 }
             }
         });
 
-        modalInstance.result.then(function (data) {
-            console.log('return from modal: '+JSON.stringify(data)); // TEST
+        listModal.result.then(function (data) {
+            data.forEach(function (currId){
+               QuestionManager.getQuestion(currId, function(data){
+                   $scope.addQuestion(data);
+               })
+            });
         });
     };
 

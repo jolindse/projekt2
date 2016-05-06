@@ -10,6 +10,11 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/user/(id)				DELETE	-			-				    Deletes a user
 /api/user/login/(id)		POST	user.id		login:bool		    Login, returns true or false
 
+/api/class					GET 	-			class				Gets ALL classes
+/api/class 					POST 	class 		class 				Adds a class
+/api/class/:id 				PUT 	class 		.					Updates a class
+/api/class/:id 				DELETE  - 			-					Deletes a class
+/api/class/:id 				DELETE  -			-					Deletes a class and ALL it's students.
 
 /api/exam					GET 	- 			[exam]			    Gets ALL exams
 /api/exam 					POST 	exam 		-				    Adds a exam

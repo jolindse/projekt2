@@ -1,89 +1,256 @@
-<!-- Share test-Modal -->
-<div class="modal-dialog">
+<!-- Modal content-->
+<div class="modal-header text-right">
+    <span class="text-right closeCross" ng-click="cancel()">&times;</span>
+    <h2 class="modal-title text-left">
+        <span ng-show="listType.type === 'users'">Användarlista</span>
+        <span ng-show="listType.type === 'exams'">Provlista</span>
+        <span ng-show="listType.type === 'questions'">Frågelista</span>
+        <span ng-show="listType.type === 'submitted'">Inlämnade prov</span>
+        <span ng-show="listType.type === 'classes'">Klasslista</span>
+    </h2>
+</div>
+<div class="modal-body">
+    <form>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
 
-	<!-- Modal content-->
-	<div class="modal-content">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">&times;</button>
-			<h4 class="modal-title">
-				<span ng-if="listType.type === 'users'">Användarlista</span>
-				<span ng-if="listType.type === 'exams'">Provlista</span>
-				<span ng-if="listType.type === 'questions'">Frågelista</span>
-				<span ng-if="listType.type === 'submitted'">Inlämnade prov</span>
-				<span ng-if="listType.type === 'classes'">Klasslista</span>
-			</h4>
-		</div>
-		<div class="modal-body">
-			<form>
-				<div class="form-group">
-					<div class="input-group">
-						<div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" placeholder="Filtrera lista" ng-model="searchList">
 
-						<input type="text" class="form-control" placeholder="Filtrera lista" ng-model="searchList">
+            </div>
+        </div>
+    </form>
 
-					</div>
-				</div>
-			</form>
+    <!-- USERS -->
+    <table ng-show="listType.type === 'users'" class="table">
+        <thead class="thead">
+        <tr>
+            <th ng-click="">
+                <checkbox ng-show="listType.multi" ng-class="{'btn-success': checkAll}" class="checkbox-mini" ng-click="selectAll()" ng-model="checkAll"/>
+            </th>
+            <!-- Users firstname-->
+            <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
+                Förnamn <span ng-show="sortType == 'firstName' && !sortReverse"
+                              class="fa fa-caret-down"></span>
+                <span ng-show="sortType == 'firstName' && sortReverse" class="fa fa-caret-up"></span>
+            </th>
+            <!-- Users surname -->
+            <th ng-click="sortType = 'surName';  sortReverse = !sortReverse">
+                Efternamn
+                <span ng-show="sortType == 'surName' && !sortReverse" class="fa fa-caret-down"></span>
+                <span ng-show="sortType == 'surName' && sortReverse" class="fa fa-caret-up"></span>
+            </th>
+            <!-- Studentclass -->
+            <th ng-click="sortType = 'studentClass';  sortReverse = !sortReverse">
+                Klass
+                <span ng-show="sortType == 'studentClass' && !sortReverse" class="fa fa-caret-down"></span>
+                <span ng-show="sortType == 'studentClass' && sortReverse" class="fa fa-caret-up"></span>
+            </th>
+        </tr>
+        </thead>
 
-			<table class="table">
-				<thead ng-if="listType === 'users'" class="thead">
-				<tr>
-					<th ng-click="">
-						<checkbox class="checkbox-mini" id="selectAll" ng-model="checkAll"/>
-					</th>
-					<!-- USERS
-					<!-- Users firstname-->
-					<th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
-						Förnamn
-						<span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
-						<span ng-show="sortType == 'firstName' && sortReverse" class="fa fa-caret-up"></span>
-					</th>
+        <tbody>
+        <tr ng-repeat="currObject in currentListObjects | orderBy:sortType:sortReverse | filter:searchList">
+            <td ng-init="currObject.selectedObject = false" ng-class="{'selectedListObject': currObject.selectedObject}"><checkbox ng-show="listType.multi" ng-class="{'btn-success': currObject.selectedObject}" class="checkbox-mini" ng-click="toggleObject(currObject)" ng-model="currObject.selectedObject"/></td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}" >{{currObject.firstName}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.surName}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.studentClass}}</td>
+        </tr>
+        </tbody>
+    </table>
 
-					<!-- Users surname -->
-					<th ng-click="sortType = 'surName';  sortReverse = !sortReverse">
-						Efternamn
-						<span ng-show="sortType == 'surName' && !sortReverse" class="fa fa-caret-down"></span>
-						<span ng-show="sortType == 'surName' && sortReverse" class="fa fa-caret-up"></span>
-					</th>
+    <!-- CLASS -->
+    <table ng-show="listType.type === 'classes'" class="table">
+        <thead class="thead">
+        <tr>
+            <th ng-click="">
+                <checkbox ng-show="listType.multi" ng-class="{'btn-success': checkAll}" class="checkbox-mini" ng-click="selectAll()" ng-model="checkAll"/>
+            </th>
+            <!-- Class name-->
+            <th ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                Namn
+                <span ng-class="{'hidefa': sortType !== 'name'}" ng-show="sortReverse === true" class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'name'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
 
-					<!-- Studentclass -->
-					<th ng-click="sortType = 'studentClass';  sortReverse = !sortReverse">
-						Klass
-						<span ng-show="sortType == 'studentClass' && !sortReverse" class="fa fa-caret-down"></span>
-						<span ng-show="sortType == 'studentClass' && sortReverse" class="fa fa-caret-up"></span>
-					</th>
-				</tr>
-				</thead>
-				<!-- CLASS -->
+            <!-- Number of students -->
+            <th ng-click="sortType = 'students.length';  sortReverse = !sortReverse">
+                Antal studenter
+                <span ng-class="{'hidefa': sortType !== 'students.lenght'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'students.length'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+        </tr>
+        </thead>
 
-				<!-- EXAMS -->
+        <tbody>
+        <tr ng-repeat="currObject in currentListObjects | orderBy:sortType:sortReverse | filter:searchList">
+            <td ng-init="currObject.selectedObject = false" ng-class="{'selectedListObject': currObject.selectedObject}"><checkbox ng-show="listType.multi" ng-class="{'btn-success': currObject.selectedObject}" class="checkbox-mini" ng-click="toggleObject(currObject)" ng-model="currObject.selectedObject"/></td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.name}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.students.length}}</td>
+        </tr>
+        </tbody>
+    </table>
 
-				<!-- QUESTIONS -->
+    <!-- EXAMS -->
+    <table ng-show="listType.type === 'exams'" class="table">
+        <thead class="thead">
+        <tr>
+            <th ng-click="">
+                <checkbox ng-show="listType.multi" ng-class="{'btn-success': checkAll}" class="checkbox-mini" ng-click="selectAll()" ng-model="checkAll"/>
+            </th>
+            <!-- Title-->
+            <th ng-click="sortType = 'title'; sortReverse = !sortReverse">
+                Titel
+                <span ng-class="{'hidefa': sortType !== 'title'}" ng-show="sortReverse === true" class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'title'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
 
-				<!-- SUBMITTED -->
+            <!-- Subject -->
+            <th ng-click="sortType = 'subject';  sortReverse = !sortReverse">
+                Ämne
+                <span ng-class="{'hidefa': sortType !== 'subject'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'subject'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Number of questions -->
+            <th ng-click="sortType = 'questions.length';  sortReverse = !sortReverse">
+                Antal frågor
+                <span ng-class="{'hidefa': sortType !== 'questions.length'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'questions.length'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Creator name -->
+            <th ng-click="sortType = 'cre8orName';  sortReverse = !sortReverse">
+                Skapare
+                <span ng-class="{'hidefa': sortType !== 'cre8orName'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'cre8orName'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="currObject in currentListObjects | orderBy:sortType:sortReverse | filter:searchList">
+            <td ng-init="currObject.selectedObject = false" ng-class="{'selectedListObject': currObject.selectedObject}"><checkbox ng-show="listType.multi" ng-class="{'btn-success': currObject.selectedObject}" class="checkbox-mini" ng-click="toggleObject(currObject)" ng-model="currObject.selectedObject"/></td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.title}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.subject}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.questions.length}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.cre8orName}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- QUESTIONS -->
+
+    <table ng-show="listType.type === 'questions'" class="table">
+        <thead class="thead">
+        <tr>
+            <th ng-click="">
+                <checkbox ng-show="listType.multi" ng-class="{'btn-success': checkAll}" class="checkbox-mini" ng-click="selectAll()" ng-model="checkAll"/>
+            </th>
+            <!-- Title-->
+            <th ng-click="sortType = 'title'; sortReverse = !sortReverse">
+                Titel
+                <span ng-class="{'hidefa': sortType !== 'title'}" ng-show="sortReverse === true" class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'title'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Type -->
+            <th ng-click="sortType = 'type';  sortReverse = !sortReverse">
+                Typ
+                <span ng-class="{'hidefa': sortType !== 'subject'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'subject'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- G/VG -->
+            <th ng-click="sortType = 'type';  sortReverse = !sortReverse">
+                Betygsgrad
+                <span ng-class="{'hidefa': sortType !== 'subject'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'subject'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Points -->
+            <th ng-click="sortType = 'questions.length';  sortReverse = !sortReverse">
+                Poäng
+                <span ng-class="{'hidefa': sortType !== 'questions.length'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'questions.length'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Creator name -->
+            <th ng-click="sortType = 'cre8orName';  sortReverse = !sortReverse">
+                Skapare
+                <span ng-class="{'hidefa': sortType !== 'cre8orName'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'cre8orName'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="currObject in currentListObjects | orderBy:sortType:sortReverse | filter:searchList">
+            <td ng-init="currObject.selectedObject = false" ng-class="{'selectedListObject': currObject.selectedObject}"><checkbox ng-show="listType.multi" ng-class="{'btn-success': currObject.selectedObject}" class="checkbox-mini" ng-change="toggleObject(currObject)" ng-model="currObject.selectedObject"/></td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.title}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.typeName}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.vgQuestion ? 'G' : 'VG'}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.points}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.cre8orName}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- SUBMITTED  -->
+
+    <table ng-show="listType.type === 'submitted'" class="table">
+        <thead class="thead">
+        <tr>
+            <th ng-click="">
+                <checkbox ng-show="listType.multi" ng-class="{'btn-success': checkAll}" class="checkbox-mini" ng-click="selectAll()" ng-model="checkAll"/>
+            </th>
+            <!-- Exam-->
+            <th ng-click="sortType = 'examName'; sortReverse = !sortReverse">
+                Prov
+                <span ng-class="{'hidefa': sortType !== 'examName'}" ng-show="sortReverse === true" class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'examName'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Student -->
+            <th ng-click="sortType = 'studentName';  sortReverse = !sortReverse">
+                Student
+                <span ng-class="{'hidefa': sortType !== 'studentName'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'studentName'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Complete correction -->
+            <th ng-click="sortType = 'completeCorrection';  sortReverse = !sortReverse">
+                Färdigrättat
+                <span ng-class="{'hidefa': sortType !== 'completeCorrection'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'completeCorrection'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+            <!-- Points -->
+            <th ng-click="sortType = 'points';  sortReverse = !sortReverse">
+                Poäng
+                <span ng-class="{'hidefa': sortType !== 'points'}" ng-show="sortReverse === true"  class="fa fa-caret-down"></span>
+                <span ng-class="{'hidefa': sortType !== 'points'}" ng-show="sortReverse === false" class="fa fa-caret-up"></span>
+            </th>
+
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="currObject in currentListObjects | orderBy:sortType:sortReverse | filter:searchList">
+            <td ng-init="currObject.selectedObject = false" ng-class="{'selectedListObject': currObject.selectedObject}"><checkbox ng-show="listType.multi" ng-class="{'btn-success': currObject.selectedObject}" class="checkbox-mini" ng-click="toggleObject(currObject)" ng-model="currObject.selectedObject"/></td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.examName}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.studentName}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.completeCorrection ? 'Ja' : 'Nej'}}</td>
+            <td ng-click="toggleObject(currObject)" ng-class="{'selectedListObject': currObject.selectedObject}">{{currObject.points}}/{{currObject.examPoints}}</td>
+         </tr>
+
+        </tbody>
+    </table>
 
 
-				<tbody>
-				<tr ng-repeat="currObject in currentListObjects | orderBy:sortType:sortReverse | filter:searchList">
-					<td><input class="checkbox" type="checkbox" ng-model="user.selected"/></td>
-					<td>{{user.user.firstName}}</td>
-					<td>{{user.user.surName}}</td>
-					<td>{{user.studentClass}}</td>
-
-				</tr>
-				</tbody>
-
-			</table>
-
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
-			<button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal"
-					data-toggle="modal" data-target="#confirmationModal">OK
-			</button>
-
-		</div>
-	</div>
-
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-success btn-md btn-width-120" ng-click="ok()">Ok</button>
+    <button type="button" class="btn btn-danger btn-md button-text-center btn-width-120" ng-click="cancel()">Avbryt</button>
 </div>
 </div>

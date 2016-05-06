@@ -17,7 +17,7 @@ uat.config(['$routeProvider', function ($routeProvider) {
         })
 
         .when('/class', {
-            templateUrl: './partials/manage_class.html',
+            templateUrl: './partials/class.html',
             controller: 'classCtrl'
         })
 
