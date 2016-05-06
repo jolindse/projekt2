@@ -549,12 +549,12 @@ app.get('/api/sendpass/:id', function(req, res) {
 
 app.get('/api/statistics/:scope/:id', function(req, res) {
     stat.statistics(req, function(returnObject) {
-        if(returnObject.success === true) {
-            res.status(200).json(returnObject);
-        } else if(returnObject.success === false) {
+        if(returnObject.success === false) {
             res.status(404).json(returnObject);
+        } else {
+            res.status(200).json(returnObject);
         }
-    });
+    })
 });
 
 
@@ -568,4 +568,3 @@ app.get('/api/statistics/:scope/:id', function(req, res) {
 var listener = app.listen(3000, function () {
     console.log('Server running on port 3000');
 });
-

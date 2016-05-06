@@ -66,23 +66,23 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
     // Fetch the submitted exam
     SubmittedExam.getSubmitted(req.params.id, function(err, submittedExam) {
         subExam = submittedExam.exam;
-        
-            // Fetch the exam
-            Exam.getExam(subExam, function (err, exam) {
-                orgExam = exam;
-                questionsId = exam.questions;
-                questionsId.forEach(function (id) {
-                    // Fetch the questions in exam
-                    Question.getQuestion(id.id, function (err, question) {
-                        questions.push(question);
-                        // If all questions is inserted in array, go back
-                        if (questions.length === questionsId.length) {
-                            callback(questions, submittedExam, orgExam);
-                        }
-                    });
+
+        // Fetch the exam
+        Exam.getExam(subExam, function (err, exam) {
+            orgExam = exam;
+            questionsId = exam.questions;
+            questionsId.forEach(function (id) {
+                // Fetch the questions in exam
+                Question.getQuestion(id.id, function (err, question) {
+                    questions.push(question);
+                    // If all questions is inserted in array, go back
+                    if (questions.length === questionsId.length) {
+                        callback(questions, submittedExam, orgExam);
+                    }
                 });
             });
-        
+        });
+
     });
 };
 
@@ -97,7 +97,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
             type = question[i].type;
-            if (type === 'multi' || type === 'single' || type === 'rank') { // These types are autocorrectable
+            if (type === 'radio' || type === 'check' || type === 'rank') { // These types are autocorrectable
                 // Loop through the question's answerOptions
                 for (var j = 0; j < question[i].answerOptions.length; j++) {
                     if (submittedExam.answers[i].corrected != true) {
@@ -126,7 +126,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 numCorrected++;
             }
         });
-        
+
         if (numAnswers == numCorrected) {
             submittedExam.completeCorrection = true;
             var totalPoints = submittedExam.points;
