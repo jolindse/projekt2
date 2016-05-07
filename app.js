@@ -22,7 +22,9 @@ var path = require('path');
 // Components import
 var correction = require('./components/correction');
 var sendMail = require('./components/sendMail');
-var stat = require('./components/statistics');
+var examStat = require('./components/examStats');
+var userStat = require('./components/userStats');
+var classStat = require('./components/classStats');
 
 // Models import
 var User = require('./models/User');
@@ -45,6 +47,7 @@ app.all('/*', function (req, res, next) {
 
 app.use(express.static(__dirname + '/client'));
 app.use(express.static(__dirname + '/questionImages'));
+
 
 
 // Init body-parser to handle request params.
@@ -548,15 +551,33 @@ app.get('/api/sendpass/:id', function(req, res) {
 */
 
 app.get('/api/statistics/:scope/:id', function(req, res) {
-    stat.statistics(req, function(returnObject) {
-        if(returnObject.success === false) {
-            res.status(404).json(returnObject);
-        } else {
-            res.status(200).json(returnObject);
-        }
-    })
-});
+    if (req.params.scope === 'exam') {
+        examStat.examStats(req, function(returnObject) {
+            if(!returnObject.success) {
+                res.status(400).json(returnObject);
+            } else {
+                res.status(200).json(returnObject);
+            }
+        });
+    } else if(req.params.scope === 'user') {
+        userStat.userStats(req, function(returnObject) {
+            if(!returnObject.success) {
+                res.status(400).json(returnObject);
+            } else {
+                res.status(200).json(returnObject);
+            }
+        });
+    } else if(req.params.scope === 'class') {
+        classStat.classStats(req, function(returnObject) {
+            if(!returnObject.success) {
+                res.status(400).json(returnObject);
+            } else {
+                res.status(200).json(returnObject);
+            }
+        });
+    }
 
+});
 
 
 /*
