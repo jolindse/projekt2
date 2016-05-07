@@ -3,8 +3,8 @@
         <div class="col-md-3">
             <h2>Fråga <strong>{{qIndex+1}}</strong>/<strong>{{currExam.questions.length}}</strong></h2>
         </div>
-        <div class="col-md-6">
-            <!-- circles for each question -->
+        <div class="col-md-6 text-center">
+
         </div>
         <div class="col-md-3 text-right">
             <button ng-click="submitExam()" class="btn btn-success btn-md topbtn">Lämna in <span class="glyphicon glyphicon-arrow-up"></span></button>
@@ -18,7 +18,7 @@
                 <p ng-show="qIndex > 0"><span class="glyphicon glyphicon-circle-arrow-left bigicon grayicon"></span></p>
             </div>
             <div class="col-md-8">
-                <!-- Time -->
+                <!-- Possible circle navigation -->
             </div>
             <div class="col-md-2 text-right" ng-click="nextQuestion()">
                 <p ng-show="qIndex < currExam.questions.length-1"><span
@@ -72,7 +72,13 @@
         </div>
 
     </div>
-<!-- DEBUG INFO     -->
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <timer countdown="500" interval="1000" finish-callback="submitExam()"><p class="timerText">Tid kvar: {{hours}}:{{mminutes}}:{{sseconds}}</p></timer>
+            </div>
+        </div>
+<!-- DEBUG INFO
     qIndex: {{qIndex}}<br/>
     currSubmitted:<br/>
     <div ng-repeat="(key, prop) in currSubmitted">
@@ -88,5 +94,5 @@
     <div ng-repeat="(key, prop) in currExam">
         <tt>{{key}} : {{prop}}</tt>
     </div>
-
+    -->
 </article>

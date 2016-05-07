@@ -7,7 +7,8 @@ var myApp = angular.module('myApp', [
     'ui.bootstrap',
     'ui.checkbox',
     'ui.sortable',
-    'ngFileUpload'
+    'ngFileUpload',
+    'timer'
 ]);
 
 myApp.config(function ($routeProvider) {

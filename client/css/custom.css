@@ -386,6 +386,12 @@ ul.draggableUl {
     margin: 0;
 }
 
+.timerText {
+    color: #777777;
+    font-size: 18px;
+    font-weight: 700;
+}
+
 /*
 * CREATE EXAM
 */

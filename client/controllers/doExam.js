@@ -24,6 +24,7 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
             $scope.buildQuestion(function () {
                 $scope.currQuestion = $scope.questions[0];
                 $scope.currAnswers = $scope.currSubmitted.answers[0];
+                $scope.$broadcast('timer-set-countdown', $scope.currExam.time*60);
             });
         });
     };
