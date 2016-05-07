@@ -125,9 +125,7 @@ myApp.controller('modalListCtrl',
             };
 
             $scope.toggleObject = function (currObject) {
-                console.log('ToggleObject called!'); // TEST
                 if (listType.multi) {
-                    console.log('List deemed multiselect'); // TEST
                     var exIndex = $scope.selectedObjects.indexOf(currObject);
                     if (exIndex > -1) {
                         $scope.selectedObjects.splice(exIndex, 1);
@@ -140,10 +138,10 @@ myApp.controller('modalListCtrl',
                     if ($scope.selectedObjects[0]) {
                         $scope.selectedObjects[0].selectedObject = false;
                         $scope.selectedObjects[0] = currObject;
-                        $scope.selectedObjects[0] = true;
+                        $scope.selectedObjects[0].selectedObject = true;
                     } else {
                         $scope.selectedObjects[0] = currObject;
-                        $scope.selectedObjects[0] = true;
+                        $scope.selectedObjects[0].selectedObject = true;
                     }
 
                 }
@@ -159,7 +157,6 @@ myApp.controller('modalListCtrl',
                     $scope.selectedObjects.forEach(function (currObj) {
                         returnArray.push(currObj._id);
                     });
-                    console.log('Should return: '+JSON.stringify(returnArray)); // TEST
                     $uibModalInstance.close(returnArray);
                 } else {
                     $uibModalInstance.dismiss('No objects');

@@ -349,21 +349,22 @@ app.get('/api/question/:id', function (req, res) {
 
 // Add question
 app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
-
-    var currQuestion = req.body;
-
     // Workaround for the multipart upload array problem.
     var questionToFormat = req.body;
 
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
-            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
+            var currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
             currQuestion.answerOptions = [];
             for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
                 currQuestion.answerOptions[i] = {
-                    text: questionToFormat.answerOptions.text[i],
-                    correct: questionToFormat.answerOptions.correct[i]
+                    text: '',
+                    correct: false
                 };
+                currQuestion.answerOptions[i].text = questionToFormat.answerOptions.text[i];
+                if (questionToFormat.answerOptions.correct[i] === "true") {
+                    currQuestion.answerOptions[i].correct = true;
+                }
             }
         }
     }
@@ -380,10 +381,31 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
     });
 });
 
-// Update question
-app.put('/api/question/:id', function (req, res) {
-    var currQuestion = req.body;
-    Question.updateQuestion(req.params.id, currQuestion, function (err, updatedQuestion) {
+app.put('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
+    // Workaround for the multipart upload array problem.
+    var questionToFormat = req.body;
+
+    if (questionToFormat.type !== 'text') {
+        if (questionToFormat.answerOptions.text) {
+            var currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
+            currQuestion.answerOptions = [];
+            for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
+                currQuestion.answerOptions[i] = {
+                    text: '',
+                    correct: false
+                };
+                currQuestion.answerOptions[i].text = questionToFormat.answerOptions.text[i];
+                if (questionToFormat.answerOptions.correct[i] === "true") {
+                    currQuestion.answerOptions[i].correct = true;
+                }
+            }
+        }
+    }
+
+    if (req.file) {
+        currQuestion.imageUrl = req.file.filename;
+    }
+    Question.updateQuestion(currQuestion._id, currQuestion, function (err, updatedQuestion) {
         if (err) {
             console.log(err);
             res.status(404);
@@ -391,7 +413,8 @@ app.put('/api/question/:id', function (req, res) {
             res.status(200).json(updatedQuestion);
         }
     });
-});
+})
+;
 
 // Delete question
 app.delete('/api/question/:id', function (req, res) {
@@ -525,27 +548,27 @@ app.post('/api/mail', function (req, res) {
 });
 
 // Send password to user
-app.get('/api/sendpass/:id', function(req, res) {
-   sendMail.sendPassword(req.params.id, function(success) {
-      if(success.success === true) {
-          res.status(200).json(success);
-      } else {
-          res.status(404).json(success);
-      }
-   });
+app.get('/api/sendpass/:id', function (req, res) {
+    sendMail.sendPassword(req.params.id, function (success) {
+        if (success.success === true) {
+            res.status(200).json(success);
+        } else {
+            res.status(404).json(success);
+        }
+    });
 });
 
 /*
----------------------------------
-            STATISTICS
----------------------------------
-*/
+ ---------------------------------
+ STATISTICS
+ ---------------------------------
+ */
 
-app.get('/api/statistics/:scope/:id', function(req, res) {
-    stat.statistics(req, function(returnObject) {
-        if(returnObject.success === true) {
+app.get('/api/statistics/:scope/:id', function (req, res) {
+    stat.statistics(req, function (returnObject) {
+        if (returnObject.success === true) {
             res.status(200).json(returnObject);
-        } else if(returnObject.success === false) {
+        } else if (returnObject.success === false) {
             res.status(404).json(returnObject);
         }
     });

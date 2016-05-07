@@ -12,7 +12,7 @@
 <div class="modal-body">
     <form>
         <div class="form-group">
-            <div class="input-group">
+            <div class="input-group input-group-lg">
                 <div class="input-group-addon"><i class="fa fa-search"></i></div>
 
                 <input type="text" class="form-control" placeholder="Filtrera lista" ng-model="searchList">
@@ -22,7 +22,7 @@
     </form>
 
     <!-- USERS -->
-    <table ng-show="listType.type === 'users'" class="table">
+    <table class="table table-hover" ng-show="listType.type === 'users'" class="table">
         <thead class="thead">
         <tr>
             <th ng-click="">
@@ -60,7 +60,7 @@
     </table>
 
     <!-- CLASS -->
-    <table ng-show="listType.type === 'classes'" class="table">
+    <table class="table table-hover" ng-show="listType.type === 'classes'" class="table">
         <thead class="thead">
         <tr>
             <th ng-click="">
@@ -92,7 +92,7 @@
     </table>
 
     <!-- EXAMS -->
-    <table ng-show="listType.type === 'exams'" class="table">
+    <table class="table table-hover" ng-show="listType.type === 'exams'" class="table">
         <thead class="thead">
         <tr>
             <th ng-click="">
@@ -141,7 +141,7 @@
 
     <!-- QUESTIONS -->
 
-    <table ng-show="listType.type === 'questions'" class="table">
+    <table class="table table-hover" ng-show="listType.type === 'questions'" class="table">
         <thead class="thead">
         <tr>
             <th ng-click="">
@@ -198,7 +198,7 @@
 
     <!-- SUBMITTED  -->
 
-    <table ng-show="listType.type === 'submitted'" class="table">
+    <table class="table table-hover" ng-show="listType.type === 'submitted'" class="table">
         <thead class="thead">
         <tr>
             <th ng-click="">

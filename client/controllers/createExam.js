@@ -6,12 +6,23 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
     /*
      FUNCTIONS
      */
+    $scope.newExam = function() {
+        $scope.questionArray = [];
+
+        $scope.exam = {
+            gradePercentage: [],
+            interval: [],
+            questions: [],
+        };
+    };
+
     $scope.loadExam = function (id) {
         ExamManager.getExam(id, function (data) {
             $scope.exam = data;
+            $scope.questionArray = [];
             data.questions.forEach(function (currQuestionId){
                 QuestionManager.getQuestion(currQuestionId, function(data){
-                   $scope.exam.questionArray.push(data);
+                   $scope.questionArray.push(data);
                 });
             })
         });
@@ -24,9 +35,28 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         });
     };
 
+    $scope.updateExam = function () {
+        var examUpdated = ExamManager.setExam($scope.exam);
+        console.log('Försöker uppdatera. '+JSON.stringify(examUpdated)); // TEST
+        $scope.loadExam(examUpdated._id);
+    };
+
     $scope.addQuestion = function (currQuestion) {
-        $scope.exam.questionArray.push(currQuestion);
+        $scope.questionArray.push(currQuestion);
         $scope.exam.questions.push(currQuestion._id);
+    };
+
+    $scope.removeQuestion = function() {
+        var newArray = [];
+        $scope.questionArray.forEach(function (currQuestion){
+            if (!currQuestion.selectedObject) {
+                newArray.push(currQuestion);
+            } else {
+                var qIndex = $scope.exam.questions.indexOf(currQuestion._id);
+                $scope.exam.questions.splice(qIndex,1);
+            }
+        });
+        $scope.questionArray = newArray;
     };
 
     $scope.dateParams = {
@@ -42,10 +72,11 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         calendarWeeks: true
     };
 
-    $scope.exam = {
-        gradePercentage: [],
-        interval: []
+    $scope.toggleObject = function(index) {
+        var currStatus = $scope.questionArray[index].selectedObject;
+        $scope.questionArray[index].selectedObject = !currStatus;
     };
+
 
     // MODAL
 
@@ -58,7 +89,6 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         });
 
         modalInstance.result.then(function (data) {
-            console.log('return from modal: ' + JSON.stringify(data)); // TEST
             $scope.addQuestion(data);
         });
     };
@@ -86,15 +116,31 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         });
     };
 
+    $scope.pickExam = function () {
+        var listModal = $uibModal.open({
+            animation: true,
+            templateUrl: 'modalviews/listModal.html',
+            controller: 'modalListCtrl',
+            size: 'lg',
+            resolve: {
+                listType: {
+                    type: 'exams',
+                    multi: false
+                }
+            }
+        });
+
+        listModal.result.then(function (data) {
+            data.forEach(function (currId){
+                $scope.loadExam(currId)
+            });
+        });
+    };
+
     /*
      INIT
      */
 
-    $scope.exam = {
-        gradePercentage: [],
-        interval: [],
-        questions: [],
-        questionArray: []  // GLÖM INTE TA BORT INNAN EXPORT
-    };
+    $scope.newExam();
 
 }]);

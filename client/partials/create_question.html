@@ -9,9 +9,9 @@
             <div class="col-md-2 text-right top-buttons">
                 <button class="btn btn-success btn-sm" ng-click="newQuestion()"><span
                         class="glyphicon glyphicon-plus"></span></button>
-                <button class="btn btn-danger btn-sm" ng-click="deleteQuestion()"><span
+                <button class="btn btn-danger btn-sm" ng-click="delQuestion()"><span
                         class="glyphicon glyphicon-remove"></span></button>
-                <button class="btn btn-primary btn-sm" ng-click="showQuestions()"><span
+                <button class="btn btn-primary btn-sm" ng-click="pickQuestion()"><span
                         class="glyphicon glyphicon-list"></span></button>
             </div>
         </div>
@@ -19,22 +19,24 @@
         <form class="form-horizontal">
             <div class="row form-group">
                 <div class="col-md-4">
-                    <div ng-class="{'imageUploaded' : questionImage !== ''}" class="drop-box"
+                    <div ng-class="{'imageUploaded' : questionImage && questionImage !==''}" class="drop-box"
                          ngf-drop="getFiles($files)"
                          ngf-select="getFiles($files)" ngf-drag-over-class="dragover" ngf-multiple="false"
                          ng-model="questionImage" name="file" ngf-pattern="'image/*'"
                          ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100">
                         <img class="previewImage" ngf-src="questionImage"/>
-                        <i ng-hide="questionImage !== ''">Välj bild genom att dra den hit eller klicka i rutan.</i>
+                        <i ng-hide="questionImage && questionImage !==''">Välj bild genom att dra den hit eller klicka i
+                            rutan.</i>
                     </div>
-                    <button class="btn btn-danger imageRemoveButton" ng-hide="questionImage === ''" ng-click="removeImage()"><span
+                    <button class="btn btn-danger imageRemoveButton" ng-hide="!questionImage"
+                            ng-click="removeImage()"><span
                             class="glyphicon glyphicon-remove"></span></button>
                 </div>
                 <div class="col-md-8">
                     <label for="qTitle" class="control-label">Titel</label>
                     <input id="qTitle" class="form-control" aria-describedby="qTitle" type="text"
                            ng-model="question.title"
-                           placeholder="Ange eventuell frågetitel här.">
+                           placeholder="Ange frågetitel här.">
                 </div>
 
                 <div class="col-md-8">
@@ -58,9 +60,14 @@
             <div class="row form-group">
                 <div class="col-md-2 col-md-offset-4">
                     <div class="" uib-dropdown keyboard-nav>
-                        <button id="qTypeDropDown" type="button" class="form-control btn btn-default btn-md"
+                        <button ng-init="question.type = 'text'" id="qTypeDropDown" type="button"
+                                class="form-control btn btn-default btn-md"
                                 uib-dropdown-toggle>
-                            {{qTypeText}} <span class="caret"></span>
+                            <span ng-show="question.type === 'multi'">Flerval </span>
+                            <span ng-show="question.type === 'single'">Enkelval </span>
+                            <span ng-show="question.type === 'text'">Fritext </span>
+                            <span ng-show="question.type === 'rank'">Rangordning </span>
+                            <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="qTypeDropDownNav">
                             <li ng-repeat="qType in questionTypes" ng-click="pickType($index)"><a
@@ -71,6 +78,8 @@
                 </div>
 
                 <!-- Question Grade -->
+
+
                 <div class="col-md-2">
                     <div class="" uib-dropdown keyboard-nav>
                         <button id="qGradeDropDown" type="button" class="form-control btn btn-default btn-md"
@@ -93,78 +102,84 @@
                 </div>
             </div>
 
-            <!-- Answer options -->
+            <!-- Answer options --->
             <div ng-show="question.type === 'multi' || question.type === 'single' || question.type === 'rank'">
                 <div class="row form-group">
                     <div class="col-md-2 col-md-offset-4">
                         <buttton type="button" class="form-control btn btn-md btn-success"
-                                 ng-click="addAnswer()">Lägg till
-                            svar <span class="icon-center text-right glyphicon glyphicon-plus-sign"></span>
+                                 ng-click="addAnswer()">Lägg till svar
                         </buttton>
                     </div>
-                    <div class="col-md-2">
-                        <buttton ng-show="selectedAnswer.current !== ''" type="button"
-                                 class="form-control center btn btn-md btn-danger" ng-click="removeAnswer()">
-                            Ta bort <span class="icon-center glyphicon glyphicon-remove-circle"></span>
-                        </buttton>
-                    </div>
-                    <div class="col-md-4"></div>
+                    <div class="col-md-6"></div>
                 </div>
+            </div>
 
-                <!-- Answer input with correct checkbox -->
-                <div ng-show="question.type === 'multi' || question.type === 'single'" class="row form-group">
-                    <div ng-repeat="currAnswer in question.answerOptions track by $index">
-                        <div class="form-group">
-                            <div class="col-md-7 col-md-offset-4">
-                                <input id="{{'qAnswerOption'+$index}}" type="text" class="form-control"
-                                       ng-focus="setSelectedAnswer($index)" ng-blur="removeSelectedAnswer($index)"
-                                       ng-model="question.answerOptions[$index].text" placeholder="Svarstext">
-                            </div>
-                            <div class="col-md-1 text-right">
-                                <checkbox class="checkbox-answer-options" large ng-class="{'btn-success': question.answerOptions[$index].correct}"
-                                          ng-model="question.answerOptions[$index].correct"
-                                          ng-change="checkboxChange($index)"></checkbox>
-                            </div>
+            <!-- Answer input with correct checkbox -->
+            <div ng-show="question.type === 'multi' || question.type === 'single'" class="row">
+                <div ng-repeat="currAnswer in question.answerOptions track by $index">
+                    <div class="col-md-8 col-md-offset-4">
+                        <div class="input-group input-group-sm">
+
+                            <span class="input-group-btn">
+                                <button ng-class="{'btn-success': currAnswer.correct === true, 'incorrectAnswer': currAnswer.correct === false}" ng-click="toggleCorrect($index)"
+                                        class="btn incorrectAnswer"><span
+                                        class="glyphicon glyphicon-ok"></span></button></span>
+                            <input ng-class="{'btn-success': currAnswer.correct === true}" type="text" class="form-control"
+                                   ng-model="question.answerOptions[$index].text"
+                                   placeholder="Svarstext">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button"
+                                                ng-click="removeAnswer($index)"><span
+                                                class="glyphicon glyphicon-remove"></span></button>
+                                </span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Answer options ranked -->
-                <div ng-show="question.type === 'rank'" class="row form-group">
-                    <div class="col-md-8 col-md-offset-4">
-                        <ul class="draggableUl" ui-sortable ng-model="question.answerOptions">
-                            <li ng-repeat="currAnswer in question.answerOptions track by $index">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><label for="{{'qAnswerOption'+$index}}"
-                                                                           class="control-label">{{$index+1}}</label></span>
-                                    <input id="{{'qAnswerRankOption'+$index}}" type="text" class="form-control"
-                                           ng-focus="setSelectedAnswer($index)"
-                                           ng-blur="removeSelectedAnswer($index)"
-                                           ng-model="question.answerOptions[$index].text" placeholder="Svarstext">
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
             </div>
 
-            <div class="row form-group">
+            <!-- Answer options ranked -->
+            <div ng-show="question.type === 'rank'" class="row">
+                <div class="col-md-8 col-md-offset-4">
+                    <ul class="draggableUl" ui-sortable ng-model="question.answerOptions">
+                        <li ng-repeat="currAnswer in question.answerOptions track by $index">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon"><strong>{{$index+1}}</strong></span>
+                                <input id="{{'qAnswerRankOption'+$index}}" type="text" class="form-control"
+                                       ng-model="question.answerOptions[$index].text"
+                                       placeholder="Svarstext">
+                                        <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button"
+                                                ng-click="removeAnswer($index)"><span
+                                                class="glyphicon glyphicon-remove"></span></button>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="row form-group top-space-div">
                 <div class="col-md-offset-10 col-md-2 text-right">
-                    <button class="btn btn-success" ng-click="submitQuestion()">Spara fråga <span
-                            class="glyphicon glyphicon-ok"/>
-                    </button>
+                    <button class="btn btn-success" ng-click="submitQuestion()">&nbspSpara fråga&nbsp</button>
 
                 </div>
 
             </div>
         </form>
+        <div class="row">
+            <div class="col-md-offset-4 col-md-8">
+                <p ng-hide="!okForm">{{validateError}}</p>
+            </div>
+        </div>
+
     </div>
-<!-- DEBUG INFO -->
+
+    <!-- DEBUG INFO -->
+    Validate error: {{validateError}} <br/>
     <div ng-repeat="(key, prop) in question">
         <tt>{{key}} : {{prop}}</tt>
     </div>
-    <tt>Answer in focus: {{selectedAnswer.current}} latest: {{selectedAnswer.latest}}</tt><br/>
     <tt>File: {{questionImage.$ngBlobUrl.blob}} {{questionImage}}</tt>
     -->
 </article>

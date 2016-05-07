@@ -111,6 +111,11 @@ myApp.run(function($rootScope, $location) {
 
 myApp.constant('APIBASEURL', 'http://localhost:3000');
 
+
+/**
+ * Added to enable modal templates to be loaded properly.
+ *
+ */
 var noSessionIdUrls = [
     "uib/template",
     "template"
@@ -122,7 +127,6 @@ myApp.config(['$httpProvider', function($httpProvider) {
             request: function(config) {
                 for(var i = 0; i < noSessionIdUrls.length; i++) {
                     if(config.url.startsWith(noSessionIdUrls[i])) {
-                        console.log("request interceptor: omitting session id");
                         return config;
                     }
                 }

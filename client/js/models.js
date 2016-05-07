@@ -270,6 +270,7 @@ myApp.factory('Question', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
             $http.delete(APIBASEURL + '/api/question/' + this._id);
         },
         update: function () {
+            console.log('update in models data: '+JSON.stringify(this)); // TEST
             $http.put(APIBASEURL + '/api/question/' + this._id, this);
         }
     };

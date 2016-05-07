@@ -67,6 +67,7 @@ module.exports.addQuestion = function (QuestionData, callback) {
 
 // Update question
 module.exports.updateQuestion = function(id, updatedQuestion, callback) {
+    console.log('Updated question with id: '+id); // LOGG OUTPUT
     Question.findOneAndUpdate(
         {_id: id},
         updatedQuestion,

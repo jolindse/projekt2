@@ -6,11 +6,11 @@
                 <h1>Prov</h1>
             </div>
             <div class="col-md-2 text-right top-buttons">
-                <button class="btn btn-success btn-sm" ng-click="newQuestion()"><span
+                <button class="btn btn-success btn-sm" ng-click="newExam()"><span
                         class="glyphicon glyphicon-plus"></span></button>
                 <button class="btn btn-danger btn-sm" ng-click="deleteQuestion()"><span
                         class="glyphicon glyphicon-remove"></span></button>
-                <button class="btn btn-primary btn-sm" ng-click="showQuestions()"><span
+                <button class="btn btn-primary btn-sm" ng-click="pickExam()"><span
                         class="glyphicon glyphicon-list"></span></button>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <!-- Test title -->
             <div class="row form-group">
                 <div class="col-md-8 col-md-offset-4">
-                    <label for="examTitle" class="form">Prov titel</label>
+                    <label for="examTitle" class="form">Provtitel</label>
                     <input id="examTitle" class="form-control" aria-describedby="testTitle" type="text"
                            ng-model="exam.title">
                 </div>
@@ -119,7 +119,7 @@
                 <div class="text-right col-md-2">
                     <button class="btn btn-success btn-sm mini-btn" ng-click="newQuestion()"><span
                             class="glyphicon glyphicon-plus"></span></button>
-                    <button class="btn btn-danger btn-sm mini-btn" ng-click=""><span
+                    <button class="btn btn-danger btn-sm mini-btn" ng-click="removeQuestion()"><span
                             class="glyphicon glyphicon-remove"></span></button>
                     <button class="btn btn-primary btn-sm mini-btn" ng-click="pickQuestions()"><span
                             class="glyphicon glyphicon-list"></span></button>
@@ -138,12 +138,14 @@
                             <th>Typ</th>
                         </tr>
                         </thead>
-                        <tbody ng-repeat="currQuestion in exam.questionArray">
-                        <tr ng-click="console.log($index)">
-                            <td>{{currQuestion.title}}</td>
-                            <td>{{currQuestion.vgQuestion ? 'VG' : 'G'}}</td>
-                            <td>{{currQuestion.points}}</td>
-                            <td>{{currQuestion.type}}</td>
+                        <tbody ng-repeat="currQuestion in questionArray">
+                            <td ng-class="{'selectedListObject': currQuestion.selectedObject}" ng-click="toggleObject($index)">{{currQuestion.title}}</td>
+                            <td ng-class="{'selectedListObject': currQuestion.selectedObject}" ng-click="toggleObject($index)">{{currQuestion.vgQuestion ? 'VG' : 'G'}}</td>
+                            <td ng-class="{'selectedListObject': currQuestion.selectedObject}" ng-click="toggleObject($index)">{{currQuestion.points}}</td>
+                            <td ng-class="{'selectedListObject': currQuestion.selectedObject}" ng-click="toggleObject($index)" ng-show="currQuestion.type ==='text'">Fritext</td>
+                            <td ng-class="{'selectedListObject': currQuestion.selectedObject}" ng-click="toggleObject($index)" ng-show="currQuestion.type ==='multi'">Flerval</td>
+                            <td ng-class="{'selectedListObject': currQuestion.selectedObject}" ng-click="toggleObject($index)" ng-show="currQuestion.type ==='single'">Enkelval</td>
+                            <td ng-class="{'selectedListObject': currQuestion.selectedObject}" ng-click="toggleObject($index)" ng-show="currQuestion.type ==='rank'">Rangordning</td>
                         </tr>
                         </tbody>
                     </table>
@@ -153,15 +155,17 @@
             <!-- Submit -->
             <div class="row">
                 <div class="col-md-3 col-md-offset-9 text-right">
-                    <button class="btn btn-success" ng-click="saveExam()">Spara prov</button>
+                    <button ng-show="!exam._id" class="btn btn-success" ng-click="saveExam()">Spara nytt prov</button>
+                    <button ng-show="exam._id" class="btn btn-success" ng-click="updateExam()">Uppdatera prov</button>
                 </div>
             </div>
         </form>
     </div>
 
-    <!-- DEBUG INFO -->
+    <!-- DEBUG INFO
     <tt>CurrExam:</tt><br/>
     <div ng-repeat="(key, prop) in exam">
         <tt>{{key}}; {{prop}}</tt>
     </div>
+     -->
 </article>

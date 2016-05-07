@@ -336,6 +336,14 @@ ul.draggableUl {
     max-width: 200px;
 }
 
+.incorrectAnswer {
+    color: white;
+}
+
+.top-space-div {
+    padding-top: 20px;
+}
+
 /*
 * END OF QUESTION CREATE/EDIT
 */
