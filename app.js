@@ -543,6 +543,12 @@ app.get('/api/submittedneedcorr/', function (req, res) {
     });
 });
 
+/*
+--------------------------------------------------------
+    Mail endpoints
+--------------------------------------------------------
+ */
+
 // Send email
 app.post('/api/mail', function (req, res) {
     sendMail.sendMail(req.body, function (success) {
@@ -582,6 +588,12 @@ app.get('/api/statistics/:scope/:id', function (req, res) {
 });
 
 
+
+/*
+-------------------------------------------
+                Starta servern
+-------------------------------------------
+ */
 // Start listening and log start.
 var listener = app.listen(3000, function () {
     console.log('Server running on port 3000');

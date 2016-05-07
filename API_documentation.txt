@@ -37,7 +37,7 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/submitted/user/(id)	GET 	- 			[submitted]		    Gets ALL submitted exams by a student
 /api/submitted/needcorr     GET     -           [submitted]         Gets all exams which needs to be corrected
 
-/api/mail                   POST    [id]        success:boolean     Expects an array with user id's, returns boolean
+/api/mail                   POST    [id]        success:boolean     Expects an array with user id's, returns boolean. Name the array rec
 /api/sendpass               GET     id          success:boolean     Sends login and password to user. Expects a user's loginId
 
 /api/statistics/scope/id    GET     scope, id   jsonObject          scope: user, class och exam, id: ObjectId

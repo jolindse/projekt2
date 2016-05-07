@@ -97,7 +97,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
             type = question[i].type;
-            if (type === 'radio' || type === 'check' || type === 'rank') { // These types are autocorrectable
+            if (type === 'multi' || type === 'single' || type === 'rank') { // These types are autocorrectable
                 // Loop through the question's answerOptions
                 for (var j = 0; j < question[i].answerOptions.length; j++) {
                     if (submittedExam.answers[i].corrected != true) {

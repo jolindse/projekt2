@@ -35,6 +35,9 @@ var submittedSchema = mongoose.Schema({
     },
     points: {
         type: Number
+    },
+    startTime: {
+        type: String
     }
 });
 

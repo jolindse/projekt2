@@ -12,7 +12,8 @@ var questionSchema = mongoose.Schema({
 
     // Basic information
     title:{
-        type: String
+        type: String,
+        required: true
     },
     questionText:{
         type: String,
