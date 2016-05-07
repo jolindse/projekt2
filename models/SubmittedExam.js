@@ -78,8 +78,8 @@ module.exports.getByUser = function (id, callback) {
 };
 
 // Get all submitted exams to a specific test
-module.exports.getByExam = function (id) {
-    SubmittedExam.find({exam: id});
+module.exports.getByExam = function (id, callback) {
+    SubmittedExam.find({exam: id}, callback);
 };
 
 // Get all submitted exams from a student

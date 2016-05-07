@@ -285,8 +285,12 @@ app.delete('/api/exam/:id', function (req, res) {
         if (err) {
             res.status(405).json('Delete operation unsuccessful.');
         } else {
-            Submitted.getByExam(id).forEach(function (currSubmitted) {
-                Submitted.deleteSubmitted(currSubmitted._id);
+            Submitted.getByExam(id, function (data) {
+                if (data) {
+                    data.forEach(function (currSubmitted) {
+                        Submitted.deleteSubmitted(currSubmitted._id);
+                    });
+                }
             });
             res.status(200).json('Exam with id ' + id + ' deleted');
         }

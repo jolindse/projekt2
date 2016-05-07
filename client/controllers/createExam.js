@@ -28,6 +28,13 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
         });
     };
 
+    $scope.deleteExam = function (){
+        if ($scope.exam._id){
+            ExamManager.deleteExam($scope.exam._id);
+            $scope.newExam();
+        }
+    }
+
     $scope.saveExam = function () {
         $scope.exam.cre8or = userService.id;
         ExamManager.addExam($scope.exam, function (data) {

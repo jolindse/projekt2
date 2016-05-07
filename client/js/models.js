@@ -439,8 +439,8 @@ myApp.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', fun
             }
         },
         addSubmitted: function (submittedData, callback) {
-            SubmittedManager._save(submittedData, function (savedClass) {
-                callback(savedClass);
+            SubmittedManager._save(submittedData, function (savedSubmitted) {
+                callback(savedSubmitted);
             });
         },
         getAllSubmitted: function (callback) {

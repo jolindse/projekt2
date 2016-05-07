@@ -1,107 +1,149 @@
 /**
  * Created by Johan on 2016-05-01.
  */
-myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'SubmittedManager', 'QuestionManager','APIBASEURL', function ($scope, userService, ExamManager, SubmittedManager, QuestionManager,APIBASEURL) {
+myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'SubmittedManager', 'QuestionManager', 'APIBASEURL', function ($scope, userService, ExamManager, SubmittedManager, QuestionManager, APIBASEURL) {
 
     /*
      FUNCTIONS
      */
 
     /*
-    Init exam and set up submit object.
+     Init exam and set up submit object.
      */
+
     $scope.startExam = function (id) {
+        $scope.currSubmitted = {
+            exam: id,
+            student: userService.id,
+            answers: []
+        };
+        $scope.questions = [];
         // Get current exam
         ExamManager.getExam(id, function (data) {
             $scope.currExam = data;
-            $scope.currSubmitted = {
-                exam: $scope.currExam._id,
-                student: userService.id,
-                answers: []
-            };
-            // Build submitted exam answers
-            var examLength = $scope.currExam.questions.length;
-            for (var i = 0; i < examLength; i++) {
-                $scope.currSubmitted.answers[i] = {
-                    text: []
-                };
-            }
-            // callback();
-            QuestionManager.getQuestion($scope.currExam.questions[$scope.qIndex], function (data) {
-                $scope.currQuestion = data;
+            $scope.buildQuestion(function () {
+                $scope.currQuestion = $scope.questions[0];
+                $scope.currAnswers = $scope.currSubmitted.answers[0];
             });
         });
     };
 
+    $scope.buildQuestion = function (callback) {
+        var waiting = $scope.currExam.questions.length;
+        var i = 0;
+        $scope.currExam.questions.forEach(function (currEQ) {
+            QuestionManager.getQuestion(currEQ, function (currQ) {
+                $scope.questions.push(currQ);
+                if (currQ.type === 'rank') {
+                    $scope.setupRanking(i);
+                } else {
+                    $scope.currSubmitted.answers[i] = ([{"text": ""}]);
+                }
+                i++;
+                finish();
+            });
+        });
+
+        function finish() {
+            waiting--;
+            if (waiting === 0) {
+                callback();
+            }
+        }
+    };
+
     /*
-    Select and save answer to questions of multi and single type
+     Select and save answer to questions of multi and single type
      */
     $scope.selectAnswer = function (index) {
+        var currAns = $scope.currSubmitted.answers[$scope.qIndex];
         if ($scope.currQuestion.type === 'single') {
-            $scope.currSubmitted.answers[$scope.qIndex].text[0] = $scope.currQuestion.answerOptions[index].text;
+            currAns[0].text = $scope.currQuestion.answerOptions[index].text;
         }
         if ($scope.currQuestion.type === 'multi') {
-
-            var currIndex = $scope.currSubmitted.answers[$scope.qIndex].text.indexOf($scope.currQuestion.answerOptions[index].text);
+            var currIndex = -1;
+            for (var aindex = 0; aindex < currAns.length; aindex++) {
+                if (currAns[aindex].text == $scope.currQuestion.answerOptions[index].text) {
+                    currIndex = aindex;
+                }
+            }
             if (currIndex >= 0) {
-                $scope.currSubmitted.answers[$scope.qIndex].text.splice(currIndex, 1);
+                currAns.splice(currIndex, 1);
+                if (currAns.length < 1) {
+                    currAns[0] = ({"text": ""});
+                }
             } else {
-                $scope.currSubmitted.answers[$scope.qIndex].text.push($scope.currQuestion.answerOptions[index].text);
+                if (currAns[0].text === "") {
+                    currAns[0] = {text: $scope.currQuestion.answerOptions[index].text};
+                } else {
+                    currAns.push({text: $scope.currQuestion.answerOptions[index].text});
+                }
             }
         }
     };
 
     /*
-    Make sure rank-questions have all answers.
+    Check if string is in answerarray
      */
-    $scope.setupRanking = function() {
-        // If first time this question is being displayed make a copy of the answers.
-        if ($scope.currSubmitted.answers[$scope.qIndex].text.length < 1){
-            $scope.currQuestion.answerOptions.forEach(function(data){
-                $scope.currSubmitted.answers[$scope.qIndex].text.push(data.text);
-            });
-            // Randomize the order of the answers.
-            for (var i = $scope.currSubmitted.answers[$scope.qIndex].text.length - 1; i > 0; i--) {
-                var j = Math.floor(Math.random() * (i + 1));
-                var temp = $scope.currSubmitted.answers[$scope.qIndex].text[i];
-                $scope.currSubmitted.answers[$scope.qIndex].text[i] = $scope.currSubmitted.answers[$scope.qIndex].text[j];
-                $scope.currSubmitted.answers[$scope.qIndex].text[j] = temp;
+    $scope.inArray = function(currString) {
+        var found = false;
+        $scope.currSubmitted.answers[$scope.qIndex].forEach(function (currAns) {
+            if (currAns.text === currString){
+                found = true;
             }
-        }
+        });
+        return found;
     };
-    
+
+
     /*
-    Get next question
+     Make sure rank-questions have all answers.
+     */
+    $scope.setupRanking = function (index) {
+        // Build answer strings
+        $scope.currSubmitted.answers[index] = [];
+        $scope.questions[index].answerOptions.forEach(function (data) {
+            $scope.currSubmitted.answers[index].push({"text": data.text});
+        });
+        // Randomize the order of the answers.
+        var origArray = $scope.currSubmitted.answers[index].slice(0);
+        for (var i = $scope.currSubmitted.answers[index].length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = origArray[i];
+            origArray[i] = origArray[j];
+            origArray[j] = temp;
+        }
+        $scope.currSubmitted.answers[index] = origArray;
+    };
+
+    /*
+     Get next question
      */
     $scope.nextQuestion = function () {
         if ($scope.qIndex < $scope.currExam.questions.length) {
             $scope.qIndex++;
-            QuestionManager.getQuestion($scope.currExam.questions[$scope.qIndex], function (data) {
-                $scope.currQuestion = data;
-                if ($scope.currQuestion.type === 'rank'){
-                    $scope.setupRanking();
-                }
-            });
+            $scope.currQuestion = $scope.questions[$scope.qIndex];
+            $scope.currAnswers = $scope.currSubmitted.answers[$scope.qIndex];
         }
     };
 
     /*
-    Get previous question
+     Get previous question
      */
     $scope.previousQuestion = function () {
         if ($scope.qIndex >= 0) {
             $scope.qIndex--;
-            QuestionManager.getQuestion($scope.currExam.questions[$scope.qIndex], function (data) {
-                $scope.currQuestion = data;
-                if ($scope.currQuestion.type === 'rank'){
-                    $scope.setupRanking();
-                }
-            });
+            $scope.currQuestion = $scope.questions[$scope.qIndex];
+            $scope.currAnswers = $scope.currSubmitted.answers[$scope.qIndex];
         }
     };
-    
-    $scope.submitExam = function() {
-        // SUBMIT
+
+    $scope.submitExam = function () {
+        SubmittedManager.addSubmitted($scope.currSubmitted, function(data){
+           if (data._id) {
+               console.log('Provet inlämnat');
+           }
+        });
     };
 
     /*
@@ -114,7 +156,9 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
     $scope.currExam = '';
     $scope.currQuestion = '';
     $scope.currSubmitted = '';
+    $scope.currAnswers = '';
 
     $scope.startExam(userService.currentExam);
 
-}]);
+}
+]);
