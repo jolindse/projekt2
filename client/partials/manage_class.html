@@ -1,11 +1,23 @@
 <article class="container">
     <div class="jumbotron">
         <div class="row">
-            <div class="col-md-4">
-                <h2>Skolklasser</h2>
+            <div class="col-md-2">
+                <h2>Klasser</h2>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-2 text-right">
+                <button class="btn btn-success btn-sm" id="newClassModal" data-toggle="modal" data-target="#createClassModal" ><span
+                        class="glyphicon glyphicon-plus"></span></button>
+                <button class="btn btn-danger btn-sm" id="deleteClassBut" ng-click="deleteClass(studentClasses[$index])"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <div class="col-md-6">
                 <h2>Användare</h2>
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-success btn-sm" id="newStudentModal" data-toggle="modal" data-target="#createStudentModal"><span
+                        class="glyphicon glyphicon-plus"></span></button>
+                <button class="btn btn-danger btn-sm" ng-click=""><span
+                        class="glyphicon glyphicon-remove"></span></button>
             </div>
         </div>
         <div class="row">
@@ -18,14 +30,12 @@
                             </tr>
                         </thead>
                         <tbody ng-repeat="class in studentClasses">
-                            <tr ng-class="{'selectedRow':selectedRow === $index},{}" ng-click="loadClass(studentClasses[$index],$index)"  class="clickable-row">
+                            <tr ng-class='{"selectedRow":selectedRow === $index}' ng-click="loadClass(studentClasses[$index],$index)" class="clickable-row">
                                 <td>{{class.name}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <button class="btn btn-success" id="newClassModal" data-toggle="modal" data-target="#createClassModal">Skapa ny klass</button>
-                <button class="btn btn-danger" id="deleteClass" >Ta bort klass</button>
             </div>
             <div class="col-md-8">
                 <div class="panel panel-default">
@@ -38,8 +48,8 @@
                                 <th>Email</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr ng-repeat="user in users">
+                        <tbody ng-repeat="user in users">
+                            <tr ng-click="loadUser(users[$index],$index)" class="clickable-row" ng-class='{"selectedRow":selectedUser === $index}'>
                                 <td>{{user.id}}</td>
                                 <td>{{user.firstName}}</td>
                                 <td>{{user.surName}}</td>
@@ -48,7 +58,6 @@
                         </tbody>
                     </table>
                 </div>
-                <button class="btn btn-success" id="newStudentModal" data-toggle="modal" data-target="#createStudentModal">Lägg till elev</button>
             </div>
         </div>
         <div class="row">
