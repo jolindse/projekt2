@@ -355,10 +355,12 @@ app.get('/api/question/:id', function (req, res) {
 app.post('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     // Workaround for the multipart upload array problem.
     var questionToFormat = req.body;
+    var currQuestion = req.body;
+    console.log('App.js; new question. Data: '+JSON.stringify(questionToFormat)); // TEST
 
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
-            var currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
+            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
             currQuestion.answerOptions = [];
             for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
                 currQuestion.answerOptions[i] = {
@@ -388,10 +390,11 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
 app.put('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     // Workaround for the multipart upload array problem.
     var questionToFormat = req.body;
+    var currQuestion = req.body;
 
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
-            var currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
+            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
             currQuestion.answerOptions = [];
             for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
                 currQuestion.answerOptions[i] = {
