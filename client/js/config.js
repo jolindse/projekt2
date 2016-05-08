@@ -88,6 +88,11 @@ myApp.config(function ($routeProvider) {
             controller: 'makeQuestionCtrl'
         })
 
+        .when('/correctexam', {
+            templateUrl: 'partials/correction.html',
+            controller: 'correctionCtrl'
+        })
+
         .otherwise({
             redirectTo: '/login'
         });

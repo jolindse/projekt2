@@ -27,7 +27,7 @@ myApp.controller('correctionCtrl',
                 $scope.questions = [];                  // All questions from exam
                 $scope.questionsNeedCorrection = [];    // All question indexes thats not corrected
                 $scope.currQuestion = '';               // Current question
-                $scope.currSubAns = '';                 // Current user submitted answers
+                $scope.currSubAns = [];                 // Current user submitted answers
                 $scope.currUser = '';                   // Student who submitted the exam
                 $scope.qIndex = '';                     // Index of current question
                 $scope.needIndex = '';                  // Index of need correction question
@@ -36,9 +36,9 @@ myApp.controller('correctionCtrl',
                     $scope.currSubmitted = data;
                     ExamManager.getExam($scope.currSubmitted.exam, function (data) {
                         $scope.currExam = data;
-                        UserManager.getUser($scope.currExam.student, function (data) {
+                        UserManager.getUser($scope.currSubmitted.student, function (data) {
                             $scope.currUser = data;
-                            buildQuestions(function () {
+                            $scope.buildQuestions(function () {
                                 $scope.qIndex = 0;
                                 $scope.getQByIndex(0);
                             });
@@ -215,5 +215,7 @@ myApp.controller('correctionCtrl',
             $scope.hasPreviousQ = false;                // Do we have a previous question?
             $scope.onlyNeedCorrection = false;          // Only display questions not corrected.
             $scope.needCorr = false;                    // Does the current question need correction?
+
+            $scope.startCorrection('572f9ba115126b6041fce8ab');
 
         }]);

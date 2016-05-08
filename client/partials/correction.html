@@ -1,99 +1,146 @@
 <article class="container">
-	<!-- Heading -->
-	<div class="row">
-		<div class="col-md-3">
-			<h1>Rätta</h1><br/>
-			<p ng-show="!onlyNeedCorrection"> Fråga <strong>{{qIndex+1}}</strong> av
-				<strong>{{questions.length}}</strong></p>
-			<p ng-show="onlyNeedCorrection"> Fråga <strong>{{needIndex+1}}</strong> av <strong>{{questionsNeedCorrection.length}}</strong>
-			</p>
-		</div>
-		<div class="col-md-9">
-		</div>
-	</div>
+    <!-- Heading -->
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Rätta</h1>
+        </div>
+        <div class="col-md-9">
+        </div>
+    </div>
 
-	<div class="jumbotron">
+    <div class="jumbotron">
 
-		<!-- Student info -->
-		<div class="row">
-			<div class="col-md-4 col-md-offset-2">
-			</div>
-			<div class="col-md-1">
-				<p>Prov:</p>
-				<p>Maxpoäng:</p>
-				<p>G %</p>
-				<p>VG %</p>
-			</div>
-			<div class="col-md-3">
-				<p><strong>{{currExam.title}}</strong></p>
-				<p>{{currExam.maxPoints}}</p>
-				<p>{{currExam.gradePercentage[0]}}</p>
-				<p>{{currExam.gradePercentage[1]}}</p>
-			</div>
-			<div ng-show="!currExam.anonymous" class="col-md-1">
-				<p>Student:</p>
-			</div>
-			<div class="col-md-3" ng-show="!currExam.anonymous">
-				<p><strong>{{currUser.firstName}} {{currUser.surName}}</strong></p>
-				<p>{{currUser.email}}</p>
-				<p>{{currUser.id}}</p>
-			</div>
-		</div>
+        <!-- Student info -->
+        <div class="row">
+            <div class="col-md-3">
+                <p ng-show="!onlyNeedCorrection"> Fråga <strong>{{qIndex+1}}</strong> av
+                    <strong>{{questions.length}}</strong></p>
+                <p ng-show="onlyNeedCorrection"> Fråga <strong>{{needIndex+1}}</strong> av <strong>{{questionsNeedCorrection.length}}</strong>
+                </p>
+            </div>
+            <div class="col-md-2">
+                <p class="infoText">Prov:<br/>
+                    Maxpoäng:<br/>
+                    G %<br/>
+                    VG %</p>
+            </div>
+            <div class="col-md-3">
+                <p class="infoText"><strong>{{currExam.title}}</strong><br/>
+                    {{currExam.maxPoints}}<br/>
+                    {{currExam.gradePercentage[0]}}<br/>
+                    {{currExam.gradePercentage[1]}}</p>
+            </div>
+            <div ng-show="!currExam.anonymous" class="col-md-2">
+                <p class="infoText">Student:<br/>
+                    Email:<br/>
+                    Id:</p>
+            </div>
+            <div class="col-md-3" ng-show="!currExam.anonymous">
+                <p class="infoText"><strong>{{currUser.firstName}} {{currUser.surName}}</strong><br/>
+                    {{currUser.email}}<br/>
+                    {{currUser.id}}</p>
+            </div>
+        </div>
 
-		<!-- Question text -->
-		<div class="row">
-			<div class="col-md-offset-3 col-md-6">
-				<p><strong>Frågetext</strong></p>
-				<p class="questionText">{{currQuestion.questionText}}</p>
-			</div>
-		</div>
+        <!-- Previous/Next buttons -->
+        <div class="row">
+            <div class="col-md-6 text-left" ng-click="previousQuestion()">
+                <p ng-show="qIndex > 0"><span class="glyphicon glyphicon-circle-arrow-left bigicon grayicon"></span></p>
+            </div>
+            <div class="col-md-6 text-right" ng-click="nextQuestion()">
+                <p ng-show="hasNextQ"><span
+                        class="glyphicon glyphicon-circle-arrow-right bigicon grayicon"></span></p>
+            </div>
+        </div>
 
-		<!-- Question text type -->
-		<div ng-show="currQuestion.type === 'text'" class="row">
-			<div class="col-md-offset-3 col-md-6">
-				<p><strong>Studentens svar</strong></p>
-				<p>{{currSubAns.text}}</p>
-			</div>
-		</div>
+        <!-- Question text -->
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10">
+                <p><strong>{{currQuestion.title}}</strong></p>
+                <p class="questionText">{{currQuestion.questionText}}</p>
+            </div>
+        </div>
 
-		<!-- Question multi/single/rank -->
-		<div ng-show="currQuestion.type !== 'text'" class="row">
-			<!-- Correct answers -->
-			<div class="col-md-offset-2 col-md-4">
-				<div ng-repeat="currA in currQuestion.answerOptions">
-					<div class="answerOptions" ng-class="{'alert alert-success': currA.correct}">
-						<p>{{currA.text}}</p>
-					</div>
-				</div>
-			</div>
-			<!-- Student answers -->
-			<div class="col-md-4">
-				<div ng-repeat="currSA in currSubAns">
-					<div class="answerOptions" ng-class="{'alert alert-success': currSA.correct}">
-						<p>{{currSA.text}}</p>
-					</div>
-				</div>
-			</div>
-		</div>
+        <!-- Question text type -->
+        <div ng-show="currQuestion.type === 'text'" class="row">
+            <div class="col-md-offset-1 col-md-10">
+                <p><strong>Studentens svar:</strong></p>
+                <p>{{currSubAns[0].text}}</p>
+            </div>
+        </div>
 
-		<!-- Comment and points awarded -->
-		<div class="row">
-			<div class="col-md-4 col-md-offset-2">
-			</div>
-			<div class="col-md-2"></div>
-			<div class="col-md-1">
-				<p><strong>Poäng</strong></p>
-			</div>
-			<div class="col-md-2">
-				<div ng-show="currQuestion.type !== 'text'">
-					{{getPoints()}}
-				</div>
-				<div ng-show="currQuestion.type === 'text'">
-					<input type="number" ng-model="currSubAns[0].points">
-				</div>
-			</div>
+        <!-- Question multi/single/rank -->
+        <div ng-show="currQuestion.type !== 'text'" class="row">
+            <!-- Correct answers -->
+            <div class="col-md-offset-1 col-md-5">
+                <div ng-repeat="currA in currQuestion.answerOptions">
+                    <div class="answerOptions" ng-class="{'alert alert-success': currA.correct}">
+                        <p>{{currA.text}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Student answers multi/single/rank-->
+            <div class="col-md-5">
+                <div ng-repeat="currSA in currSubAns">
+                    <div class="answerOptions"
+                         ng-class="{'alert alert-success': currSA.correct, 'alert alert-danger' : !currSA.correct}">
+                        <p>{{currSA.text}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		</div>
+        <!-- Comment and points awarded -->
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1">
+                <div ng-show="currQuestion.type === 'text'">
+                    <textarea class="form-control" ng-model="currSubAns[0].comment" rows="3"
+                              placeholder="Skriv eventuell kommentar här"></textarea>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-1">
+                <p><strong>Poäng</strong></p>
+            </div>
+            <div class="col-md-1">
+                <div ng-show="currQuestion.type !== 'text'">
+                    {{getPoints()}}
+                </div>
+                <div ng-show="currQuestion.type === 'text'">
+                    <input class="text-right" type="number" ng-model="currSubAns[0].points">
+                </div>
+            </div>
+            <div class="col-md-1"></div>
 
-	</div>
+        </div>
+    </div>
+
+    <!-- DEBUG INFO -->
+    qIndex: {{qIndex}}<br/>
+    currSubmitted:<br/>
+    <div ng-repeat="(key, prop) in currSubmitted">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
+    currExam:<br/>
+    <div ng-repeat="(key, prop) in currExam">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    currSubAns:<br/>
+    <div ng-repeat="(key, prop) in currSubAns">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    currQuestion:<br/>
+    <div ng-repeat="(key, prop) in currQuestion">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
+    currUser:<br/>
+    <div ng-repeat="(key, prop) in currUser">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
+
+    -->
+
 </article>
