@@ -73,7 +73,7 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
                 questionsId = exam.questions;
                 questionsId.forEach(function (id) {
                     // Fetch the questions in exam
-                    Question.getQuestion(id.id, function (err, question) {
+                    Question.getQuestion(id, function (err, question) {
                         questions.push(question);
                         // If all questions is inserted in array, go back
                         if (questions.length === questionsId.length) {

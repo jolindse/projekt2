@@ -1,7 +1,7 @@
 /**
  * Created by Johan on 2016-05-01.
  */
-myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'SubmittedManager', 'QuestionManager', 'APIBASEURL', function ($scope, userService, ExamManager, SubmittedManager, QuestionManager, APIBASEURL) {
+myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'SubmittedManager', 'QuestionManager', 'APIBASEURL','$http', function ($scope, userService, ExamManager, SubmittedManager, QuestionManager, APIBASEURL, $http) {
 
     /*
      FUNCTIONS
@@ -142,7 +142,10 @@ myApp.controller('doExamCtrl', ['$scope', 'userService', 'ExamManager', 'Submitt
     $scope.submitExam = function () {
         SubmittedManager.addSubmitted($scope.currSubmitted, function(data){
            if (data._id) {
-               console.log('Provet inlämnat');
+               $http.get(APIBASEURL+'/api/submitted/autocorrect/'+data._id)
+                   .then(function(resData){
+                       console.log('Corrected; data: '+JSON.stringify(resData)); // TEST
+                   });
            }
         });
     };

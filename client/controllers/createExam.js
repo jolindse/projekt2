@@ -36,7 +36,12 @@ myApp.controller('makeExamCtrl', ['$scope', 'userService', 'ExamManager', 'Quest
     }
 
     $scope.saveExam = function () {
+        var totalP = 0;
         $scope.exam.cre8or = userService.id;
+        $scope.questionArray.forEach(function (currQ){
+            totalP += currQ.points;
+        });
+        $scope.exam.maxPoints = totalP;
         ExamManager.addExam($scope.exam, function (data) {
             $scope.exam = data;
         });
