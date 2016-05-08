@@ -20,10 +20,20 @@ myApp.controller('makeQuestionCtrl',
             // FUNCTIONS
 
             // Form actions
+
+            /**
+             * Removes image from current question
+             */
             $scope.removeImage = function () {
                 $scope.questionImage = '';
             }
 
+            /**
+             * Checks or unchecks correct status of answer
+             *
+             * @param index
+             */
+            /*
             $scope.checkboxChange = function (index) {
                 if ($scope.question.type === 'single') {
                     for (var i = 0; i < $scope.question.answerOptions.length; i++) {
@@ -33,7 +43,11 @@ myApp.controller('makeQuestionCtrl',
                     }
                 }
             };
+            */
 
+            /**
+             * Initializes a new question
+             */
             $scope.newQuestion = function () {
                 $scope.question = {
                     answerOptions: [],
@@ -45,15 +59,28 @@ myApp.controller('makeQuestionCtrl',
                 $scope.pickType(0);
             };
 
+            /**
+             * Removes a answer option from current question
+             *
+             * @param index
+             */
             $scope.removeAnswer = function (index) {
                 $scope.question.answerOptions.splice(index, 1);
             };
 
+            /**
+             * Picks type of question
+             *
+             * @param index
+             */
             $scope.pickType = function (index) {
                 $scope.question.type = $scope.questionTypes[index].value;
                 $scope.qTypeText = $scope.questionTypes[index].text;
             };
 
+            /**
+             * Adds a answer to current question
+             */
             $scope.addAnswer = function () {
                 $scope.question.answerOptions[$scope.question.answerOptions.length] = {
                     text: '',
@@ -61,6 +88,11 @@ myApp.controller('makeQuestionCtrl',
                 };
             };
 
+            /**
+             * Toggles a answers corrected status
+             *
+             * @param index
+             */
             $scope.toggleCorrect = function (index) {
                 if ($scope.question.type === 'multi') {
                     var currVal = $scope.question.answerOptions[index].correct;
@@ -77,6 +109,10 @@ myApp.controller('makeQuestionCtrl',
                 }
             };
 
+            /**
+             * Validates current question before posting to database with proper methods for questions containing images
+             * or not.
+             */
             $scope.submitQuestion = function () {
                 // Validate all required fields.
                 $scope.okForm = true;
@@ -182,8 +218,14 @@ myApp.controller('makeQuestionCtrl',
                     }
                 }
             };
+
             // Standard actions
 
+            /**
+             * Loads a question
+             *
+             * @param id
+             */
             $scope.loadQuestion = function (id) {
                 QuestionManager.getQuestion(id, function (data) {
                     $scope.question = data;
@@ -193,6 +235,9 @@ myApp.controller('makeQuestionCtrl',
                 });
             };
 
+            /**
+             * Deletes current question
+             */
             $scope.delQuestion = function () {
                 if (!$scope.question._id) {
                     $scope.newQuestion();
@@ -204,6 +249,9 @@ myApp.controller('makeQuestionCtrl',
 
             // Modal
 
+            /**
+             * Initializes question picking modal
+             */
             $scope.pickQuestion = function () {
                 var listModal = $uibModal.open({
                     animation: true,
@@ -227,6 +275,7 @@ myApp.controller('makeQuestionCtrl',
 
             // INIT
 
+            // The text representation of the question types
             $scope.questionTypes = [
                 {
                     text: 'Fritext',
@@ -246,8 +295,8 @@ myApp.controller('makeQuestionCtrl',
                 }];
 
 
-            $scope.newQuestion();
-            $scope.pickType(0);
+            $scope.newQuestion(); // Initializes new question at start
+            $scope.pickType(0); // Picks default question type.
 
         }
     ]);

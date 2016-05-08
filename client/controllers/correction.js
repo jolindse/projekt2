@@ -186,8 +186,24 @@ myApp.controller('correctionCtrl',
                 }
             };
 
+            /**
+             * Returns total points awarded for multi, single and rank question
+             *
+             * @returns {number}
+             */
+            $scope.getPoints = function(){
+                var points = 0;
+                $scope.currSubAns.forEach(function (subAns){
+                   points += subAns.points;
+                });
+                return points;
+            };
+
             // UPDATES
 
+            /**
+             * Saves and updates submitted exam
+             */
             $scope.setCorrected = function() {
                 $scope.currSubmitted[0].corrected = true;
                 SubmittedManager.setSubmitted($scope.currSubmitted);

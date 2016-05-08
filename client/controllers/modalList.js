@@ -25,6 +25,10 @@ myApp.controller('modalListCtrl',
             /**
              * FUNCTIONS
              */
+
+            /**
+             * Gets information for users list
+             */
             $scope.loadUsers = function () {
                 UserManager.getAllUsers(function (data) {
                     $scope.currentListObjects = data;
@@ -44,12 +48,18 @@ myApp.controller('modalListCtrl',
                 });
             };
 
+            /**
+             * Gets information for classes list
+             */
             $scope.loadClasses = function () {
                 StudentClassManager.getAllStudentClasses(function (data) {
                     $scope.currentListObjects = data;
                 });
             };
 
+            /**
+             * Gets information for question list
+             */
             $scope.loadQuestions = function () {
                 QuestionManager.getAllQuestions(function (data) {
                     $scope.currentListObjects = data;
@@ -79,6 +89,9 @@ myApp.controller('modalListCtrl',
                 });
             };
 
+            /**
+             * Gets information for exams list
+             */
             $scope.loadExams = function () {
                 ExamManager.getAllExams(function (data) {
                     $scope.currentListObjects = data;
@@ -96,6 +109,9 @@ myApp.controller('modalListCtrl',
 
             };
 
+            /**
+             * Gets information for submitted exams list
+             */
             $scope.loadSubmitted = function () {
                 SubmittedManager.getAllSubmitted(function (data) {
                     $scope.currentListObjects = data;
@@ -105,6 +121,9 @@ myApp.controller('modalListCtrl',
                             ExamManager.getExam(currSubmitted.exam, function (currExam) {
                                 currSubmitted.examName = currExam.title;
                                 currSubmitted.examPoints = currExam.maxPoints;
+                                if (currExam.anonymous) {
+                                    currSubmitted.studentName = 'Anonym';
+                                }
                             })
                         })
                     })
@@ -113,6 +132,9 @@ myApp.controller('modalListCtrl',
 
             };
 
+            /**
+             * Selects all items in list (based on filter)
+             */
             $scope.selectAll = function () {
                 var selectedArray = $filter('filter')($scope.currentListObjects, $scope.searchList);
                 selectedArray.forEach(function (currSelected) {
@@ -124,6 +146,11 @@ myApp.controller('modalListCtrl',
                 });
             };
 
+            /**
+             * Toggles selection of object based on if it's a multi or single selection list
+             *
+             * @param currObject
+             */
             $scope.toggleObject = function (currObject) {
                 if (listType.multi) {
                     var exIndex = $scope.selectedObjects.indexOf(currObject);
@@ -151,6 +178,9 @@ myApp.controller('modalListCtrl',
              * MODAL
              */
 
+            /**
+             * Returns the selected objects MongoDB id as array
+             */
             $scope.ok = function () {
                 if ($scope.selectedObjects) {
                     var returnArray = [];
@@ -163,6 +193,9 @@ myApp.controller('modalListCtrl',
                 }
             };
 
+            /**
+             * Cancel modal
+             */
             $scope.cancel = function () {
                 $uibModalInstance.dismiss();
             };
@@ -171,10 +204,11 @@ myApp.controller('modalListCtrl',
              * INIT
              */
 
-            $scope.listType = listType;
-            $scope.selectedObjects = [];
-            $scope.currentListObjects = [];
+            $scope.listType = listType;         // Reference the params object in scope
+            $scope.selectedObjects = [];        // Initializes the selected list
+            $scope.currentListObjects = [];     // Initializes the list objects array
 
+            // Switch to determine what kind of list the modal is for.
             switch ($scope.listType.type) {
                 case 'users':
                     $scope.loadUsers();
