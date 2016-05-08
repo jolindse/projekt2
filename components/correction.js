@@ -67,15 +67,17 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
     var orgExam = null; // The exam which is taken by student
     // Fetch the submitted exam
     SubmittedExam.getSubmitted(req.params.id, function(err, submittedExam) {
-        subExam = submittedExam.exam;
-
+        if (err) {console.log(err);}
+        else {
+            subExam = submittedExam.exam;
+        }
         // Fetch the exam
         Exam.getExam(subExam, function (err, exam) {
             orgExam = exam;
             questionsId = exam.questions;
             questionsId.forEach(function (id) {
                 // Fetch the questions in exam
-                Question.getQuestion(id.id, function (err, question) {
+                Question.getQuestion(id, function (err, question) {
                     questions.push(question);
                     // If all questions is inserted in array, go back
                     if (questions.length === questionsId.length) {
@@ -99,22 +101,74 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
             type = question[i].type;
-            if (type === 'radio' || type === 'check' || type === 'rank') { // These types are autocorrectable
-                // Loop through the question's answerOptions
-                for (var j = 0; j < question[i].answerOptions.length; j++) {
-                    if (submittedExam.answers[i].corrected != true) {
+
+            // Single type
+            if(type === 'single') {
+                for (var j=0; j<question[i].answerOptions.length; j++) {
+                   if(!submittedExam.answers[i].corrected) {
+                       // Set student's answer as corrected
+                       submittedExam.answers[i].corrected = true;
+                       if(question[i].answerOptions[j].correct === true) {
+                           // If student's answer and correct answer mathes set student's answer to correct
+                           for (var k = 0; k<submittedExam.answers[i].subAnswers.length; k++) {
+                               if(submittedExam.answers[i].subAnswers[k].text === question[i].answerOptions[j].text) {
+                                   submittedExam.answers[i].correct = true;
+                                   submittedExam.answers[i].points = question[i].points;
+                               } else {
+                                   submittedExam.answers[i].correct = false;
+                                   submittedExam.answers[i].points = 0;
+                               }
+                           }
+                       }
+                   }
+                }
+            } 
+            // Multi type
+            else if (type === 'multi') {
+                for (var j = 0; j<question[i].answerOptions.length; j++) {
+                    if(!submittedExam.answers[i].corrected) {
                         // Set student's answer as corrected
                         submittedExam.answers[i].corrected = true;
-                        if (question[i].answerOptions[j].correct === true) {
-                            // If student's answer and correct answer mathes set student's answer to correct
-                            if (submittedExam.answers[i].text === question[i].answerOptions[j].text) {
-                                submittedExam.answers[i].correct = true;
-                                submittedExam.answers[i].points = question[i].points;
-
-                            } else {
-                                submittedExam.answers[i].correct = false;
-                                submittedExam.answers[i].points = 0;
+                        // Get all the correct answers from the question
+                        var correctArray = [];
+                        question[i].answerOptions.forEach(function(correct) {
+                            if(correct.correct) {correctArray.push(correct);}
+                        });
+                        var numCorrectAnswers = 0;
+                        correctArray.forEach(function(correctAnswer) {
+                           submittedExam.answers[i].subAnswers.forEach(function(subAnswer) {
+                               if(subAnswer.text === correctAnswer.text) {
+                                   numCorrectAnswers++;
+                               }
+                            });
+                        });
+                        if(numCorrectAnswers === correctArray.length) {
+                            submittedExam.answers[i].correct = true;
+                            submittedExam.answers[i].points = question[i].points;
+                        }
+                    }
+                }
+            }
+            
+            // Rank type
+            else if(type === 'rank') {
+                for (var j = 0; j < question[i].answerOptions.length; j++) {
+                    if(!submittedExam.answers[i].corrected) {
+                        // Set the student's answer as corrected
+                        submittedExam.answers[i].corrected = true;
+                        var numCorrect = question[i].answerOptions.length;
+                        var numCorrectAnswers = 0;
+                        console.log(submittedExam.answers[i].subAnswers.length);
+                        for(var k = 0; k < submittedExam.answers[i].subAnswers.length; k++) {
+                            console.log('Svarat: ' + submittedExam.answers[i].subAnswers[k].text);
+                            console.log('Rätt: ' + question[i].answerOptions[k].text);
+                            if(submittedExam.answers[i].subAnswers[k].text === question[i].answerOptions[k].text) {
+                                numCorrectAnswers++;
                             }
+                        }
+                        if(numCorrectAnswers === numCorrect) {
+                            submittedExam.answers[i].correct = true;
+                            submittedExam.answers[i].points = question[i].points;
                         }
                     }
                 }
