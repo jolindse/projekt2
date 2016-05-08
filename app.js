@@ -356,7 +356,6 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
     // Workaround for the multipart upload array problem.
     var questionToFormat = req.body;
     var currQuestion = req.body;
-    console.log('App.js; new question. Data: '+JSON.stringify(questionToFormat)); // TEST
 
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
@@ -484,7 +483,6 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            console.log('rättar');
             correction.setExamCorrected(req.params.id, function (err) {
                 if (err) {
                     console.log(err);
