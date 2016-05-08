@@ -13,7 +13,11 @@
                 <p>{{errorMessage}}</p>
             </div>
 
-            <button ng-show="sendPasswordBtn" type="button" class="btn btn-danger">Maila mitt lösenord</button>
+            <div ng-show="loginSuccess" class="alert alert-success" role="alert">
+                <p>{{successMessage}}</p>
+            </div>
+
+            <button ng-click="sendPassword()" ng-show="sendPasswordBtn" data-loading-text="Skickar..." type="button" class="btn btn-danger"><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Maila mitt lösenord</button>
 
         </form><!-- /form -->
     </div><!-- /card-container -->

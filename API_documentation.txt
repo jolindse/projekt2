@@ -93,7 +93,7 @@ question:
 		_id:				MongoDB id
 		title:				String
 		questionText:		String
-		type:				String (Multi,Rank,Text)
+		type:				String (multi,rank,text)
 		answerOption:		[answerObject:{
 									text: 		String
 									correct:	Boolean

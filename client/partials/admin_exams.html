@@ -3,7 +3,6 @@
         <h1 class="display-3">Prov</h1>
         <p class="lead">Det finns för tillfället {{tests.length}}st prov att administrera.</p>
         <hr class="m-y-2">
-
         <table class="table" id="examTable">
             <thead class="thead">
             <tr>
@@ -24,7 +23,7 @@
             </tr>
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
+        <button ng-hide="selectedTest == null" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
     </div>
 </article>
 
@@ -43,9 +42,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-search"></i></div>
-
                             <input type="text" class="form-control" placeholder="Filtrera användare" ng-model="searchUser">
-
                         </div>
                     </div>
                 </form>
@@ -73,27 +70,27 @@
                         </th>
                     </tr>
                     </thead>
-
                     <tbody>
                     <tr ng-repeat="user in selectedStudents | orderBy:sortType:sortReverse | filter:searchUser">
                         <td><input class="checkbox" type="checkbox" ng-model="user.selected"/></td>
                         <td>{{user.user.firstName}}</td>
                         <td>{{user.user.surName}}</td>
                         <td>{{user.studentClass}}</td>
-
                     </tr>
                     </tbody>
-
                 </table>
-
             </div>
             <div class="modal-footer">
+                <div ng-show="successShare" class="alert alert-success" role="alert">
+                    <p>{{successMessage}}</p>
+                </div>
+                <div ng-show="errorShare" class="alert alert-danger" role="alert">
+                    <p>{{errorMessage}}</p>
+                </div>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
-                <button ng-click="shareExam()" type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#confirmationModal">OK</button>
-
+                <button ng-hide="successShare" ng-click="shareExam()" type="button" class="btn btn-primary" ><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> OK</button>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -129,23 +126,18 @@
                         </th>
                     </tr>
                     </thead>
-
                     <tbody>
                     <tr ng-repeat="user in selectedStudents | orderBy:sortType:sortReverse | filter:searchUser" ng-if="user.selected == true">
                         <td>{{user.user.firstName}}</td>
                         <td>{{user.user.surName}}</td>
                         <td>{{user.studentClass}}</td>
-
                     </tr>
                     </tbody>
-
                 </table>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
             </div>
         </div>
-
     </div>
 </div>

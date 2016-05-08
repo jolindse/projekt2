@@ -75,23 +75,12 @@
                                     <span class="glyphicon glyphicon-lock"></span>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <strong>
-                                        Behörighet:
-                                    </strong>
-                                </td>
-                                <td class="text-primary">
-                                    <input type="text" name="firstname" ng-disabled="true" ng-model="user.admin">
-                                </td>
-                                <td>
-                                    <span class="glyphicon glyphicon-lock"></span>
-                                </td>
-                            </tr>
-
                             </tbody>
                         </table>
-                        <button ng-click="updateUser()" type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmationModal">Spara ändringar</button>
+                        <button ng-show="showbutton" ng-click="updateUser()" type="button" class="btn btn-success" >Spara ändringar</button>
+                        <div ng-show="detailsChanged" class="alert alert-success" role="alert">
+                            <p>Dina uppgifter har nu uppdaterats!</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -99,21 +88,3 @@
     </div>
 </article>
 
-<!-- Confirmation-Modal -->
-<div id="confirmationModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Dina uppgifter är nu uppdaterade.</h4>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
-            </div>
-        </div>
-
-    </div>
-</div>
