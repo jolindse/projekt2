@@ -68,17 +68,19 @@ module.exports.examStats = function(req, callback) {
                if(err){error(err, callback, returnObject);}
                else {
                     exam.questions.forEach(function(question) {
-                            Question.getQuestion(question.id, function(err, q) {
-                                if(err){error(err, callback, returnObject);}
-                                else {
-                                    if (questionsArray.length === exam.questions.length) {
-                                        checkAnswers(subExams);
-                                    }
-                                    questionsArray.push(q);
+                        Question.getQuestion(question, function(err, q) {
+                            if(err){error(err, callback, returnObject);}
+                            else {
+                                if (questionsArray.indexOf(question) < 0) {
+                                    questionsArray.push(q)
                                 }
-                            });
+                                if (questionsArray.length === exam.questions.length) {
+                                    checkAnswers(subExams);
+                                }
+                            }
+                        });
                     });
-                }
+               }
            });
        });
     }

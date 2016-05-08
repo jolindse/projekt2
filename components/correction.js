@@ -65,10 +65,12 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
     var questionsId = []; // The _id's of questions in exam
     var questions = []; // The questions in exam
     var orgExam = null; // The exam which is taken by student
+    var maxPoints;
     // Fetch the submitted exam
     SubmittedExam.getSubmitted(req.params.id, function(err, submittedExam) {
         if (err) {console.log(err);}
         else {
+            if(!submittedExam.points) {submittedExam.points = 0;}
             subExam = submittedExam.exam;
         }
         // Fetch the exam
@@ -97,11 +99,11 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
  * @param callback
  */
 module.exports.autoCorrect = function(question, submittedExam, orgExam, callback) {
+    var maxPoints = orgExam.maxPoints;
     var type; // Type of question; radiobuttons, checkboxes or rank
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
             type = question[i].type;
-
             // Single type
             if(type === 'single') {
                 for (var j=0; j<question[i].answerOptions.length; j++) {
@@ -114,6 +116,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                                if(submittedExam.answers[i].subAnswers[k].text === question[i].answerOptions[j].text) {
                                    submittedExam.answers[i].correct = true;
                                    submittedExam.answers[i].points = question[i].points;
+                                   submittedExam.points += question[i].points;
                                } else {
                                    submittedExam.answers[i].correct = false;
                                    submittedExam.answers[i].points = 0;
@@ -145,6 +148,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                         if(numCorrectAnswers === correctArray.length) {
                             submittedExam.answers[i].correct = true;
                             submittedExam.answers[i].points = question[i].points;
+                            submittedExam.points += question[i].points;
                         }
                     }
                 }
@@ -158,10 +162,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                         submittedExam.answers[i].corrected = true;
                         var numCorrect = question[i].answerOptions.length;
                         var numCorrectAnswers = 0;
-                        console.log(submittedExam.answers[i].subAnswers.length);
                         for(var k = 0; k < submittedExam.answers[i].subAnswers.length; k++) {
-                            console.log('Svarat: ' + submittedExam.answers[i].subAnswers[k].text);
-                            console.log('Rätt: ' + question[i].answerOptions[k].text);
                             if(submittedExam.answers[i].subAnswers[k].text === question[i].answerOptions[k].text) {
                                 numCorrectAnswers++;
                             }
@@ -169,6 +170,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                         if(numCorrectAnswers === numCorrect) {
                             submittedExam.answers[i].correct = true;
                             submittedExam.answers[i].points = question[i].points;
+                            submittedExam.points += question[i].points;
                         }
                     }
                 }
@@ -185,16 +187,13 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
 
         if (numAnswers == numCorrected) {
             submittedExam.completeCorrection = true;
-            var totalPoints = submittedExam.points;
-            submittedExam.answers.forEach(function (answer) {
-                totalPoints += answer.points;
-            });
+
             submittedExam.points = totalPoints;
             SendMail.sendCorrected(submittedExam);
         }
-        if (submittedExam.points < orgExam.gradePercentage[0]) {
+        if ((submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[0]) {
             submittedExam.grade = "IG";
-        } else if (submittedExam.points >= orgExam.gradePercentage[0] && submittedExam.points < orgExam.gradePercentage[1]) {
+        } else if ((submittedExam.points/maxPoints)*100 >= orgExam.gradePercentage[0] && (submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[1]) {
             submittedExam.grade = "G";
         } else {
             submittedExam.grade = "VG";
