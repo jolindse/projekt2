@@ -38,9 +38,7 @@ module.exports.classStats = function(req, callback) {
                     SubmittedExam.getByStudent(student, function(err, submitted) {
                         if(err){error(err, callback, returnObject);}
                         else {
-
                             submitted.forEach(function(subEx) {
-                                if (subEx.completeCorrection) {
                                     returnObject.numExams++;
                                     if (subEx.grade === 'IG') {
                                         returnObject.numIGExams++;
@@ -49,9 +47,7 @@ module.exports.classStats = function(req, callback) {
                                     } else if (subEx.grade === 'VG') {
                                         returnObject.numVGExams++;
                                     }
-                                }
                             });
-                            console.log('Number of exams: ' + returnObject.numExams);
                             returnObject.percentageIGExams = (returnObject.numIGExams/returnObject.numExams)*100;
                             returnObject.percentageGExams = (returnObject.numGExams/returnObject.numExams)*100;
                             returnObject.percentageVGExams = (returnObject.numVGExams/returnObject.numExams)*100;
@@ -74,32 +70,31 @@ module.exports.classStats = function(req, callback) {
                         if(err){error(err, callback, returnObject);}
                         else {
                             subEx.forEach(function(submitted) {
-                                
                                     var startTime = moment(submitted.startTime).unix();
                                     var endTime = moment(submitted._id.getTimestamp()).unix();
                                     var minutes = (endTime - startTime) / 60;
                                     var examTimeHours = parseInt(minutes / 60);
                                     var examTimeMinutes = parseInt(minutes - (examTimeHours * 60));
-                                    if(submitted.completeCorrection) {
                                         returnObject.examTime.push({
                                             student: submitted.student,
                                             hours: examTimeHours,
                                             minutes: examTimeMinutes
                                         });
-                                        if (returnObject.examTime.length === returnObject.numExams) {
-                                            var hours = 0;
-                                            var minutes = 0;
-                                            returnObject.examTime.forEach(function (examTime) {
-                                                hours += examTime.hours;
-                                                minutes += examTime.minutes;
-                                            });
-                                            returnObject.avgExamTime.push({
-                                                hours: hours / returnObject.examTime.length,
-                                                minutes: parseInt(minutes / returnObject.examTime.length)
-                                            });
-                                            success(callback, returnObject);
-                                        }
+                                        console.log('number in array: ' + examTime.length);
+                                    if (returnObject.examTime.length === returnObject.numExams) {
+                                        var hours = 0;
+                                        var minutes = 0;
+                                        returnObject.examTime.forEach(function (examTime) {
+                                            hours += examTime.hours;
+                                            minutes += examTime.minutes;
+                                        });
+                                        returnObject.avgExamTime.push({
+                                            hours: hours / returnObject.examTime.length,
+                                            minutes: parseInt(minutes / returnObject.examTime.length)
+                                        });
+                                        success(callback, returnObject);
                                     }
+                                    
                             });
                         }
                     });
