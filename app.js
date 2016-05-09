@@ -148,10 +148,7 @@ app.delete('/api/user/:id', function (req, res) {
         } else {
             //TODO Hangs from tooling.
             Class.removeStudent(id);
-            Submitted.getByUser(id).forEach(function (userSubmitted) {
-                Submitted.deleteSubmitted(userSubmitted._id);
-            });
-            res.status(200).json('User with id ' + id + ' deleted');
+            Submitted.removeStudent(id);
         }
     });
 });

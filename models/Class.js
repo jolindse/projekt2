@@ -56,15 +56,18 @@ module.exports.deleteClass = function (id, callback) {
 
 // Remove student from class
 module.exports.removeStudent = function (id) {
-  var currClass = Class.findOne({students: $elemMatch(id)});
-    if (currClass) {
-        var index = currClass.students.indexOf(id);
-        currClass.students.splice(index, 1);
-        Class.updateClass(currClass._id, currClass, function (err) {
-            if (err) {
-                console.log("Error removing student with id "+id+" from class with id "+currClass._id);
-            }
+    console.log('removeStudent; Id in ' + id); // TEST
+    Class.find({'students': {$in: [id]}}, function (err, currClass) {
+        currClass.forEach(function (classToRemoveFrom) {
+            var index = classToRemoveFrom.students.indexOf(id);
+            classToRemoveFrom.students.splice(index, 1);
+            Class.updateClass(classToRemoveFrom._id, classToRemoveFrom, function (err) {
+                if (err) {
+                    console.log("Error removing student with id " + id + " from class with id " + classToRemoveFrom._id);
+                }
+            });
         });
-    }
+    });
 };
+
 

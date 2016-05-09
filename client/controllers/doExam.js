@@ -33,6 +33,7 @@ myApp.controller('doExamCtrl',
                     student: userService.id,
                     answers: []
                 };
+                $scope.currSubmitted.startTime = moment().format('YYYY-MM-DD HH:mm');
                 $scope.questions = [];
                 // Get current exam
                 ExamManager.getExam(id, function (data) {

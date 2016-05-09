@@ -8,11 +8,13 @@ myApp.controller('correctionCtrl',
         'SubmittedManager',
         'QuestionManager',
         'UserManager',
+        'userService',
         function ($scope,
                   ExamManager,
                   SubmittedManager,
                   QuestionManager,
-                  UserManager) {
+                  UserManager,
+                  userService) {
 
             // FUNCTIONS
 
@@ -138,7 +140,7 @@ myApp.controller('correctionCtrl',
                     }
                 }
                 if (!$scope.onlyNeedCorrection){
-                    if ($scope.qIndex < $scope.questions.length) {
+                    if ($scope.qIndex < $scope.questions.length-1) {
                         $scope.hasNextQ = true;
                     } else {
                         $scope.hasNextQ = false;
@@ -150,7 +152,7 @@ myApp.controller('correctionCtrl',
                         $scope.hasPreviousQ = false;
                     }
                 } else {
-                    if ($scope.needIndex < $scope.questionsNeedCorrection.length) {
+                    if ($scope.needIndex < $scope.questionsNeedCorrection.length-1) {
                         $scope.hasNextQ = true;
                     } else {
                         $scope.hasNextQ = false;
@@ -216,6 +218,6 @@ myApp.controller('correctionCtrl',
             $scope.onlyNeedCorrection = false;          // Only display questions not corrected.
             $scope.needCorr = false;                    // Does the current question need correction?
 
-            $scope.startCorrection('572f9ba115126b6041fce8ab');
+            $scope.startCorrection(userService.testToCorrect);
 
         }]);
