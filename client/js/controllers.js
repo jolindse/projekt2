@@ -147,8 +147,13 @@ myApp.controller('studentCtrl', function ($location, $scope, UserManager, ExamMa
 
         //Get the active tests for the student:
         $scope.user.testToTake.forEach(function(testId) {
+            var today = moment().format('YYYY-MM-DD HH:mm');
+
             ExamManager.getExam(testId, function (test) {
-                $scope.tests.push(test);
+                if (today >= test.interval[0] && today <= test.interval[1]){
+                    $scope.tests.push(test);
+
+                }
             });
         });
     });
@@ -169,13 +174,16 @@ myApp.controller('studentCtrl', function ($location, $scope, UserManager, ExamMa
         userService.startTime = currentTime;
         UserManager.setUser($scope.user);
         $location.path("/doexam");
-    }
+    };
+
+
+
 });
 
 /**
  * ADMIN-CONTROLLER:
  */
-myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassManager, UserManager, ExamManager, userService) {
+myApp.controller('adminCtrl', function (APIBASEURL, $filter, $http, $scope, StudentClassManager, UserManager, ExamManager, userService) {
     userService.updateNavbar();
 
     //Current user:
@@ -281,13 +289,15 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
 
 
     $scope.selectAllStudents = function () {
+        var selectedArray = $filter('filter')($scope.selectedStudents, $scope.searchUser);
+
         if ($scope.isSelectAll == true) {
-            $scope.selectedStudents.forEach(function (selectedStudent) {
+            selectedArray.forEach(function (selectedStudent) {
                 selectedStudent.selected = true;
             });
         }
         else if($scope.isSelectAll == false){
-            $scope.selectedStudents.forEach(function (selectedStudent) {
+            selectedArray.forEach(function (selectedStudent) {
                 selectedStudent.selected = false;
             });
         }

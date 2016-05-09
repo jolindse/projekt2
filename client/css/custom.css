@@ -77,6 +77,10 @@ body, html {
     margin-bottom: 0;
 }
 
+.userdetail-field {
+    width: 220px;
+}
+
 .panel-body {
     padding-left: 0;
 }
