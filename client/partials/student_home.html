@@ -19,7 +19,7 @@
                 <td>{{test.subject}}</td>
                 <td>{{test.title}}</td>
                 <td>{{test.time}}</td>
-                <td>{{test.interval[0]}}</td>
+                <td>{{test.interval[0]}}  -  {{test.interval[1]}}</td>
                 <td><span data-toggle="modal" data-target="#infoModal" class="glyphicon glyphicon-info-sign"></span></td>
             </tr>
             </tbody>
@@ -44,33 +44,17 @@
                     <thead class="thead">
                     <tr>
                         <th>
-                            Titel
-                        </th>
-                        <th>
-                            Ämne
-                        </th>
-                        <th>
                             Tillgänglig
                         </th>
                         <th>
-                            Gräns för godkänt
-                        </th>
-                        <th>
-                            Gräns för väl godkänt
-                        </th>
-                        <th>
                             Antal frågor
-                        </th>
-                        <th>
-                            Skapare
                         </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{selectedTest.titel}}</td>
-                        <td>{{user.user.surName}}</td>
-                        <td>{{user.studentClass}}</td>
+                        <td>{{selectedTest.interval[0]}}  -  {{selectedTest.interval[1]}}</td>
+                        <td>{{selectedTest.question.length}}</td>
                     </tr>
                     </tbody>
                 </table>

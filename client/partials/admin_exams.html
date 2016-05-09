@@ -51,7 +51,7 @@
                     <thead class="thead">
                     <tr>
                         <th ng-click="">
-                            <input class="checkbox" id="selectAll" type="checkbox"/>
+                            <input ng-model="isSelectAll" ng-click="selectAllStudents()" class="checkbox" id="selectAll" type="checkbox"/>
                         </th>
                         <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
                             Förnamn

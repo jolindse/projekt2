@@ -74,7 +74,7 @@ myApp.controller("loginCtrl", ['$http','$scope','$location','$rootScope','userSe
             if (status == 200){
                 $scope.sendPasswordBtn = false;
                 $scope.loginSuccess = true;
-                $scope.successMessage = "Mail med lösenord skickat!"
+                $scope.successMessage = "Mail med lösenord har skickats!"
             }
             else {
                 $scope.errorMessage = "Kunde inte skicka mail, vänligen försök igen.";
@@ -199,6 +199,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
 
     //Array holding students, studentclasses and a boolean if selected or not in the table:
     $scope.selectedStudents = [];
+    $scope.isSelectAll = false;
 
     //For sorting the usertable when sharing an exam:
     $scope.sortType     = 'name';
@@ -274,6 +275,24 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
         });
     };
 
+    $scope.test = function () {
+      console.log($scope.isSelectAll);
+    };
+
+
+    $scope.selectAllStudents = function () {
+        if ($scope.isSelectAll == true) {
+            $scope.selectedStudents.forEach(function (selectedStudent) {
+                selectedStudent.selected = true;
+            });
+        }
+        else if($scope.isSelectAll == false){
+            $scope.selectedStudents.forEach(function (selectedStudent) {
+                selectedStudent.selected = false;
+            });
+        }
+    };
+
     //Listener for the button "share exam":
     $scope.shareExam = function () {
         $scope.loading = true;
@@ -301,7 +320,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
             }
         );
 
-        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <-------------------------*/
+        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <------------------------- */
         if (recObj.rec.length > 0) {
             console.log("innan mail " + JSON.stringify(recObj));
 
@@ -313,7 +332,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
                 if (status == 200){
                     $scope.loading = false;
                     $scope.successShare = true;
-                    $scope.successMessage = "Du har nu delat provet " + $scope.selectedTest.title + "och studenterna har informerats via email.";
+                    $scope.successMessage = "Du har nu delat provet " + $scope.selectedTest.title + " och studenterna har informerats via email.";
                 }
                 else {
                     $scope.loading = false;
@@ -336,13 +355,18 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
         }
 
 
+
+
     };
+
+
+
 });
 
 /**
  * USERDETAIL-CONTROLLER:
  */
-myApp.controller('userDetailCtrl', function ($scope, $route, UserManager, userService) {
+myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
     $scope.user = "";
     $scope.firstNameDisabled = true;
     $scope.lastNameDisabled = true;
