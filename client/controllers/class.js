@@ -7,7 +7,7 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
     $scope.studentClass = "";
     $scope.selectedRow = "";
     $scope.selectedUser = "";
-    $scope.user = "";
+    $scope.userCon = "";
     $scope.studentClasses = [];
     $scope.users = [];
 
@@ -20,27 +20,43 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
     $scope.getAllStudentClasses = function () {
         StudentClassManager.getAllStudentClasses (function (data) {
             $scope.studentClasses = data;
+            console.log("laddat alla klasser" + $scope.studentClasses.length);
         })
     };
 
     $scope.loadUser = function (currUser, index) {
-            $scope.user = currUser;
+        console.log("laddat user" + currUser._id);
+            $scope.userCon = currUser;
             $scope.selectedUser = index;
+        console.log($scope.userCon._id);
     };
 
     $scope.loadClass = function (currClass, index) {
-        console.log(currClass);
+        console.log("laddat klass"+ currClass._id);
             $scope.studentClass = currClass;
             $scope.selectedRow = index;
-        $scope.deleteClassBut = function () {
-            console.log(currClass);
-            StudentClassManager.deleteClass(currClass, callback);
-        }
+        console.log($scope.studentClass._id);
+    };
+    
+    $scope.deleteClassBut = function () {
+        console.log("ska deleta klass " + $scope.studentClass._id);
+        StudentClassManager.deleteClass($scope.studentClass._id, function () {
+            $scope.getAllStudentClasses();
+            console.log("callback");
+        });
+    };
+
+    $scope.deleteUserBut = function () {
+        console.log("ska deleta user" + $scope.userCon._id)
+        UserManager.deleteUser($scope.userCon._id, function () {
+            $scope.getAllUsers();
+            console.log("callback");
+        });
     };
     
     $scope.saveUser = function () {
-      UserManager.addUser($scope.user, function (data) {
-            $scope.user = data;
+      UserManager.addUser($scope.userCon, function (data) {
+            $scope.userCon = data;
             $scope.getAllUsers();
         })  
     };
@@ -51,13 +67,6 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             $scope.getAllStudentClasses();
         })
     };
-    
-    // $scope.deleteClassBut = function () {
-    //     StudentClassManager.deleteClass($scope.class, function (data) {
-    //
-    //
-    //     })
-    // };
 
     $scope.getAllStudentClasses();
     $scope.getAllUsers();

@@ -16,7 +16,7 @@
             <div class="col-md-2 text-right">
                 <button class="btn btn-success btn-sm" id="newStudentModal" data-toggle="modal" data-target="#createStudentModal"><span
                         class="glyphicon glyphicon-plus"></span></button>
-                <button class="btn btn-danger btn-sm" ng-click=""><span
+                <button class="btn btn-danger btn-sm" id="deleteUserBut" ng-click="deleteUserBut()"><span
                         class="glyphicon glyphicon-remove"></span></button>
             </div>
         </div>
@@ -30,7 +30,7 @@
                             </tr>
                         </thead>
                         <tbody ng-repeat="class in studentClasses">
-                            <tr ng-class='{"selectedRow":selectedRow === $index}' ng-click="loadClass(studentClasses[$index],$index)" class="clickable-row">
+                            <tr ng-class='{"selectedRow":class === studentClass}' ng-click="loadClass(studentClasses[$index],$index)" class="clickable-row">
                                 <td>{{class.name}}</td>
                             </tr>
                         </tbody>
@@ -46,13 +46,15 @@
                                 <th>Förnamn</th>
                                 <th>Efternamn</th>
                                 <th>Email</th>
+                                <th>Klass</th>
                             </tr>
                         </thead>
                         <tbody ng-repeat="user in users">
-                            <tr ng-click="loadUser(users[$index],$index)" class="clickable-row" ng-class='{"selectedRow":selectedUser === $index}'>
+                            <tr ng-click="loadUser(users[$index],$index)" class="clickable-row" ng-class='{"selectedRow":user === userCon}'>
                                 <td>{{user.id}}</td>
                                 <td>{{user.firstName}}</td>
                                 <td>{{user.surName}}</td>
+                                <td>{{user.email}}</td>
                                 <td>{{user.studentClass}}</td>
                             </tr>
                         </tbody>
@@ -83,7 +85,7 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        <input ng-model="user.firstName" type="text" name="firstname">
+                                        <input ng-model="userCon.firstName" type="text" name="firstname">
                                     </td>
                                 </tr>
                                 <tr>
@@ -93,7 +95,7 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        <input type="text" name="lastname" ng-model="user.surName">
+                                        <input type="text" name="lastname" ng-model="userCon.surName">
                                     </td>
                                 </tr>
                                 <tr>
@@ -103,7 +105,7 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        <input type="password" name="password" ng-model="user.password">
+                                        <input type="password" name="password" ng-model="userCon.password">
                                     </td>
                                 </tr>
                                 <!--<tr>-->
@@ -123,7 +125,7 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        <input type="text" name="email" ng-model="user.email">
+                                        <input type="text" name="email" ng-model="userCon.email">
                                     </td>
                                 </tr>
                                 <tr>
@@ -133,7 +135,7 @@
                                         </strong>
                                     </td>
                                     <td class="text-primary">
-                                        <input type="text" name="persNumb" ng-model="user.id">
+                                        <input type="text" name="persNumb" ng-model="userCon.id">
                                     </td>
                                 </tr>
                                 <tr>
@@ -143,7 +145,7 @@
                                         </strong>
                                     </td>
                                     <td class="text-primary">
-                                        <input type="text" name="firstname" ng-model="user.admin">
+                                        <input type="text" name="firstname" ng-model="userCon.admin">
                                     </td>
                                 </tr>
                                 </tbody>
