@@ -28,7 +28,7 @@ module.exports.classStats = function(req, callback) {
 
     Class.getClass(req.params.id, function(err, schoolClass) {
        
-        // Hämta alla elever från klassen
+        console.log('Hämta alla elever från klassen');
         var classId = req.params.id;
         Class.getClass(classId, function (err, schoolClass){
             if(err) {error(err);}
@@ -38,16 +38,20 @@ module.exports.classStats = function(req, callback) {
                     SubmittedExam.getByStudent(student, function(err, submitted) {
                         if(err){error(err, callback, returnObject);}
                         else {
+
                             submitted.forEach(function(subEx) {
-                                returnObject.numExams++;
-                                if(subEx.grade === 'IG') {
-                                    returnObject.numIGExams++;
-                                } else if(subEx.grade === 'G') {
-                                    returnObject.numGExams++;
-                                } else if(subEx.grade === 'VG') {
-                                    returnObject.numVGExams++;
+                                if (subEx.completeCorrection) {
+                                    returnObject.numExams++;
+                                    if (subEx.grade === 'IG') {
+                                        returnObject.numIGExams++;
+                                    } else if (subEx.grade === 'G') {
+                                        returnObject.numGExams++;
+                                    } else if (subEx.grade === 'VG') {
+                                        returnObject.numVGExams++;
+                                    }
                                 }
                             });
+                            console.log('Number of exams: ' + returnObject.numExams);
                             returnObject.percentageIGExams = (returnObject.numIGExams/returnObject.numExams)*100;
                             returnObject.percentageGExams = (returnObject.numGExams/returnObject.numExams)*100;
                             returnObject.percentageVGExams = (returnObject.numVGExams/returnObject.numExams)*100;
@@ -60,6 +64,8 @@ module.exports.classStats = function(req, callback) {
     });
 
     function examTime(schoolClass, returnObject) {
+        var examsToInclude = 0;
+        console.log('ExamTime');
         schoolClass.students.forEach(function(user) {
             User.getUser(user, function(err, student) {
                 if(err){error(err, callback, returnObject);}
@@ -68,22 +74,32 @@ module.exports.classStats = function(req, callback) {
                         if(err){error(err, callback, returnObject);}
                         else {
                             subEx.forEach(function(submitted) {
-                                var startTime = moment(submitted.startTime).unix();
-                                var endTime = moment(submitted._id.getTimestamp()).unix();
-                                var minutes = (endTime-startTime)/60;
-                                var examTimeHours  =  parseInt(minutes/60);
-                                var examTimeMinutes = parseInt(minutes - (examTimeHours*60));
-                                returnObject.examTime.push({student: submitted.student, hours: examTimeHours, minutes: examTimeMinutes});
-                                if(returnObject.examTime.length === returnObject.numExams) {
-                                    var hours = 0;
-                                    var minutes = 0;
-                                    returnObject.examTime.forEach(function(examTime) {
-                                        hours += examTime.hours;
-                                        minutes += examTime.minutes;
-                                    });
-                                    returnObject.avgExamTime.push({hours: hours/returnObject.examTime.length, minutes: parseInt(minutes/returnObject.examTime.length)});
-                                    success(callback, returnObject);
-                                }
+                                
+                                    var startTime = moment(submitted.startTime).unix();
+                                    var endTime = moment(submitted._id.getTimestamp()).unix();
+                                    var minutes = (endTime - startTime) / 60;
+                                    var examTimeHours = parseInt(minutes / 60);
+                                    var examTimeMinutes = parseInt(minutes - (examTimeHours * 60));
+                                    if(submitted.completeCorrection) {
+                                        returnObject.examTime.push({
+                                            student: submitted.student,
+                                            hours: examTimeHours,
+                                            minutes: examTimeMinutes
+                                        });
+                                        if (returnObject.examTime.length === returnObject.numExams) {
+                                            var hours = 0;
+                                            var minutes = 0;
+                                            returnObject.examTime.forEach(function (examTime) {
+                                                hours += examTime.hours;
+                                                minutes += examTime.minutes;
+                                            });
+                                            returnObject.avgExamTime.push({
+                                                hours: hours / returnObject.examTime.length,
+                                                minutes: parseInt(minutes / returnObject.examTime.length)
+                                            });
+                                            success(callback, returnObject);
+                                        }
+                                    }
                             });
                         }
                     });
