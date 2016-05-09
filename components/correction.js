@@ -115,7 +115,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                             subAnswer[0].corrected = true;
                             subAnswer[0].points = question[i].points;
                             submittedExam.points += subAnswer[0].points;
-
+                            break;
                         } else {
                             subAnswer[0].correct = false;
                             subAnswer[0].corrected = true;

@@ -470,6 +470,7 @@ app.post('/api/submitted', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
+            
             res.status(200).json(currSubmitted);
         }
     });
