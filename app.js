@@ -469,8 +469,9 @@ app.post('/api/submitted', function (req, res) {
         if (err) {
             console.log(err);
             res.status(404);
+        } else {
+            res.status(200).json(currSubmitted);
         }
-        res.status(200).json(currSubmitted);
     });
 });
 
@@ -484,8 +485,7 @@ app.put('/api/submitted/:id', function (req, res) {
         } else {
             correction.setExamCorrected(req.params.id, function (err, subExam) {
                 if (err) {
-                    console.log(err);
-                    res.status(404);
+                    res.status(404).json({success: false, message: 'Couldn\'t correct test'});
                 } else {
                     correction.getSubmittedAndCorrectAnswers(req, res, function(question, subExam, orgExam) {
                         correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {

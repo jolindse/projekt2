@@ -108,26 +108,23 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             // Single type
             if(type === 'single') {
                 var subAnswer = submittedExam.answers[i];
-                
-                for (var j = 0; j<question[i].answerOptions.length; j++) {
-                    if(!subAnswer[0].corrected) {
+                if(!subAnswer[0].corrected) {
+                    for (var j = 0; j < question[i].answerOptions.length; j++) {
                         if (subAnswer[0].text === question[i].answerOptions[j].text && question[i].answerOptions[j].correct) {
-                            subAnswer[0].corrected = true;
                             subAnswer[0].correct = true;
+                            subAnswer[0].corrected = true;
                             subAnswer[0].points = question[i].points;
                             submittedExam.points += subAnswer[0].points;
-                            break;
+
                         } else {
-                            subAnswer[0].corrected = true;
                             subAnswer[0].correct = false;
+                            subAnswer[0].corrected = true;
                             subAnswer[0].points = 0;
                         }
                     }
                 }
             }
 
-                
-           
             // Multi type
             else if (type === 'multi') {
                 var subAnswers = submittedExam.answers[i];
@@ -135,14 +132,13 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 question[i].answerOptions.forEach(function (answerOption) {
                     if (answerOption.correct) {correctArray.push(answerOption.text);}
                 });
-                console.log(correctArray);
                 for (var j=0; j<subAnswers.length; j++) {
                     if(!subAnswers[j].corrected) {
                         subAnswers[j].corrected = true;
                         for (var k = 0; k < correctArray.length; k++) {
                             if (subAnswers[j].text === correctArray[k]) {
                                 subAnswers[j].correct = true;
-                                subAnswers[j].points = (question[i].points / question[i].answerOptions.length);
+                                subAnswers[j].points = (question[i].points / correctArray.length);
                                 submittedExam.points += subAnswers[j].points;
                             }
                         }
@@ -157,8 +153,6 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                     if(!subAnswers[j].corrected) {
                         // Set the student's answer as corrected
                         subAnswers[j].corrected = true;
-                        console.log('Svarat: ' + subAnswers[j].text);
-                        console.log('Rätt: ' + question[i].answerOptions[j].text);
                         if(subAnswers[j].text === question[i].answerOptions[j].text) {
                             subAnswers[j].correct = true;
                             subAnswers[j].points = (question[i].points/question[i].answerOptions.length);
@@ -169,21 +163,22 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             }
         }
 
-        
-
         // Check if all answers are corrected
         var numAnswers = submittedExam.answers.length;
-        var numCorrected = 0;
+        var numSubCorrected = 0;
+        var numTotCorrected = 0;
         submittedExam.answers.forEach(function (answer) {
-            if (answer.corrected === true) {
-                numCorrected++;
-            }
+            var subAnswers = answer;
+            subAnswer.forEach(function(sub) {
+               if(sub.corrected){numSubCorrected++;}
+                if(numSubCorrected === subAnswer.length) {numTotCorrected++;}
+            });
         });
 
-        if (numAnswers == numCorrected) {
+        if (numAnswers == numTotCorrected) {
             submittedExam.completeCorrection = true;
 
-            submittedExam.points = totalPoints;
+            //submittedExam.points = totalPoints;
             if ((submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[0]) {
                 submittedExam.grade = "IG";
             } else if ((submittedExam.points/maxPoints)*100 >= orgExam.gradePercentage[0] && (submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[1]) {
@@ -191,6 +186,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             } else {
                 submittedExam.grade = "VG";
             }
+            submittedExam.points = Math.round(submittedExam.points*2)/2;
             SendMail.sendCorrected(submittedExam);
         }
 
