@@ -130,17 +130,23 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 var subAnswers = submittedExam.answers[i];
                 var correctArray = [];
                 question[i].answerOptions.forEach(function (answerOption) {
-                    if (answerOption.correct) {correctArray.push(answerOption.text);}
+                    if (answerOption.correct) {
+                        if(correctArray.indexOf(answerOption.text<0)) {
+                            correctArray.push(answerOption.text);
+                        }
+                    }
                 });
                 for (var j=0; j<subAnswers.length; j++) {
-                    if(!subAnswers[j].corrected) {
-                        subAnswers[j].corrected = true;
-                        for (var k = 0; k < correctArray.length; k++) {
-                            if (subAnswers[j].text === correctArray[k]) {
-                                subAnswers[j].correct = true;
-                                subAnswers[j].points = (question[i].points / correctArray.length);
-                                submittedExam.points += subAnswers[j].points;
-                            }
+                    if (!subAnswers[j].corrected) {
+                        if (correctArray.indexOf(subAnswers[j].text) > -1) {
+                            subAnswers[j].corrected = true;
+                            subAnswers[j].correct = true;
+                            subAnswers[j].points = (question[i].points / correctArray.length);
+                            submittedExam.points += subAnswers[j].points;
+                        } else {
+                            subAnswers[j].corrected = true;
+                            subAnswers[j].correct = false;
+                            subAnswers[j].points = 0;
                         }
                     }
                 }
@@ -157,6 +163,9 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                             subAnswers[j].correct = true;
                             subAnswers[j].points = (question[i].points/question[i].answerOptions.length);
                             submittedExam.points += subAnswers[j].points;
+                        } else {
+                            subAnswers[j].correct = false;
+                            subAnswers[j].points = 0;
                         }
                     }
                 }
