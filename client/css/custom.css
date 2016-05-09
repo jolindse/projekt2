@@ -424,6 +424,9 @@ ul.draggableUl {
 .selectedRow{
     background-color: #00a5ff;
 }
+.unselectedRow{
+    background-color: transparent;
+}
 
 .smallLabeltext {
     font-size: 14px;

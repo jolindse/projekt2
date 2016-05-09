@@ -49,13 +49,13 @@
                                 <th>Klass</th>
                             </tr>
                         </thead>
-                        <tbody ng-repeat="user in users">
+                        <tbody ng-repeat="user in users" >
                             <tr ng-class='{"selectedRow":user === userCon}' ng-click="loadUser(users[$index],$index)" class="clickable-row">
                                 <td>{{user.id}}</td>
                                 <td>{{user.firstName}}</td>
                                 <td>{{user.surName}}</td>
                                 <td>{{user.email}}</td>
-                                <td>{{user.studentClass}}</td>
+                                <td ng-repeat="class in studentClasses" >{{class.name}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -162,7 +162,8 @@
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li ng-repeat="class in studentClasses"><a href="#">{{class.name}}</a></li>
+                                                <li ng-repeat="class in studentClasses"><a ng-model="studentClass.students">{{class.name}}</a></li>
+                                                <li class="divider"></li>
                                             </ul>
                                         </div>
                                     </td>
