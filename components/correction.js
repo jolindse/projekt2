@@ -162,8 +162,9 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                         submittedExam.answers[i].corrected = true;
                         var numCorrect = question[i].answerOptions.length;
                         var numCorrectAnswers = 0;
-                        for(var k = 0; k < submittedExam.answers[i].subAnswers.length; k++) {
-                            if(submittedExam.answers[i].subAnswers[k].text === question[i].answerOptions[k].text) {
+                        var subAnswers = submittedExam.answers[i];
+                        for(var k = 0; k < subAnswers.length; k++) {
+                            if(subAnswers[k].text === question[i].answerOptions[k].text) {
                                 numCorrectAnswers++;
                             }
                         }
