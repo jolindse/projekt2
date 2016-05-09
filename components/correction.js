@@ -65,7 +65,7 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
     var questionsId = []; // The _id's of questions in exam
     var questions = []; // The questions in exam
     var orgExam = null; // The exam which is taken by student
-    var maxPoints;
+    
     // Fetch the submitted exam
     SubmittedExam.getSubmitted(req.params.id, function(err, submittedExam) {
         if (err) {console.log(err);}
@@ -104,51 +104,47 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
             type = question[i].type;
+            
             // Single type
             if(type === 'single') {
-                for (var j=0; j<question[i].answerOptions.length; j++) {
-                   if(!submittedExam.answers[i].corrected) {
-                       // Set student's answer as corrected
-                       submittedExam.answers[i].corrected = true;
-                       if(question[i].answerOptions[j].correct === true) {
-                           // If student's answer and correct answer mathes set student's answer to correct
-                           for (var k = 0; k<submittedExam.answers[i].subAnswers.length; k++) {
-                               if(submittedExam.answers[i].subAnswers[k].text === question[i].answerOptions[j].text) {
-                                   submittedExam.answers[i].correct = true;
-                                   submittedExam.answers[i].points = question[i].points;
-                                   submittedExam.points += question[i].points;
-                               } else {
-                                   submittedExam.answers[i].correct = false;
-                                   submittedExam.answers[i].points = 0;
-                               }
-                           }
-                       }
-                   }
+                var subAnswer = submittedExam.answers[i];
+                
+                for (var j = 0; j<question[i].answerOptions.length; j++) {
+                    if(!subAnswer[0].corrected) {
+                        if (subAnswer[0].text === question[i].answerOptions[j].text && question[i].answerOptions[j].correct) {
+                            subAnswer[0].corrected = true;
+                            subAnswer[0].correct = true;
+                            subAnswer[0].points = question[i].points;
+                            submittedExam.points += subAnswer[0].points;
+                            break;
+                        } else {
+                            subAnswer[0].corrected = true;
+                            subAnswer[0].correct = false;
+                            subAnswer[0].points = 0;
+                        }
+                    }
                 }
-            } 
+            }
+
+                
+           
             // Multi type
             else if (type === 'multi') {
-                for (var j = 0; j<question[i].answerOptions.length; j++) {
-                    if(!submittedExam.answers[i].corrected) {
-                        // Set student's answer as corrected
-                        submittedExam.answers[i].corrected = true;
-                        // Get all the correct answers from the question
-                        var correctArray = [];
-                        question[i].answerOptions.forEach(function(correct) {
-                            if(correct.correct) {correctArray.push(correct);}
-                        });
-                        var numCorrectAnswers = 0;
-                        correctArray.forEach(function(correctAnswer) {
-                           submittedExam.answers[i].subAnswers.forEach(function(subAnswer) {
-                               if(subAnswer.text === correctAnswer.text) {
-                                   numCorrectAnswers++;
-                               }
-                            });
-                        });
-                        if(numCorrectAnswers === correctArray.length) {
-                            submittedExam.answers[i].correct = true;
-                            submittedExam.answers[i].points = question[i].points;
-                            submittedExam.points += question[i].points;
+                var subAnswers = submittedExam.answers[i];
+                var correctArray = [];
+                question[i].answerOptions.forEach(function (answerOption) {
+                    if (answerOption.correct) {correctArray.push(answerOption.text);}
+                });
+                console.log(correctArray);
+                for (var j=0; j<subAnswers.length; j++) {
+                    if(!subAnswers[j].corrected) {
+                        subAnswers[j].corrected = true;
+                        for (var k = 0; k < correctArray.length; k++) {
+                            if (subAnswers[j].text === correctArray[k]) {
+                                subAnswers[j].correct = true;
+                                subAnswers[j].points = (question[i].points / question[i].answerOptions.length);
+                                submittedExam.points += subAnswers[j].points;
+                            }
                         }
                     }
                 }
@@ -156,27 +152,25 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             
             // Rank type
             else if(type === 'rank') {
-                for (var j = 0; j < question[i].answerOptions.length; j++) {
-                    if(!submittedExam.answers[i].corrected) {
+                var subAnswers = submittedExam.answers[i];
+                for (var j = 0; j < subAnswers.length; j++) {
+                    if(!subAnswers[j].corrected) {
                         // Set the student's answer as corrected
-                        submittedExam.answers[i].corrected = true;
-                        var numCorrect = question[i].answerOptions.length;
-                        var numCorrectAnswers = 0;
-                        var subAnswers = submittedExam.answers[i];
-                        for(var k = 0; k < subAnswers.length; k++) {
-                            if(subAnswers[k].text === question[i].answerOptions[k].text) {
-                                numCorrectAnswers++;
-                            }
-                        }
-                        if(numCorrectAnswers === numCorrect) {
-                            submittedExam.answers[i].correct = true;
-                            submittedExam.answers[i].points = question[i].points;
-                            submittedExam.points += question[i].points;
+                        subAnswers[j].corrected = true;
+                        console.log('Svarat: ' + subAnswers[j].text);
+                        console.log('Rätt: ' + question[i].answerOptions[j].text);
+                        if(subAnswers[j].text === question[i].answerOptions[j].text) {
+                            subAnswers[j].correct = true;
+                            subAnswers[j].points = (question[i].points/question[i].answerOptions.length);
+                            submittedExam.points += subAnswers[j].points;
                         }
                     }
                 }
             }
         }
+
+        
+
         // Check if all answers are corrected
         var numAnswers = submittedExam.answers.length;
         var numCorrected = 0;
@@ -190,15 +184,16 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             submittedExam.completeCorrection = true;
 
             submittedExam.points = totalPoints;
+            if ((submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[0]) {
+                submittedExam.grade = "IG";
+            } else if ((submittedExam.points/maxPoints)*100 >= orgExam.gradePercentage[0] && (submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[1]) {
+                submittedExam.grade = "G";
+            } else {
+                submittedExam.grade = "VG";
+            }
             SendMail.sendCorrected(submittedExam);
         }
-        if ((submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[0]) {
-            submittedExam.grade = "IG";
-        } else if ((submittedExam.points/maxPoints)*100 >= orgExam.gradePercentage[0] && (submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[1]) {
-            submittedExam.grade = "G";
-        } else {
-            submittedExam.grade = "VG";
-        }
+
     }
     callback(submittedExam);
 };
