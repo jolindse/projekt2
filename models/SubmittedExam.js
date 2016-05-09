@@ -54,7 +54,6 @@ module.exports.getSubmitted = function (id, callback) {
 };
 
 // Add a submitted exam
-//TODO AUTOCORRECTION ROUTINES
 module.exports.addSubmitted = function (submittedData, callback) {
     SubmittedExam.create(submittedData, callback);
 };
