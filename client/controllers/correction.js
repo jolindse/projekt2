@@ -216,6 +216,6 @@ myApp.controller('correctionCtrl',
             $scope.onlyNeedCorrection = false;          // Only display questions not corrected.
             $scope.needCorr = false;                    // Does the current question need correction?
 
-            $scope.startCorrection('572f9ba115126b6041fce8ab');
+            $scope.startCorrection('5730580a87840bc80d4047da');
 
         }]);
