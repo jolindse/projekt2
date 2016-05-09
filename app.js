@@ -22,7 +22,9 @@ var path = require('path');
 // Components import
 var correction = require('./components/correction');
 var sendMail = require('./components/sendMail');
-var stat = require('./components/statistics');
+var examStat = require('./components/examStats');
+var userStat = require('./components/userStats');
+var classStat = require('./components/classStats');
 
 // Models import
 var User = require('./models/User');
@@ -483,12 +485,19 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            correction.setExamCorrected(req.params.id, function (err) {
+            correction.setExamCorrected(req.params.id, function (err, subExam) {
                 if (err) {
                     console.log(err);
                     res.status(404);
                 } else {
-                    res.status(200).json('Exam updated');
+                    correction.getSubmittedAndCorrectAnswers(req, res, function(question, subExam, orgExam) {
+                        correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
+                            Submitted.updateSubmitted(submittedExam.id, submittedExam, function() {
+                                res.status(200).json(subExam);
+                            });
+                        });
+                    });
+
                 }
             });
         }
@@ -559,32 +568,50 @@ app.post('/api/mail', function (req, res) {
 });
 
 // Send password to user
-app.get('/api/sendpass/:id', function (req, res) {
-    sendMail.sendPassword(req.params.id, function (success) {
-        if (success.success === true) {
-            res.status(200).json(success);
-        } else {
-            res.status(404).json(success);
-        }
-    });
+app.get('/api/sendpass/:id', function(req, res) {
+   sendMail.sendPassword(req.params.id, function(success) {
+      if(success.success === true) {
+          res.status(200).json(success);
+      } else {
+          res.status(404).json(success);
+      }
+   });
 });
 
 /*
- ---------------------------------
- STATISTICS
- ---------------------------------
- */
+---------------------------------
+            STATISTICS
+---------------------------------
+*/
 
-app.get('/api/statistics/:scope/:id', function (req, res) {
-    stat.statistics(req, function (returnObject) {
-        if (returnObject.success === true) {
-            res.status(200).json(returnObject);
-        } else if (returnObject.success === false) {
-            res.status(404).json(returnObject);
-        }
-    });
+app.get('/api/statistics/:scope/:id', function(req, res) {
+    if (req.params.scope === 'exam') {
+        examStat.examStats(req, function(returnObject) {
+            if(!returnObject.success) {
+                res.status(400).json(returnObject);
+            } else {
+                res.status(200).json(returnObject);
+            }
+        });
+    } else if(req.params.scope === 'user') {
+        userStat.userStats(req, function(returnObject) {
+            if(!returnObject.success) {
+                res.status(400).json(returnObject);
+            } else {
+                res.status(200).json(returnObject);
+            }
+        });
+    } else if(req.params.scope === 'class') {
+        classStat.classStats(req, function(returnObject) {
+            if(!returnObject.success) {
+                res.status(400).json(returnObject);
+            } else {
+                res.status(200).json(returnObject);
+            }
+        });
+    }
+
 });
-
 
 
 /*
@@ -596,4 +623,3 @@ app.get('/api/statistics/:scope/:id', function (req, res) {
 var listener = app.listen(3000, function () {
     console.log('Server running on port 3000');
 });
-

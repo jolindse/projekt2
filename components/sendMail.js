@@ -57,7 +57,6 @@ module.exports.sendPassword = function(recipient, callback) {
           console.log(err);
           callback({success: false, error: err})
       } else {
-          console.log(user.password);
           var mailOptions = {
               from: '"Newton Testsystem" <newtonexam@hotmail.com>',
               to: user.email,
@@ -80,6 +79,28 @@ module.exports.sendPassword = function(recipient, callback) {
                   callback({success: true});
               }
           })
+      }
+  });
+};
+
+module.exports.sendCorrected = function(exam) {
+  User.getUser(exam.student, function(err, student) {
+      if(err){}
+      else {
+          var mailOptions = {
+              from: '"Newton Testsystem" <newtonexam@hotmail.com>',
+              to: student.email,
+              subject: 'Du har ett rättat prov',
+              html: '<h1>Ett prov har blivit rättat</h1> ' +
+              'Ett prov som du har skrivit har blivit rättat.' +
+              '<p>Logga in på med ditt konto för att se resultatet</p>' +
+              '<p>Med vänlig hälsning<br />' +
+              'Newton Yrkeshögskola'
+          };
+          transporter.sendMail(mailOptions, function(err, info) {
+              if(err) {console.log(err);}
+              else {console.log('Mail skickat');}
+          });
       }
   });
 };
