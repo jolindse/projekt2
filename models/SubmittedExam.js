@@ -54,7 +54,6 @@ module.exports.getSubmitted = function (id, callback) {
 };
 
 // Add a submitted exam
-//TODO AUTOCORRECTION ROUTINES
 module.exports.addSubmitted = function (submittedData, callback) {
     SubmittedExam.create(submittedData, callback);
 };
@@ -93,5 +92,6 @@ module.exports.getByStudent = function (id, callback) {
 
 // Get all submitted exams not completly corrected
 module.exports.getExamsNeedCorrection = function(callback) {
-    SubmittedExam.find({completeCorrection: false}, callback);
+    SubmittedExam.find(
+        {completeCorrection: false}, callback);
 };

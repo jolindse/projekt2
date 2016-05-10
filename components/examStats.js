@@ -45,16 +45,17 @@ module.exports.examStats = function(req, callback) {
                     returnObject.exam = exam._id;
                     returnObject.numStudents = subExams.length;
                     subExams.forEach(function (sub) {
-                        if (sub.grade === 'IG') {
-                            returnObject.numIGResults++;
-                            returnObject.percentageIGResults = (returnObject.numIGResults / returnObject.numStudents) * 100;
-                        } else if (sub.grade === 'G') {
-                            returnObject.numGResults++;
-                            returnObject.percentageGResults = (returnObject.numGResults / returnObject.numStudents) * 100;
-                        } else if (sub.grade === 'VG') {
-                            returnObject.numVGResults++;
-                            returnObject.percentageVGResults = (returnObject.numVGResults / returnObject.numStudents) * 100;
-                        }
+                        
+                            if (sub.grade === 'IG') {
+                                returnObject.numIGResults++;
+                                returnObject.percentageIGResults = (returnObject.numIGResults / returnObject.numStudents) * 100;
+                            } else if (sub.grade === 'G') {
+                                returnObject.numGResults++;
+                                returnObject.percentageGResults = (returnObject.numGResults / returnObject.numStudents) * 100;
+                            } else if (sub.grade === 'VG') {
+                                returnObject.numVGResults++;
+                                returnObject.percentageVGResults = (returnObject.numVGResults / returnObject.numStudents) * 100;
+                            }
                     });
                     getQuestions(subExams, callback, returnObject);
                 }
