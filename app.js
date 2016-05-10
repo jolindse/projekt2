@@ -473,7 +473,6 @@ app.post('/api/submitted', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            
             res.status(200).json(currSubmitted);
         }
     });
@@ -544,9 +543,10 @@ app.get('/api/submitted/user/:id', function (req, res) {
 app.get('/api/submittedneedcorr/', function (req, res) {
     Submitted.getExamsNeedCorrection(function (err, exam) {
         if (err) {
-            res.status(404).json('No exams need correction.');
+            res.status(404).json('Error');
         } else {
-            res.status(200).json(exam);
+            if(!exam) {res.status(200).json([]);}
+            else {res.status(200).json(exam);}
         }
     });
 });

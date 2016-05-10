@@ -92,5 +92,6 @@ module.exports.getByStudent = function (id, callback) {
 
 // Get all submitted exams not completly corrected
 module.exports.getExamsNeedCorrection = function(callback) {
-    SubmittedExam.find({completeCorrection: false}, callback);
+    SubmittedExam.find(
+        {completeCorrection: false}, callback);
 };
