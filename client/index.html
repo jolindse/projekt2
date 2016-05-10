@@ -21,21 +21,33 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img id="header-logo" src="img/newtonlogo.svg">
+            <img ng-click="clickLogo()" id="header-logo" src="img/newtonlogo.svg">
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li ng-show="showAdminNav" class="admin-nav"><a href="#/adminexams" id="createTestTab">Prov</a></li>
+                <li class="dropdown" ng-show="showAdminNav">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Prov <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="admin-nav"><a href="#/adminexams" id="createTestTab">Hantera prov</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="admin-nav"><a href="#/createexam" id="createExam">Skapa prov</a></li>
+                        <li class="admin-nav"><a href="#/createquestion" id="createQuestion">Skapa fråga</a></li>
+                    </ul>
+                </li>
                 <li ng-show="showAdminNav" class="admin-nav"><a href="#/class" id="sortUserTab">Användare</a></li>
-                <li ng-show="showAdminNav" class="admin-nav"><a href="#/createexam" id="createExam">Skapa prov</a></li>
-                <li ng-show="showAdminNav" class="admin-nav"><a href="#/createquestion" id="createQuestion">Skapa fråga</a></li>
-                <li ng-show="showAdminNav" class="admin-nav"><a href="#/correctexam" id="correctExam">Rätta prov</a></li>
-
-                <li ng-show="showStudentNav" class="student-nav"><a href="#/student" id="studentHomeTab">Hem</a></li>
-                <li ng-show="showUserDetailsNav" ><a href="#/user" id="userDetailsTab">Hantera uppgifter</a></li>
+                <li ng-show="showStudentNav" class="student-nav"><a href="#/" id="studentHomeTab">Resultat</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li ng-show="showLogout" ng-click="logout()" id="logout-nav"><a href="#/login">Logga ut</a></li>
+                <li class="dropdown" ng-show="showUserIconNav">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="usericon-navbar glyphicon glyphicon-user"></span> {{userName}}<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/user" id="userDetailsTab">Hantera uppgifter</a></li>
+                        <li class="divider"></li>
+                        <li ng-click="logout()" id="logout-nav"><a href="#/login">Logga ut</a></li>
+                    </ul>
+                </li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

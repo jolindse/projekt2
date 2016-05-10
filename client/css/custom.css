@@ -15,10 +15,22 @@ body, html {
 .activerow {
     background-color: #337AB7;
 }
+
+.table-checkbox {
+
+}
 /* END OF SHARE TEST MODAL */
 
 .clickable-row{ /*in a table*/
     cursor: pointer;
+}
+
+.table-center-row {
+    text-align: center;
+}
+
+.table-right-row {
+    text-align: right;
 }
 
 /* ANIMATION FOR CONFIRMATIONS (loading..) */
@@ -51,6 +63,7 @@ body, html {
     height: auto;
     width: 120px;
     padding: 0;
+    cursor: pointer;
 }
 
 .jumbotron h1 {
@@ -65,6 +78,10 @@ body, html {
     margin-top: 10px;
 }
 
+.usericon-navbar {
+    font-size: 16px;
+}
+
 /* Fix for ui-bootstrap components */
 .nav, .pagination, .carousel, .panel-title a {
     cursor: pointer;
@@ -75,6 +92,10 @@ body, html {
 */
 .m-y-2 {
     margin-bottom: 0;
+}
+
+.userdetail-field {
+    width: 220px;
 }
 
 .panel-body {
@@ -239,7 +260,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .btn.btn-signin {
-    background-color: #02C1EE;
+    background-color: #0083A1;
     /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
     padding: 0px;
     font-weight: 700;

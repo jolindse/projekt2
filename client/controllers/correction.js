@@ -251,6 +251,6 @@ myApp.controller('correctionCtrl',
             $scope.onlyNeedCorrection = false;          // Only display questions not corrected.
             $scope.needCorr = false;                    // Does the current question need correction?
 
-            $scope.startCorrection(userService.testToCorrect);
+            $scope.startCorrection(userService.submittedTest);
 
         }]);

@@ -5,7 +5,7 @@
 /**
  * LOGIN-CONTROLLER
  */
-myApp.controller("loginCtrl", ['$http','$scope','$location','$rootScope','userService','UserManager', function($http, $scope, $location, $rootScope, userService, UserManager) {
+myApp.controller("loginCtrl", ['$http','$scope','$location','userService','UserManager', function($http, $scope, $location, userService, UserManager) {
     $scope.errorMessage = "";
     $scope.username = "";
     $scope.password = "";
@@ -74,7 +74,7 @@ myApp.controller("loginCtrl", ['$http','$scope','$location','$rootScope','userSe
             if (status == 200){
                 $scope.sendPasswordBtn = false;
                 $scope.loginSuccess = true;
-                $scope.successMessage = "Mail med lösenord skickat!"
+                $scope.successMessage = "Mail med lösenord har skickats!"
             }
             else {
                 $scope.errorMessage = "Kunde inte skicka mail, vänligen försök igen.";
@@ -87,6 +87,7 @@ myApp.controller("loginCtrl", ['$http','$scope','$location','$rootScope','userSe
  * INDEX-CONTROLLER:
  */
 myApp.controller('indexCtrl', function ($scope, $location, userService) {
+    $scope.userName = null;
 
     //When clicking the Newton-logo:
     $scope.clickLogo = function() {
@@ -102,22 +103,20 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
     $scope.$on('updateNavbarBroadcast', function () {
 
         if (sessionStorage.getItem('userId') != null) {
-            $scope.showLogout = true;
+            $scope.showUserIconNav = true;
+            $scope.userName = userService.firstName;
 
             if (userService.admin == true) {
                 $scope.showAdminNav = true;
-                $scope.showUserDetailsNav = true;
             }
             else if (userService.admin == false) {
                 $scope.showStudentNav = true;
-                $scope.showUserDetailsNav = true;
             }
         }
         else {
-            $scope.showLogout = false;
+            $scope.showUserIconNav = false;
             $scope.showAdminNav = false;
             $scope.showStudentNav = false;
-            $scope.showUserDetailsNav = false;
         }
     });
 
@@ -147,8 +146,13 @@ myApp.controller('studentCtrl', function ($location, $scope, UserManager, ExamMa
 
         //Get the active tests for the student:
         $scope.user.testToTake.forEach(function(testId) {
+            var today = moment().format('YYYY-MM-DD HH:mm');
+
             ExamManager.getExam(testId, function (test) {
-                $scope.tests.push(test);
+                if (today >= test.interval[0] && today <= test.interval[1]){
+                    $scope.tests.push(test);
+
+                }
             });
         });
     });
@@ -169,13 +173,13 @@ myApp.controller('studentCtrl', function ($location, $scope, UserManager, ExamMa
         userService.startTime = currentTime;
         UserManager.setUser($scope.user);
         $location.path("/doexam");
-    }
+    };
 });
 
 /**
  * ADMIN-CONTROLLER:
  */
-myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassManager, UserManager, ExamManager, userService) {
+myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter, $http, $scope, SubmittedManager, StudentClassManager, UserManager, ExamManager, userService) {
     userService.updateNavbar();
 
     //Current user:
@@ -184,14 +188,21 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
     //All exams:
     $scope.tests = [];
 
+    //All submittedTests:
+    $scope.submittedTests = [];
+
+    //Array with SubmittedExams, Exams and students:
+    $scope.testsToCorrect = [];
+
     //The selected exam (for sharing):
     $scope.selectedTest = null;
+
     //Array with studentId's (for email-notification)
     var recObj = {
         rec: []
     };
 
-    //Usertable:
+    //Usertable users:
     $scope.users = [];
 
     //All studentclasses:
@@ -200,13 +211,16 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
     //Array holding students, studentclasses and a boolean if selected or not in the table:
     $scope.selectedStudents = [];
 
+    //Boolean for checking if checkbox(in "share test") is selected or not.
+    $scope.isSelectAll = false;
+
     //For sorting the usertable when sharing an exam:
     $scope.sortType     = 'name';
     $scope.sortReverse  = false;
     $scope.searchUser   = '';
-    //Loading animation when sharing exam:
+    //Loading-animation when sharing exam:
     $scope.loading = false;
-    //When a sharing an exam successfully:
+    //When sharing an exam successfully:
     $scope.successShare = false;
     $scope.successShare = false;
     $scope.successMessage = null;
@@ -216,6 +230,33 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
     ExamManager.getAllExams(function (test) {
         $scope.tests = test;
     });
+
+    //Get all exams that needs to get corrected:
+    SubmittedManager.getNeedCorrection(function (submittedTests) {
+        $scope.submittedTests = submittedTests;
+
+        $scope.submittedTests.forEach(function (submittedTest) {
+            //Get the examobject:
+            ExamManager.getExam(submittedTest.exam, function (exam) {
+                //Get the studentobject:
+                UserManager.getUser(submittedTest.student, function (student) {
+                    //Push to array:
+                    $scope.testsToCorrect.push (
+                        {
+                            submittedTest: submittedTest._id,
+                            exam: exam,
+                            student: student
+                        }
+                    )
+                });
+            });
+        })
+    });
+
+    //When clicking "Correct exam":
+    $scope.correctTest = function () {
+        $location.path("/correctexam");
+    };
 
     //Get the user who has logged in:
     UserManager.getUser(userService.id, function (data) {
@@ -256,7 +297,14 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
         });
     });
 
-    //Get selected exam from the table when sharing an exam:
+    //Get selected exam to correct:
+    $scope.selectTestToCorrect = function (data) {
+        $scope.selectedTest = data;
+        //Send the id to the userService:
+        userService.submittedTest = data.submittedTest;
+    };
+
+    //Get selected exam from the table:
     $scope.selectExam = function (data) {
 
         //Get the exam:
@@ -272,6 +320,24 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
                 }
             });
         });
+    };
+
+    //Function for selecting all/unselecting all students showing in a table:
+    $scope.selectAllStudents = function () {
+        var selectedArray = $filter('filter')($scope.selectedStudents, $scope.searchUser);
+
+        //If checkbox is selected, select all:
+        if ($scope.isSelectAll == true) {
+            selectedArray.forEach(function (selectedStudent) {
+                selectedStudent.selected = true;
+            });
+        }
+        //If the checkbox is not selected, unselect all:
+        else if($scope.isSelectAll == false){
+            selectedArray.forEach(function (selectedStudent) {
+                selectedStudent.selected = false;
+            });
+        }
     };
 
     //Listener for the button "share exam":
@@ -301,7 +367,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
             }
         );
 
-        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <-------------------------*/
+        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <------------------------- */
         if (recObj.rec.length > 0) {
             console.log("innan mail " + JSON.stringify(recObj));
 
@@ -313,7 +379,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
                 if (status == 200){
                     $scope.loading = false;
                     $scope.successShare = true;
-                    $scope.successMessage = "Du har nu delat provet " + $scope.selectedTest.title + "och studenterna har informerats via email.";
+                    $scope.successMessage = "Du har nu delat provet " + $scope.selectedTest.title + " och studenterna har informerats via email.";
                 }
                 else {
                     $scope.loading = false;
@@ -334,15 +400,20 @@ myApp.controller('adminCtrl', function (APIBASEURL, $http, $scope, StudentClassM
         else {
             $scope.loading = false;
         }
-
-
     };
+
+    //Listener for button "Edit exam"
+    $scope.editExam = function () {
+        userService.testToEdit = $scope.selectedTest;
+        $location.path("/createexam");
+        userService.editTest();
+    }
 });
 
 /**
  * USERDETAIL-CONTROLLER:
  */
-myApp.controller('userDetailCtrl', function ($scope, $route, UserManager, userService) {
+myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
     $scope.user = "";
     $scope.firstNameDisabled = true;
     $scope.lastNameDisabled = true;
