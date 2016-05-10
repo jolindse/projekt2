@@ -1,6 +1,7 @@
 /**
  * Created by Mattias on 2016-05-07.
  */
+
 var User = require('../models/User');
 var Class = require('../models/Class');
 var Exam = require('../models/Exam');
@@ -37,7 +38,9 @@ module.exports.classStats = function(req, callback) {
         }
         for(var i = 0; i<studentArray.length; i++) {
             SubmittedExam.getByStudent(studentArray[i], function(submitted) {
-                if(submittedArray.length === returnObject.numStudents) {break;}
+                if(submittedArray.length === returnObject.numStudents) {
+                //    break;
+                }
                 else if(!submitted) {submittedArray.push('');}
                 else {submittedArray.push(submitted);}
             });

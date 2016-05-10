@@ -217,6 +217,23 @@ myApp.controller('correctionCtrl',
                 }
             };
 
+            /**
+             * Changes corrected state of question
+             */
+
+            $scope.setCorrected = function() {
+                var currStatus = $scope.currSubAns[0].corrected;
+                $scope.currSubAns[0].corrected = !currStatus;
+                if ($scope.currSubAns[0].corrected) {
+                    var indexToRemove = $scope.questionsNeedCorrection.indexOf($scope.currQuestion._id);
+                    if (indexToRemove > 0){
+                        $scope.questionsNeedCorrection.splice(indexToRemove,1);
+                    }
+                } else {
+                    $scope.questionsNeedCorrection.push($scope.currQuestion._id);
+                }
+            };
+
             // UPDATES
 
             /**
