@@ -470,13 +470,13 @@ app.post('/api/submitted', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            correction.setExamCorrected(currSubmitted.id, function (err, subExam) {
+            correction.setExamCorrected(currSubmitted._id, function (err, subExam) {
                 if (err) {
                     res.status(404).json({success: false, message: 'Couldn\'t correct test'});
                 } else {
-                    correction.getSubmittedAndCorrectAnswers(req, res, function(question, subExam, orgExam) {
+                    correction.getSubmittedAndCorrectAnswers(currSubmitted._id, function(question, subExam, orgExam) {
                         correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
-                            Submitted.updateSubmitted(submittedExam.id, submittedExam, function() {
+                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function() {
                                 res.status(200).json(submittedExam);
                             });
                         });
@@ -496,11 +496,11 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            correction.setExamCorrected(req.params.id, function (err, subExam) {
+            correction.setExamCorrected(updatedExam._id, function (err, subExam) {
                 if (err) {
                     res.status(404).json({success: false, message: 'Couldn\'t correct test'});
                 } else {
-                    correction.getSubmittedAndCorrectAnswers(req, res, function(question, subExam, orgExam) {
+                    correction.getSubmittedAndCorrectAnswers(function(question, subExam, orgExam) {
                         correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
                             Submitted.updateSubmitted(submittedExam.id, submittedExam, function() {
                                 res.status(200).json(subExam);

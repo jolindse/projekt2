@@ -56,18 +56,17 @@ module.exports.setExamCorrected = function(id, callback) {
 
 /** Fetch submitted answers and correct answers
  *
- * @param req
- * @param res
+ 
  * @param callback
  */
-module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
+module.exports.getSubmittedAndCorrectAnswers = function(id, callback) {
     var subExam = null; // The _id of the exam that is submitted
     var questionsId = []; // The _id's of questions in exam
     var questions = []; // The questions in exam
     var orgExam = null; // The exam which is taken by student
     
     // Fetch the submitted exam
-    SubmittedExam.getSubmitted(req.params.id, function(err, submittedExam) {
+    SubmittedExam.getSubmitted(id, function(err, submittedExam) {
         if (err) {console.log(err);}
         else {
             if(!submittedExam.points) {submittedExam.points = 0;}
@@ -77,9 +76,6 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
         Exam.getExam(subExam, function (err, exam) {
             orgExam = exam;
             questionsId = exam.questions;
-
-
-
             questionsId.forEach(function (id) {
                 // Fetch the questions in exam
                 Question.getQuestion(id, function (err, question) {

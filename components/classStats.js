@@ -11,6 +11,7 @@ var moment = require('moment');
 
 module.exports.classStats = function(req, callback) {
     var schoolClassId;
+    var submittedArray = [];
     var studentArray = [];
     var returnObject = {
         success: false,
@@ -30,12 +31,24 @@ module.exports.classStats = function(req, callback) {
     Class.getClass(req.params.id, function(err, schoolClass) {
         schoolClassId = schoolClass._id; 
         returnObject.numStudents = schoolClass.students.length;
-        schoolClass.students.forEach(functio)
+        for (var i = 0; i<schoolClass.students.length; i++) {
+            if(studentArray.length === returnObject.numStudents) {break;}
+            else {studentArray.push(schoolClass.students[i]);}
+        }
+        for(var i = 0; i<studentArray.length; i++) {
+            SubmittedExam.getByStudent(studentArray[i], function(submitted) {
+                if(submittedArray.length === returnObject.numStudents) {break;}
+                else if(!submitted) {submittedArray.push('');}
+                else {submittedArray.push(submitted);}
+            });
+        }
+        console.log(studentArray);
+        console.log(submittedArray);
     });
-    for (var i = 0; i<returnObject.numStudents; i++) {
-        SubmittedExam.getByStudent(schoolClass.students[i], function(err, submitted) {
-        });
-    }
+    // for (var i = 0; i<returnObject.numStudents; i++) {
+    //     SubmittedExam.getByStudent(schoolClass.students[i], function(err, submitted) {
+    //     });
+    // }
 
     // Class.getClass(req.params.id, function(err, schoolClass) {
     //     console.log('Hämta alla elever från klassen');
