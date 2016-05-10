@@ -14,6 +14,7 @@ body, html {
 /* SHARE TEST MODAL */
 .activerow {
     background-color: #337AB7;
+    color: white;
 }
 
 .table-checkbox {
@@ -90,7 +91,7 @@ body, html {
 /*
 * USER DETAILS
 */
-.m-y-2 {
+.userdetail-separator {
     margin-bottom: 0;
 }
 

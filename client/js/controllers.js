@@ -345,7 +345,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
 
     //Listener for the button "share exam":
     $scope.shareExam = function () {
-        $scope.loading = true;
+        //$scope.loading = true;
 
         //Loop trough the array selectedStudents:
         $scope.selectedStudents.forEach(function (student) {
@@ -370,38 +370,25 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
             }
         );
 
-        /* MAIL FUNCTION DISABLED PREVENTING SPAM WHEN TESTING <------------------------- */
         if (recObj.rec.length > 0) {
-            console.log("innan mail " + JSON.stringify(recObj));
-
             $http.post("/api/mail", JSON.stringify(recObj))
                 .success(function (data, status) {
-                console.log("status = " + status);
-                console.log("data = " + data);
-
-                if (status == 200){
-                    $scope.loading = false;
-                    $scope.successShare = true;
-                    $scope.successMessage = "Du har nu delat provet " + $scope.selectedTest.title + " och studenterna har informerats via email.";
-                }
-                else {
-                    $scope.loading = false;
-                    $scope.errorShare = true;
-                    $scope.errorMessage = "Du har nu delat provet " + $scope.selectedTest.title + " men tyvärr har inget email skickats iväg, vänligen försök igen..";
-                }
-            })
+                    if (status == 200){
+                        //$scope.loading = false;
+                        //$scope.successShare = true;
+                        $scope.successMessage = "Du har nu delat provet " + $scope.selectedTest.title + " och studenterna har informerats via email.";
+                    }
+                    else {
+                        //$scope.loading = false;
+                        //$scope.errorShare = true;
+                        $scope.errorMessage = "Du har nu delat provet " + $scope.selectedTest.title + " men tyvärr har inget email skickats iväg, vänligen försök igen..";
+                    }
+                })
                 .error(function (data, status) {
-                $scope.loading = false;
-
-                $scope.errorShare = true;
-                $scope.errorMessage = "Du har nu delat provet " + $scope.selectedTest.title + " men tyvärr har inget email skickats iväg, vänligen försök igen..";
-
-                console.log(data);
-                console.log(status);
-            });
-        }
-        else {
-            $scope.loading = false;
+                    //$scope.loading = false;
+                    //$scope.errorShare = true;
+                    $scope.errorMessage = "Du har nu delat provet " + $scope.selectedTest.title + " men tyvärr har inget email skickats iväg, vänligen försök igen..";
+                });
         }
     };
 

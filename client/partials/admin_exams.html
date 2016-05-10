@@ -1,8 +1,7 @@
 <article class="container">
     <div class="jumbotron">
         <h1 class="display-3">Prov</h1>
-        <p class="lead">Det finns för tillfället {{tests.length}}st prov att administrera.</p>
-        <hr class="m-y-2">
+        <p class="lead">Det finns {{tests.length}}st prov att administrera.</p>
         <table class="table" id="examTable">
             <thead class="thead">
             <tr>
@@ -25,6 +24,30 @@
         </table>
         <button ng-hide="selectedTest == null" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
         <button ng-click="editExam()" ng-hide="selectedTest == null" type="button" class="btn btn-warning">Redigera prov</button>
+
+        <hr class="m-y-2">
+
+        <p class="lead">Det finns {{testsToCorrect.length}} st prov att rätta.</p>
+
+        <table class="table">
+            <thead class="thead">
+            <tr>
+                <th>Provnamn</th>
+                <th>Ämne</th>
+                <th class="table-center-row">Antal frågor</th>
+                <th>Student</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="test in testsToCorrect">
+            <tr ng-click="selectTestToCorrect(testsToCorrect[$index])" ng-class="{activerow: testsToCorrect[$index] === selectedTestToCorrect}" class="clickable-row">
+                <td>{{test.exam.title}}</td>
+                <td>{{test.exam.subject}}</td>
+                <td class="table-center-row">{{test.exam.questions.length}}</td>
+                <td>{{test.student.firstName}} {{test.student.surName}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button ng-hide="selectedTestToCorrect == null" ng-click="correctTest()" type="button" class="btn btn-success">Rätta prov</button>
     </div>
 </article>
 
@@ -88,8 +111,8 @@
                 <div ng-show="errorShare" class="alert alert-danger" role="alert">
                     <p>{{errorMessage}}</p>
                 </div>
-                <button ng-hide="successShare" ng-click="shareExam()" type="button" class="btn btn-success" ><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> OK</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Stäng</button>
+                <button ng-hide="successShare" ng-click="shareExam()" type="button" data-dismiss="modal" class="btn btn-success" ><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> OK</button>
+                <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Stäng</button> -->
             </div>
         </div>
     </div>
