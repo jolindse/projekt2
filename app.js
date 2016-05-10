@@ -505,6 +505,7 @@ app.put('/api/submitted/:id', function (req, res) {
 // Try to autocorrect exam
 app.get('/api/submitted/autocorrect/:id', function (req, res) {
     correction.getSubmittedAndCorrectAnswers(req, res, function (question, subExam, orgExam) {
+        console.log('In app.js question: '+JSON.stringify(question)); // TEST
         correction.autoCorrect(question, subExam, orgExam, function (submittedExam) {
             // Update the submitted exam in db
             Submitted.updateSubmitted(submittedExam.id, submittedExam, function () {

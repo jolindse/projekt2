@@ -510,6 +510,10 @@ thead {
 
 p.infoText {
     font-size: 12px;
+    margin-bottom: 5px;
+}
+
+p.button-text {
 }
 
 /*

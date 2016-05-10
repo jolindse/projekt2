@@ -172,6 +172,7 @@ myApp.controller('doExamCtrl',
              */
             $scope.submitExam = function () {
                 SubmittedManager.addSubmitted($scope.currSubmitted, function (data) {
+                    console.log(JSON.stringify(data));
                     if (data._id) {
                         $http.get(APIBASEURL + '/api/submitted/autocorrect/' + data._id)
                             .then(function (resData) {

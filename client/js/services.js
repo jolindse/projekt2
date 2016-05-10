@@ -10,7 +10,7 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     user.testsToTake = [];
     user.currentExam = "";
     user.startTime = "";
-    user.testToCorrect = "5730454a7d95ef6425b5db6c";
+    user.testToCorrect = "573089675f38b6f8dbbf89a3";
 
     user.login = function (firstName, id, admin, userTestsToTake){
         this.firstName = firstName;
