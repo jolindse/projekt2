@@ -197,6 +197,9 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
     //The selected exam (for sharing):
     $scope.selectedTest = null;
 
+    //The selected exam (for correcting):
+    $scope.selectedTestToCorrect = null;
+
     //Array with studentId's (for email-notification)
     var recObj = {
         rec: []
@@ -299,7 +302,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
 
     //Get selected exam to correct:
     $scope.selectTestToCorrect = function (data) {
-        $scope.selectedTest = data;
+        $scope.selectedTestToCorrect = data;
         //Send the id to the userService:
         userService.submittedTest = data.submittedTest;
     };

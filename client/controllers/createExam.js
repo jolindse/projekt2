@@ -215,7 +215,6 @@ myApp.controller('makeExamCtrl',
              */
 
             $scope.$on('editTestBroadcast', function (event, testId) {
-                console.log("createExam, id = " + testId);
                 $scope.loadExam(testId);
             });
 

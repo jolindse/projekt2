@@ -10,7 +10,6 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     user.testsToTake = [];
     user.currentExam = "";
     user.submittedTest = "";
-    user.testToEdit = "";
     user.startTime = "";
 
     user.login = function (firstName, id, admin, userTestsToTake){
@@ -26,7 +25,6 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     };
 
     user.editTest = function (testId) {
-        console.log("skickar från service... - " + testId);
         $rootScope.$broadcast('editTestBroadcast', testId);
     };
 
