@@ -20,37 +20,43 @@ module.exports.setExamCorrected = function(id, callback) {
         {_id: id},
         function(err, exam) {
             if(err) {
-                console.log(err);
+                console.log('setExamCorrected ' + err);
             } else {
-                var numAnswers = exam.answers.length;
+                var correctedArray = [];
                 var corrected = 0;
-                exam.answers.forEach(function(answer) {
-                    if (answer.corrected === 'true') {
-                        corrected++;
+                var numAnswers = exam.answers.length;
+                for (var i = 0; i<exam.answers.length; i++) {
+                    var subAnswers = exam.answers[i];
+                    for (var j=0; j<subAnswers.length;j++) {
+                        if(subAnswers[j].corrected) {
+                            console.log('pushar true');
+                            correctedArray.push('true');
+                        } else {
+                            console.log('Pushar false');
+                            correctedArray.push('false');
+                        }
+                        }
+                        
                     }
-                });
-                // If all answers are corrected set, the exam to completely corrected
-                if (corrected == numAnswers) {
+                }
+                if (correctedArray.indexOf('false')<0) {
+                    console.log('complete correction');
                     SubmittedExam.findOneAndUpdate(
                         {_id: id},
-                        {
-                            $set: {completeCorrection: true}
-
-                        },
-                        {upsert: false}, callback
+                        {$set:{completeCorrection: true}},
+                        {new: true},
+                        callback
                     );
-                    // If all answers are not corrected
                 } else {
                     SubmittedExam.findOneAndUpdate(
                         {_id: id},
-                        {
-                            $set: {completeCorrection: false}
-                        },
-                        {upsert: false}, callback
+                        {$set: {completeCorrection: false}},
+                        {new: true},
+                        callback
                     );
                 }
             }
-        }
+        
     );
 };
 
@@ -67,26 +73,28 @@ module.exports.getSubmittedAndCorrectAnswers = function(id, callback) {
     
     // Fetch the submitted exam
     SubmittedExam.getSubmitted(id, function(err, submittedExam) {
-        if (err) {console.log(err);}
+        if (err) {console.log('getSubmitted ' + id);
+        console.log(id);}
         else {
             if(!submittedExam.points) {submittedExam.points = 0;}
             subExam = submittedExam.exam;
-        }
-        // Fetch the exam
-        Exam.getExam(subExam, function (err, exam) {
-            orgExam = exam;
-            questionsId = exam.questions;
-            questionsId.forEach(function (id) {
-                // Fetch the questions in exam
-                Question.getQuestion(id, function (err, question) {
-                    questions.push(question);
-                    // If all questions is inserted in array, go back
-                    if (questions.length === questionsId.length) {
-                        callback(questions, submittedExam, orgExam);
-                    }
+            // Fetch the exam
+            Exam.getExam(subExam, function (err, exam) {
+                orgExam = exam;
+                questionsId = exam.questions;
+                questionsId.forEach(function (id) {
+                    // Fetch the questions in exam
+                    Question.getQuestion(id, function (err, question) {
+                        questions.push(question);
+                        // If all questions is inserted in array, go back
+                        if (questions.length === questionsId.length) {
+                            callback(questions, submittedExam, orgExam);
+                        }
+                    });
                 });
             });
-        });
+        }
+        
 
     });
 };
@@ -107,11 +115,9 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             // Single type
             if(type === 'single') {
                 var subAnswer = submittedExam.answers[i];
-                console.log('Current answer is single (index '+i+') : '+JSON.stringify(subAnswer,null, 2)+'\n\n'); // TEST
                 if(!subAnswer[0].corrected) {
                     for (var j = 0; j < question[i].answerOptions.length; j++) {
                         if (subAnswer[0].text === question[i].answerOptions[j].text && question[i].answerOptions[j].correct) {
-                            console.log('Subanswer '+JSON.stringify(subAnswer[0],null, 2)+' is correct'+'\n\n'); // TEST
                             subAnswer[0].correct = true;
                             subAnswer[0].corrected = true;
                             subAnswer[0].points = question[i].points;
@@ -171,12 +177,17 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                     }
                 }
             }
-
-            else if(type === 'text') {
+                
+            // Text type
+            else if (type === 'text') {
                 var subAnswers = submittedExam.answers[i];
+                if (subAnswers[0].corrected  && subAnswers[0].correct) {
+                    subAnswers[0].points = question[i].points;
+                    submittedExam.points += subAnswers[0].points;
+                }
             }
         }
-
+/*
         // Check if all answers are corrected
         var numAnswers = submittedExam.answers.length;
         var numSubCorrected = 0;
@@ -188,9 +199,9 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 if(numSubCorrected === subAnswer.length) {numTotCorrected++;}
             });
         });
-
-        if (numAnswers == numTotCorrected) {
-            submittedExam.completeCorrection = true;
+*/
+        if (submittedExam.completeCorrection) {
+            // submittedExam.completeCorrection = true;
 
             //submittedExam.points = totalPoints;
             if ((submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[0]) {
