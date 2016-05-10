@@ -214,10 +214,9 @@ myApp.controller('makeExamCtrl',
              * Loads an exam to edit on broadcast:
              */
 
-            $scope.$on('editTestBroadcast', function () {
-                //$scope.loadExam(userService.testToEdit);
-                console.log("hej");
-                console.log(userService.testToEdit);
+            $scope.$on('editTestBroadcast', function (event, testId) {
+                console.log("createExam, id = " + testId);
+                $scope.loadExam(testId);
             });
 
         }]);

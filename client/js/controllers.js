@@ -404,10 +404,13 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
 
     //Listener for button "Edit exam"
     $scope.editExam = function () {
-        userService.testToEdit = $scope.selectedTest;
         $location.path("/createexam");
-        userService.editTest();
+
+        $timeout(function(){
+            userService.editTest($scope.selectedTest._id);
+        }, 50);
     }
+
 });
 
 /**
@@ -421,7 +424,6 @@ myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
     $scope.emailDisabled = true;
     $scope.detailsChanged = false;
     $scope.showbutton = false;
-
 
     //Get current user:
     UserManager.getUser(userService.id, function (data) {

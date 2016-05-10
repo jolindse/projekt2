@@ -26,9 +26,8 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     };
 
     user.editTest = function (testId) {
-        this.testToEdit = testId;
-        $rootScope.$broadcast('editTestBroadcast');
-        console.log("skickar du?");
+        console.log("skickar från service... - " + testId);
+        $rootScope.$broadcast('editTestBroadcast', testId);
     };
 
     return user;
