@@ -479,7 +479,7 @@ myApp.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', fun
         },
         getNeedCorrection: function (callback) {
             var scope = this;
-            $http.get(APIBASEURL + '/api/submitted/needcorr')
+            $http.get(APIBASEURL + '/api/submittedneedcorr')
                 .success(function (needCorrArray) {
                     var needCorr = [];
                     needCorrArray.forEach(function (currSub) {

@@ -178,9 +178,9 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
         var numTotCorrected = 0;
         submittedExam.answers.forEach(function (answer) {
             var subAnswers = answer;
-            subAnswer.forEach(function(sub) {
+            subAnswers.forEach(function(sub) {
                if(sub.corrected){numSubCorrected++;}
-                if(numSubCorrected === subAnswer.length) {numTotCorrected++;}
+                if(numSubCorrected === subAnswers.length) {numTotCorrected++;}
             });
         });
 

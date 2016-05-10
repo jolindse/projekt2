@@ -7,20 +7,20 @@
         <table class="table">
             <thead class="thead">
             <tr>
-                <th>Ämne</th>
                 <th>Provnamn</th>
-                <th>Tid</th>
-                <th>Tillgänglig</th>
+                <th>Ämne</th>
+                <th class="table-center-row">Tid</th>
+                <th class="table-center-row">Antal frågor</th>
                 <th></th>
             </tr>
             </thead>
             <tbody ng-repeat="test in tests">
             <tr ng-click="selectExam(tests[$index])" ng-class="{activerow: tests[$index] === selectedTest}" class="clickable-row">
-                <td>{{test.subject}}</td>
                 <td>{{test.title}}</td>
-                <td>{{test.time}}</td>
-                <td>{{test.interval[0]}}  -  {{test.interval[1]}}</td>
-                <td><span data-toggle="modal" data-target="#infoModal" class="glyphicon glyphicon-info-sign"></span></td>
+                <td>{{test.subject}}</td>
+                <td class="table-center-row">{{test.time}}min</td>
+                <td class="table-center-row">{{test.questions.length}}</td>
+                <td class="table-right-row"><span data-toggle="modal" data-target="#infoModal" class="glyphicon glyphicon-info-sign"></span></td>
             </tr>
             </tbody>
         </table>
@@ -44,17 +44,21 @@
                     <thead class="thead">
                     <tr>
                         <th>
-                            Tillgänglig
+                            Tillgängligt
                         </th>
                         <th>
-                            Antal frågor
+                            Gräns för godkänt
+                        </th>
+                        <th>
+                            Gräns för väl godkänt
                         </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
                         <td>{{selectedTest.interval[0]}}  -  {{selectedTest.interval[1]}}</td>
-                        <td>{{selectedTest.question.length}}</td>
+                        <td class="table-center-row">{{selectedTest.gradePercentage[0]}}%</td>
+                        <td class="table-center-row">{{selectedTest.gradePercentage[1]}}%</td>
                     </tr>
                     </tbody>
                 </table>

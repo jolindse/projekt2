@@ -9,6 +9,8 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     user.admin = "";
     user.testsToTake = [];
     user.currentExam = "";
+    user.submittedTest = "";
+    user.testToEdit = "";
     user.startTime = "";
 
     user.login = function (firstName, id, admin, userTestsToTake){
@@ -21,6 +23,12 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     
     user.updateNavbar = function () {
         $rootScope.$broadcast('updateNavbarBroadcast');
+    };
+
+    user.editTest = function (testId) {
+        this.testToEdit = testId;
+        $rootScope.$broadcast('editTestBroadcast');
+        console.log("skickar du?");
     };
 
     return user;

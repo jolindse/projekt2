@@ -8,11 +8,13 @@ myApp.controller('correctionCtrl',
         'SubmittedManager',
         'QuestionManager',
         'UserManager',
+        'userService',
         function ($scope,
                   ExamManager,
                   SubmittedManager,
                   QuestionManager,
-                  UserManager) {
+                  UserManager,
+                  userService) {
 
             // FUNCTIONS
 
@@ -216,6 +218,6 @@ myApp.controller('correctionCtrl',
             $scope.onlyNeedCorrection = false;          // Only display questions not corrected.
             $scope.needCorr = false;                    // Does the current question need correction?
 
-            $scope.startCorrection('5730580a87840bc80d4047da');
+            $scope.startCorrection(userService.submittedTest);
 
         }]);
