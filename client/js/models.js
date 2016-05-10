@@ -565,10 +565,11 @@ myApp.factory('StudentClassManager', ['$http', '$q', 'StudentClass', 'APIBASEURL
                 });
             }
         },
-        deleteClass: function (id) {
+        deleteClass: function (id, callback) {
             StudentClassManager._load(id, function (currClass) {
                 delete StudentClassManager._pool.id;
                 currClass.delete();
+                callback();
             });
         },
         deleteClassFull: function (id) {

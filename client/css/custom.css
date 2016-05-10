@@ -421,6 +421,9 @@ ul.draggableUl {
 .answerModalOptions {
     margin-bottom: 10px;
 }
+.selectedRow{
+    background-color: #00a5ff;
+}
 
 .smallLabeltext {
     font-size: 14px;
@@ -507,6 +510,10 @@ thead {
 
 p.infoText {
     font-size: 12px;
+    margin-bottom: 5px;
+}
+
+p.button-text {
 }
 
 /*

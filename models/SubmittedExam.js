@@ -92,6 +92,19 @@ module.exports.getByStudent = function (id, callback) {
 
 // Get all submitted exams not completly corrected
 module.exports.getExamsNeedCorrection = function(callback) {
-    SubmittedExam.find(
-        {completeCorrection: false}, callback);
+    SubmittedExam.find({completeCorrection: false}, callback);
+};
+
+// Removes all submitted exams from student
+module.exports.removeStudent = function (id) {
+    console.log('removeStudent; Id in ' + id); // TEST
+    SubmittedExam.find({'student': {$in: [id]}}, function (err, currSub) {
+        currSub.forEach(function (subToRemove) {
+            SubmittedExam.deleteSubmitted(subToRemove._id, function (err) {
+                if (err) {
+                    console.log("Error removing submitted from student with id " + id);
+                }
+            });
+        });
+    });
 };

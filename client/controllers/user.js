@@ -9,8 +9,7 @@ myApp.controller('userCtrl', ['$scope','UserManager', 'userService', function ($
     UserManager.getUser(userService.id, function(loggedInUser){
         $scope.user = loggedInUser;
     });
-
-
+    
 }]);
 
 
