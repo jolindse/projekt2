@@ -529,12 +529,23 @@ thead {
 * CORRECT EXAM
 */
 
-p.infoText {
+p.infoText, .infoText {
     font-size: 12px;
     margin-bottom: 5px;
 }
 
-p.button-text {
+.button-top {
+    margin-top: 20px;
+}
+
+.button-text-large {
+    padding: 0px;
+    min-width: 170px;
+}
+
+.button-text {
+    padding: 0px;
+    min-width: 100px;
 }
 
 /*

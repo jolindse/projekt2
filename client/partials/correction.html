@@ -1,230 +1,240 @@
 <article class="container">
-	<!-- Heading -->
-	<div class="row">
-		<div class="col-md-3">
-			<h1>Rätta</h1>
-		</div>
-		<div class="col-md-9">
-		</div>
-	</div>
+    <!-- Heading -->
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Rätta</h1>
+        </div>
+        <div class="col-md-9 text-right">
+            <button ng-class="{'btn-success': onlyNeedCorrection}" ng-click="toggleNeedCorrection()"
+                    class="btn btn-sm button-top"><span class="infoText">Visa endast i behov av rättning</span></button>
+        </div>
+    </div>
 
-	<div class="jumbotron">
+    <div class="jumbotron">
 
-		<!-- Question counter -->
-		<div class="row">
-			<div class="col-md-2">
-				<p ng-show="!onlyNeedCorrection"> Fråga <strong>{{qIndex+1}}</strong> av
-					<strong>{{questions.length}}</strong></p>
-				<p ng-show="onlyNeedCorrection"> Fråga <strong>{{needIndex+1}}</strong> av <strong>{{questionsNeedCorrection.length}}</strong>
-				</p>
-			</div>
+        <!-- Question counter -->
+        <div class="row">
+            <div class="col-md-2">
+                <p ng-show="!onlyNeedCorrection"> Fråga <strong>{{qIndex+1}}</strong> av
+                    <strong>{{questions.length}}</strong></p>
+                <p ng-show="onlyNeedCorrection"> Fråga <strong>{{needIndex+1}}</strong> av <strong>{{questionsNeedCorrection.length}}</strong>
+                </p>
+            </div>
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-success btn-lg button-text-large" ng-click="postCorrected()">Markera rättad</button>
+            </div>
+        </div>
 
-			<div class="col-md-10 text-right">
-				<p>Visa bara frågor som behöver rättas
-					<checkbox ng-init="onlyNeedCorrection = false" ng-class="{'btn-success' : onlyNeedCorrection}" large
-							  ng-model="onlyNeedCorrection" ng-change="toggleNeedCorrection()"></checkbox>
-			</div>
-		</div>
-		<!-- Info rows -->
-		<div class="row">
-			<div class="col-md-2 col-md-offset-1">
-				<p class="infoText">Prov:<br/>
-			</div>
-			<div class="col-md-3">
-				<p class="infoText"><strong>{{currExam.title}}</strong></p>
-			</div>
-			<div ng-show="!currExam.anonymous" class="col-md-2">
-				<p class="infoText">Student:</p>
-			</div>
-			<div class="col-md-3" ng-show="!currExam.anonymous">
-				<p class="infoText"><strong>{{currUser.firstName}} {{currUser.surName}}</strong></p>
-			</div>
-		</div>
+        <!-- Info rows -->
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+                <p class="infoText">Prov:</p>
+            </div>
+            <div class="col-md-3">
+                <p class="infoText"><strong>{{currExam.title}}</strong></p>
+            </div>
+            <div ng-show="!currExam.anonymous" class="col-md-2">
+                <p class="infoText">Student:</p>
+            </div>
+            <div class="col-md-3" ng-show="!currExam.anonymous">
+                <p class="infoText"><strong>{{currUser.firstName}} {{currUser.surName}}</strong></p>
+            </div>
+        </div>
 
-		<div class="row">
-			<div class="col-md-2 col-md-offset-1">
-				<p class="infoText">Maxpoäng:</p>
-			</div>
-			<div class="col-md-3">
-				<p class="infoText">{{currExam.maxPoints}}</p>
-			</div>
-			<div ng-show="!currExam.anonymous" class="col-md-2">
-				<p class="infoText">Email:</p>
-			</div>
-			<div class="col-md-3" ng-show="!currExam.anonymous">
-				<p class="infoText">{{currUser.email}}</p>
-			</div>
-		</div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+                <p class="infoText">Maxpoäng:</p>
+            </div>
+            <div class="col-md-3">
+                <p class="infoText">{{currExam.maxPoints}}</p>
+            </div>
+            <div ng-show="!currExam.anonymous" class="col-md-2">
+                <p class="infoText">Email:</p>
+            </div>
+            <div class="col-md-3" ng-show="!currExam.anonymous">
+                <p class="infoText">{{currUser.email}}</p>
+            </div>
+        </div>
 
-		<div class="row">
-			<div class="col-md-2 col-md-offset-1">
-				<p class="infoText">G %</p>
-			</div>
-			<div class="col-md-3">
-				<p class="infoText">{{currExam.gradePercentage[0]}}</p>
-			</div>
-			<div ng-show="!currExam.anonymous" class="col-md-2">
-				<p class="infoText">Id:</p>
-			</div>
-			<div class="col-md-3" ng-show="!currExam.anonymous">
-				<p class="infoText">{{currUser.id}}</p>
-			</div>
-		</div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+                <p class="infoText">G %</p>
+            </div>
+            <div class="col-md-3">
+                <p class="infoText">{{currExam.gradePercentage[0]}}</p>
+            </div>
+            <div ng-show="!currExam.anonymous" class="col-md-2">
+                <p class="infoText">Id:</p>
+            </div>
+            <div class="col-md-3" ng-show="!currExam.anonymous">
+                <p class="infoText">{{currUser.id}}</p>
+            </div>
+        </div>
 
-		<div class="row">
-			<div class="col-md-2 col-md-offset-1">
-				<p class="infoText">VG %</p>
-			</div>
-			<div class="col-md-3">
-				<p class="infoText">{{currExam.gradePercentage[1]}}</p>
-			</div>
-		</div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1">
+                <p class="infoText">VG %</p>
+            </div>
+            <div class="col-md-3">
+                <p class="infoText">{{currExam.gradePercentage[1]}}</p>
+            </div>
+        </div>
 
-		<!-- Previous/Next buttons -->
-		<div class="row">
-			<div class="col-md-6 text-left" ng-click="previousQuestion()">
-				<p ng-show="qIndex > 0"><span class="glyphicon glyphicon-circle-arrow-left bigicon grayicon"></span></p>
-			</div>
-			<div class="col-md-6 text-right" ng-click="nextQuestion()">
-				<p ng-show="hasNextQ"><span
-						class="glyphicon glyphicon-circle-arrow-right bigicon grayicon"></span></p>
-			</div>
-		</div>
+        <!-- Previous/Next buttons -->
+        <div class="row">
+            <div class="col-md-6 text-left" ng-click="previousQuestion()">
+                <p ng-show="qIndex > 0"><span class="glyphicon glyphicon-circle-arrow-left bigicon grayicon"></span></p>
+            </div>
+            <div class="col-md-6 text-right" ng-click="nextQuestion()">
+                <p ng-show="hasNextQ"><span
+                        class="glyphicon glyphicon-circle-arrow-right bigicon grayicon"></span></p>
+            </div>
+        </div>
 
-		<!-- Question text -->
-		<div class="row">
-			<div class="col-md-2">
-				<p><strong>Fråga:</strong></p>
-			</div>
-			<div class="col-md-8">
-				<p><strong>{{currQuestion.title}}</strong></p>
-				<p class="questionText">{{currQuestion.questionText}}</p>
-			</div>
-			<div class="col-md-2 text-right">
-				<p>Max poäng</p>
-				<p><strong>{{currQuestion.points}}</strong></p>
-			</div>
-		</div>
+        <!-- Question text -->
+        <div class="row">
+            <div class="col-md-2">
+                <p><strong>Fråga:</strong></p>
+            </div>
+            <div class="col-md-8">
+                <p><strong>{{currQuestion.title}}</strong></p>
+                <p class="questionText">{{currQuestion.questionText}}</p>
+            </div>
+            <div class="col-md-2 text-right">
+                <p>Max poäng</p>
+                <p><strong>{{currQuestion.points}}</strong></p>
+            </div>
+        </div>
 
-		<!-- Question text type -->
-		<div ng-show="currQuestion.type === 'text'" class="row">
-			<div class="col-md-2">
-				<p><strong>Svar:</strong></p>
-			</div>
-			<div class="col-md-10">
-				<p>{{currSubAns[0].text}}</p>
-			</div>
-		</div>
+        <!-- Question text type -->
+        <div ng-show="currQuestion.type === 'text'" class="row">
+            <div class="col-md-2">
+                <p><strong>Svar:</strong></p>
+            </div>
+            <div class="col-md-10">
+                <p>{{currSubAns[0].text}}</p>
+            </div>
+        </div>
 
-		<!-- Question multi/single/rank -->
-		<div ng-show="currQuestion.type !== 'text'" class="row">
-			<!-- Correct answers -->
-			<div class="col-md-6">
-				<p><strong>Rätt svar:</strong></p>
-			</div>
-			<!-- Student answers multi/single/rank-->
-			<div class="col-md-6">
-				<p><strong>Studentens svar:</strong></p>
-			</div>
-		</div>
+        <!-- Question multi/single/rank -->
+        <div ng-show="currQuestion.type !== 'text'" class="row">
+            <!-- Correct answers -->
+            <div class="col-md-6">
+                <p><strong>Rätt svar:</strong></p>
+            </div>
+            <!-- Student answers multi/single/rank-->
+            <div class="col-md-6">
+                <p><strong>Studentens svar:</strong></p>
+            </div>
+        </div>
 
-		<div ng-show="currQuestion.type !== 'text'" class="row">
-			<!-- Correct answers -->
-			<div class="col-md-6">
-				<div ng-repeat="currA in currQuestion.answerOptions">
-					<div class="answerOptions" ng-class="{'alert alert-success': currA.correct}">
-						<p>{{currA.text}}</p>
-					</div>
-				</div>
-			</div>
-			<!-- Student answers multi/single/rank-->
-			<div class="col-md-6">
-				<div ng-repeat="currSA in currSubAns">
-					<div class="answerOptions"
-						 ng-class="{'alert alert-success': currSA.correct, 'alert alert-danger' : !currSA.correct}">
-						<p>{{currSA.text}}</p>
-					</div>
-				</div>
-			</div>
-		</div>
+        <div ng-show="currQuestion.type !== 'text'" class="row">
+            <!-- Correct answers -->
+            <div class="col-md-6">
+                <div ng-repeat="currA in currQuestion.answerOptions">
+                    <div class="answerOptions" ng-class="{'alert alert-success': currA.correct}">
+                        <p>{{currA.text}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Student answers multi/single/rank-->
+            <div class="col-md-6">
+                <div ng-repeat="currSA in currSubAns">
+                    <div class="answerOptions"
+                         ng-class="{'alert alert-success': currSA.correct, 'alert alert-danger' : !currSA.correct}">
+                        <p>{{currSA.text}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<!-- Correct non correct points -->
-		<div class="row form-group" ng-show="currQuestion.type === 'text'">
-			<div class="col-md-2">
-				<p><strong>Rättat:</strong></p>
-			</div>
-			<div class="col-md-4">
-				<checkbox ng-class="{'btn-success' : currSubAns[0].corrected}" largest ng-model="currSubAns[0].corrected" ng-change="setCorrected()"></checkbox>
-				</div>
-			<div class="col-md-6 text-right">
-				<div class="btn-group" uib-dropdown keyboard-nav>
-					<button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-lg"
-							uib-dropdown-toggle>
-						<p class="button-text"><strong>Poäng<span
-								class="caret"></span></strong></p></button>
-					<ul uib-dropdown-menu>
-						<li ng-repeat="currP in currQPoints track by $index"
-							ng-click="currSubAns[0].points = currQPoints[$index]">{{currP}}
-						</li>
-					</ul>
-					<h2><strong>{{getPoints()}}</strong></h2>
-				</div>
-			</div>
+        <!-- Correct non correct points -->
+        <div class="row form-group" ng-show="currQuestion.type === 'text'">
+            <div class="col-md-2">
+                <p><strong>Status:</strong></p>
+            </div>
+            <div class="col-md-4 btn-group">
+                <button ng-class="{'btn-success' : currSubAns[0].correct}" class="btn btn-lg button-text"
+                        ng-click="setCorrect()">Rätt
+                    <span class="glyphicon glyphicon-ok"></span></button>
+                <button ng-class="{'btn-danger' : !currSubAns[0].correct}" class="btn btn-lg button-text"
+                        ng-click="setFault()">Fel
+                </button>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="btn-group" uib-dropdown keyboard-nav>
+                    <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-lg button-text"
+                            uib-dropdown-toggle>
+                        <span class="button-text"><strong>Poäng</strong></span>
+                        <i class="caret"></i></button>
+                    <ul uib-dropdown-menu>
+                        <li class="menutext" ng-repeat="currP in currQPoints track by $index"
+                            ng-click="currSubAns[0].points = currQPoints[$index]">{{currP}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2 text-right">
+                <p>Poäng</p>
+                <h2><strong>{{getPoints()}}</strong></h2>
+            </div>
 
-		</div>
+        </div>
 
-		<div class="row" ng-show="currQuestion.type !== 'text'">
-			<div class="col-md-6">
-			</div>
-			<div class="col-md-6 text-right">
-				<p>Poäng
-				<h2><strong>{{getPoints()}}</strong></h2></p>
-			</div>
-		</div>
+        <div class="row" ng-show="currQuestion.type !== 'text'">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6 text-right">
+                <p>Poäng
+                <h2><strong>{{getPoints()}}</strong></h2>
+            </div>
+        </div>
 
-		<!-- Comments -->
-		<div class="row" ng-show="currQuestion.type === 'text'">
-			<div class="col-md-2">
-				<p><strong>Kommentar:</strong></p>
-			</div>
-			<div class="col-md-8">
+        <!-- Comments -->
+        <div class="row" ng-show="currQuestion.type === 'text'">
+            <div class="col-md-2">
+                <p><strong>Kommentar:</strong></p>
+            </div>
+            <div class="col-md-8">
 					<textarea class="form-control" ng-model="currSubAns[0].comment" rows="3"
-							  placeholder="Skriv eventuell kommentar här"></textarea>
-			</div>
-		</div>
-	</div>
+                              placeholder="Skriv eventuell kommentar här"></textarea>
+            </div>
+        </div>
+    </div>
 
-	<!-- DEBUG INFO -->
-	onlyNeedCorrection: {{onlyNeedCorrection}}<br/>
-	qIndex: {{qIndex}}<br/>
-	needCorrectionArray: {{questionsNeedCorrection}}<br/>
-	needIndex: {{needIndex}}<br/>
-	currSubmitted:<br/>
-	<div ng-repeat="(key, prop) in currSubmitted">
-		<tt>{{key}} : {{prop}}</tt>
-	</div>
-	<br/>
-	currExam:<br/>
-	<div ng-repeat="(key, prop) in currExam">
-		<tt>{{key}} : {{prop}}</tt>
-	</div>
-	<br/>
-	currSubAns:<br/>
-	<div ng-repeat="(key, prop) in currSubAns">
-		<tt>{{key}} : {{prop}}</tt>
-	</div>
-	<br/>
-	currQuestion:<br/>
-	<div ng-repeat="(key, prop) in currQuestion">
-		<tt>{{key}} : {{prop}}</tt>
-	</div>
-	<br/>
-	currUser:<br/>
-	<div ng-repeat="(key, prop) in currUser">
-		<tt>{{key}} : {{prop}}</tt>
-	</div>
-	<br/>
+    <!-- DEBUG INFO -->
+    onlyNeedCorrection: {{onlyNeedCorrection}}<br/>
+    qIndex: {{qIndex}}<br/>
+    needCorrectionArray: {{questionsNeedCorrection}}<br/>
+    needIndex: {{needIndex}}<br/>
+    currSubmitted:<br/>
+    <div ng-repeat="(key, prop) in currSubmitted">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
+    currExam:<br/>
+    <div ng-repeat="(key, prop) in currExam">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
+    currSubAns:<br/>
+    <div ng-repeat="(key, prop) in currSubAns">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
+    currQuestion:<br/>
+    <div ng-repeat="(key, prop) in currQuestion">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
+    currUser:<br/>
+    <div ng-repeat="(key, prop) in currUser">
+        <tt>{{key}} : {{prop}}</tt>
+    </div>
+    <br/>
 
-	-->
+    -->
 
 </article>

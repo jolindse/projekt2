@@ -56,19 +56,20 @@ myApp.controller('doExamCtrl',
                 var i = 0;
                 $scope.currExam.questions.forEach(function (currEQ) {
                     QuestionManager.getQuestion(currEQ, function (currQ) {
-                        $scope.questions.push(currQ);
+                        //$scope.questions.push(currQ);
+                        var index = $scope.currExam.questions.indexOf(currQ._id);
                         if (currQ.type === 'rank') {
-                            $scope.setupRanking(i);
+                            $scope.setupRanking(index);
                         } else {
-                            $scope.currSubmitted.answers[i] = ([{"text": ""}]);
+                            $scope.currSubmitted.answers[index] = ([{"text": ""}]);
                         }
-                        i++;
-                        finish();
+                        finish(currQ, index);
                     });
                 });
 
-                function finish() {
+                function finish(question, index) {
                     waiting--;
+                    $scope.questions[index] = question;
                     if (waiting === 0) {
                         callback();
                     }
