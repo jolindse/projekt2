@@ -10,7 +10,6 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     user.testsToTake = [];
     user.currentExam = "";
     user.submittedTest = "";
-    user.testToEdit = "";
     user.startTime = "";
     user.testToCorrect = "573185f85984bf58018a1b74";
 
@@ -27,9 +26,7 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     };
 
     user.editTest = function (testId) {
-        this.testToEdit = testId;
-        $rootScope.$broadcast('editTestBroadcast');
-        console.log("skickar du?");
+        $rootScope.$broadcast('editTestBroadcast', testId);
     };
 
     return user;

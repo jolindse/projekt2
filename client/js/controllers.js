@@ -197,6 +197,9 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
     //The selected exam (for sharing):
     $scope.selectedTest = null;
 
+    //The selected exam (for correcting):
+    $scope.selectedTestToCorrect = null;
+
     //Array with studentId's (for email-notification)
     var recObj = {
         rec: []
@@ -299,7 +302,7 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
 
     //Get selected exam to correct:
     $scope.selectTestToCorrect = function (data) {
-        $scope.selectedTest = data;
+        $scope.selectedTestToCorrect = data;
         //Send the id to the userService:
         userService.submittedTest = data.submittedTest;
     };
@@ -404,10 +407,13 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
 
     //Listener for button "Edit exam"
     $scope.editExam = function () {
-        userService.testToEdit = $scope.selectedTest;
         $location.path("/createexam");
-        userService.editTest();
+
+        $timeout(function(){
+            userService.editTest($scope.selectedTest._id);
+        }, 50);
     }
+
 });
 
 /**
@@ -421,7 +427,6 @@ myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
     $scope.emailDisabled = true;
     $scope.detailsChanged = false;
     $scope.showbutton = false;
-
 
     //Get current user:
     UserManager.getUser(userService.id, function (data) {

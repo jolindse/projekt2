@@ -14,7 +14,7 @@
             </tr>
             </thead>
             <tbody ng-repeat="test in testsToCorrect">
-            <tr ng-click="selectTestToCorrect(testsToCorrect[$index])" ng-class="{activerow: testsToCorrect[$index] === selectedTest}" class="clickable-row">
+            <tr ng-click="selectTestToCorrect(testsToCorrect[$index])" ng-class="{activerow: testsToCorrect[$index] === selectedTestToCorrect}" class="clickable-row">
                 <td>{{test.exam.title}}</td>
                 <td>{{test.exam.subject}}</td>
                 <td class="table-center-row">{{test.exam.questions.length}}</td>
@@ -22,6 +22,6 @@
             </tr>
             </tbody>
         </table>
-        <button ng-hide="selectedTest == null" ng-click="correctTest()" type="button" class="btn btn-success">Rätta prov</button>
+        <button ng-hide="selectedTestToCorrect == null" ng-click="correctTest()" type="button" class="btn btn-success">Rätta prov</button>
     </div>
 </article>
