@@ -358,7 +358,7 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
 
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
-            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
+            currQuestion = JSON.parse(JSON.stringify(JSON.parse(questionToFormat))); // In order to make a clone and not a reference to original object.
             currQuestion.answerOptions = [];
             for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
                 currQuestion.answerOptions[i] = {
@@ -392,7 +392,7 @@ app.put('/api/question', multer({dest: './questionImages/'}).single('file'), fun
 
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
-            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
+            currQuestion = JSON.parse(JSON.stringify(JSON.parse(questionToFormat))); // In order to make a clone and not a reference to original object.
             currQuestion.answerOptions = [];
             for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
                 currQuestion.answerOptions[i] = {
@@ -505,7 +505,7 @@ app.put('/api/submitted/:id', function (req, res) {
 // Try to autocorrect exam
 app.get('/api/submitted/autocorrect/:id', function (req, res) {
     correction.getSubmittedAndCorrectAnswers(req, res, function (question, subExam, orgExam) {
-        console.log('In app.js question: '+JSON.stringify(question)); // TEST
+        console.log('In app.js question: '+JSON.stringify(question,null, 2)); // TEST
         correction.autoCorrect(question, subExam, orgExam, function (submittedExam) {
             // Update the submitted exam in db
             Submitted.updateSubmitted(submittedExam.id, submittedExam, function () {
