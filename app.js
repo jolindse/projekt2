@@ -500,10 +500,10 @@ app.put('/api/submitted/:id', function (req, res) {
                 if (err) {
                     res.status(404).json({success: false, message: 'Couldn\'t correct test'});
                 } else {
-                    correction.getSubmittedAndCorrectAnswers(function(question, subExam, orgExam) {
+                    correction.getSubmittedAndCorrectAnswers(subExam._id, function(question, subExam, orgExam) {
                         correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
-                            Submitted.updateSubmitted(submittedExam.id, submittedExam, function() {
-                                res.status(200).json(subExam);
+                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function() {
+                                res.status(200).json(submittedExam);
                             });
                         });
                     });
