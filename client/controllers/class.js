@@ -103,6 +103,7 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             $scope.getAllStudentClasses();
             console.log("callback");
         });
+        $scope.studentClass = "";
     };
 
     $scope.deleteUserBut = function () {
@@ -111,22 +112,23 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             $scope.getAllUsers();
             console.log("callback");
         });
+        $scope.getAllUsers();
     };
     
     $scope.saveUser = function () {
          console.log(JSON.stringify($scope.userCon,null,2));
-                console.log($scope.userCon._id);
             if($scope.userCon._id === undefined) {
                 UserManager.addUser($scope.userCon, function (data) {
                     console.log("Adding a user");
                     $scope.userCon = data;
+                    if($scope.studentClass !== undefined){
                     StudentClassManager.setStudentClass($scope.studentClass, function (data) {
                         $scope.studentClass = data;
                         $scope.getAllUsers();
                     });
                     $scope.addStudentToClass();
+                    }
                 });
-                
             }else{
                 console.log("setting a user111");
                 UserManager.setUser($scope.userCon, function (data) {
@@ -140,6 +142,8 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
                     $scope.addStudentToClass();
                 });
             };
+        $scope.getAllUsers();
+        $scope.resetUser();
     };
     
     $scope.addStudentToClass = function () {
@@ -151,6 +155,15 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             $scope.class = data;
             $scope.getAllStudentClasses();
         })
+        $scope.resetSchoolClass();
+    };
+
+    $scope.resetSchoolClass = function () {
+        $scope.class = "";
+    };
+
+    $scope.resetUser = function () {
+        $scope.userCon = "";
     };
 
     $scope.getAllStudentClasses();

@@ -42,6 +42,7 @@
                     <table class="table">
                         <thead class="thead">
                             <tr>
+                                <th>Behörighet</th>
                                 <th>Personnummer</th>
                                 <th>Förnamn</th>
                                 <th>Efternamn</th>
@@ -49,8 +50,12 @@
                                 <th>Klass</th>
                             </tr>
                         </thead>
-                        <tbody ng-repeat="user in users | filter:studentClass.name">
+                        <tbody ng-repeat="user in users | filter:studentClass.name: true">
                             <tr ng-class='{"selectedRow":user === userCon}' ng-click="loadUser(users[$index],$index)" class="clickable-row">
+                                <td>
+                                    <div ng-if="user.admin == true">Admin</div>
+                                    <div ng-if="user.admin == false">Elev</div>
+                                </td>
                                 <td>{{user.id}}</td>
                                 <td>{{user.firstName}}</td>
                                 <td>{{user.surName}}</td>
@@ -145,6 +150,8 @@
                                         </strong>
                                     </td>
                                     <td class="text-primary">
+                                        <!--<label class="radio-inline"><input type="radio" name="authority" ng-model="userCon-admin" ng-value="true">Admin</label>-->
+                                        <!--<label class="radio-inline"><input type="radio" name="authority" ng-model="userCon-admin" ng-value="false">Elev</label>-->
                                         <input type="text" name="authority" ng-model="userCon.admin">
                                     </td>
                                 </tr>
@@ -192,7 +199,7 @@
             </div>
                 </div>
                 <div class="modal-footer">
-            <button class="btn btn-success" id="saveSchoolClass" ng-click="saveSchoolClass()" data-dismiss="modal">Spara Skolklass</button>
+            <button class="btn btn-success" id="sparaSkolKlass" ng-click="saveSchoolClass()" data-dismiss="modal">Spara Skolklass</button>
                 </div>
              </div>
             </div>
