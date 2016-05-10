@@ -131,12 +131,13 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentCtrl', function ($location, $scope, UserManager, ExamManager, userService) {
+myApp.controller('studentCtrl', function ($location, $scope, SubmittedManager, UserManager, ExamManager, userService) {
     //Update navbar:
     userService.updateNavbar();
 
-    $scope.user = "";
+    $scope.user = null;
     $scope.selectedTest = null;
+    $scope.testResults = [];
 
     //Get current student:
     UserManager.getUser(userService.id, function (data) {
@@ -162,6 +163,19 @@ myApp.controller('studentCtrl', function ($location, $scope, UserManager, ExamMa
         userService.currentExam = data._id;
         $scope.selectedTest = data;
     };
+
+    SubmittedManager.getSubmittedBy(userService.id, function (submittedtests) {
+        submittedtests.forEach(function (submittedTest) {
+            if (submittedTest.completeCorrection == true) {
+                ExamManager.getExam(submittedTest.exam, function (exam) {
+                    $scope.testResults.push({
+                        exam: exam,
+                        submittedtest: submittedTest
+                    })
+                })
+            }
+        })
+    });
 
     //When starting exam, remove the test from the users test-array and update the database, then send to /doexam.
     $scope.startExam = function () {

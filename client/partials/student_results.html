@@ -1,0 +1,23 @@
+<article class="container">
+    <div class="jumbotron">
+        <h1 class="display-3">Resultat</h1>
+        <table class="table">
+            <thead class="thead">
+            <tr>
+                <th>Provnamn</th>
+                <th>Ämne</th>
+                <th>Betyg</th>
+                <th>Poäng</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="test in testResults">
+            <tr>
+                <td>{{test.exam.title}}</td>
+                <td>{{test.exam.subject}}</td>
+                <td>{{test.submittedtest.grade}}</td>
+                <td>{{test.submittedtest.points}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</article>
