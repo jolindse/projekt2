@@ -83,7 +83,6 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
             questionsId.forEach(function (id) {
                 // Fetch the questions in exam
                 Question.getQuestion(id, function (err, question) {
-                    console.log('Getting question (id: '+question._id+'): '+JSON.stringify(question,null, 2)); // TESe
                     questions.push(question);
                     // If all questions is inserted in array, go back
                     if (questions.length === questionsId.length) {
@@ -103,12 +102,10 @@ module.exports.getSubmittedAndCorrectAnswers = function(req, res, callback) {
  * @param callback
  */
 module.exports.autoCorrect = function(question, submittedExam, orgExam, callback) {
-    console.log('AutoCorrect '+JSON.stringify(question),null, 2); // TEST
     var maxPoints = orgExam.maxPoints;
     var type; // Type of question; radiobuttons, checkboxes or rank
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
-            console.log('Current Question (index '+i+')'+JSON.stringify(question[i],null, 2)+'\n\n'); // TEST
             type = question[i].type;
             
             // Single type
@@ -116,7 +113,6 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 var subAnswer = submittedExam.answers[i];
                 console.log('Current answer is single (index '+i+') : '+JSON.stringify(subAnswer,null, 2)+'\n\n'); // TEST
                 if(!subAnswer[0].corrected) {
-                    console.log('Subanswer '+JSON.stringify(subAnswer[0],null, 2)+' deemed not corrected Index i '+i+' index j '+j+'\n\n'); // TEST
                     for (var j = 0; j < question[i].answerOptions.length; j++) {
                         if (subAnswer[0].text === question[i].answerOptions[j].text && question[i].answerOptions[j].correct) {
                             console.log('Subanswer '+JSON.stringify(subAnswer[0],null, 2)+' is correct'+'\n\n'); // TEST
@@ -126,7 +122,6 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                             submittedExam.points += subAnswer[0].points;
                             break;
                         } else {
-                            console.log('Subanswer '+JSON.stringify(subAnswer[0],null, 2)+' is NOT correct'+'\n\n'); // TEST
                             subAnswer[0].correct = false;
                             subAnswer[0].corrected = true;
                             subAnswer[0].points = 0;
@@ -138,7 +133,6 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             // Multi type
             else if (type === 'multi') {
                 var subAnswers = submittedExam.answers[i];
-                console.log('Current answer is multi (index '+i+') : '+JSON.stringify(subAnswers,null, 2)+'\n\n'); // TEST
                 var correctArray = [];
                 question[i].answerOptions.forEach(function (answerOption) {
                     if (answerOption.correct) {
@@ -149,15 +143,12 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 });
                 for (var j=0; j<subAnswers.length; j++) {
                     if (!subAnswers[j].corrected) {
-                         console.log('Subanswer '+JSON.stringify(subAnswers[j],null, 2)+' deemed not corrected Index i '+i+' index j '+j+'\n\n'); // TEST
                         if (correctArray.indexOf(subAnswers[j].text) > -1) {
-                            console.log('Subanswer '+JSON.stringify(subAnswers[j],null, 2)+' is correct'+'\n\n'); // TEST
                             subAnswers[j].corrected = true;
                             subAnswers[j].correct = true;
                             subAnswers[j].points = (question[i].points / correctArray.length);
                             submittedExam.points += subAnswers[j].points;
                         } else {
-                            console.log('Subanswer '+JSON.stringify(subAnswers[j],null, 2)+' is NOT correct'+'\n\n'); // TEST
                             subAnswers[j].corrected = true;
                             subAnswers[j].correct = false;
                             subAnswers[j].points = 0;
@@ -169,7 +160,6 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             // Rank type
             else if(type === 'rank') {
                 var subAnswers = submittedExam.answers[i];
-                console.log('Current answer is rank (index '+i+') : '+JSON.stringify(subAnswers,null, 2)+'\n\n'); // TEST
                 for (var j = 0; j < subAnswers.length; j++) {
                     if(!subAnswers[j].corrected) {
                         // Set the student's answer as corrected
@@ -188,7 +178,6 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
 
             else if(type === 'text') {
                 var subAnswers = submittedExam.answers[i];
-                console.log('Current answer is text (index '+i+') : '+JSON.stringify(subAnswers,null, 2)+'\n\n'); // TEST
             }
         }
 

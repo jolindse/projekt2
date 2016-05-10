@@ -470,7 +470,20 @@ app.post('/api/submitted', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            res.status(200).json(currSubmitted);
+            correction.setExamCorrected(currSubmitted.id, function (err, subExam) {
+                if (err) {
+                    res.status(404).json({success: false, message: 'Couldn\'t correct test'});
+                } else {
+                    correction.getSubmittedAndCorrectAnswers(req, res, function(question, subExam, orgExam) {
+                        correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
+                            Submitted.updateSubmitted(submittedExam.id, submittedExam, function() {
+                                res.status(200).json(submittedExam);
+                            });
+                        });
+                    });
+
+                }
+            });
         }
     });
 });
