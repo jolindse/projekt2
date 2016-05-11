@@ -11,13 +11,85 @@
             </tr>
             </thead>
             <tbody ng-repeat="test in testResults">
-            <tr>
+            <tr ng-click="showResults(testResults[$index])" data-toggle="modal" data-target="#informationModal" >
                 <td>{{test.exam.title}}</td>
                 <td>{{test.exam.subject}}</td>
                 <td>{{test.submittedtest.grade}}</td>
-                <td>{{test.submittedtest.points}}/{{test.maxpoints}}</td>
+                <td>{{test.submittedtest.points}}/{{test.exam.maxPoints}}</td>
             </tr>
             </tbody>
         </table>
     </div>
 </article>
+
+<!-- More information-Modal -->
+<div id="informationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Resultat från provet {{questionResults.exam.title}} till:</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead class="thead">
+                    <tr>
+                        <th ng-click="sortType = 'number'; sortReverse = !sortReverse">
+                            #
+                            <span ng-show="sortType == 'number' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'number' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'title';  sortReverse = !sortReverse">
+                            Titel
+                            <span ng-show="sortType == 'title' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'title' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'question';  sortReverse = !sortReverse">
+                            Fråga
+                            <span ng-show="sortType == 'question' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'question' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'type';  sortReverse = !sortReverse">
+                            Typ
+                            <span ng-show="sortType == 'type' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'type' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'answer';  sortReverse = !sortReverse">
+                            Ditt svar
+                            <span ng-show="sortType == 'answer' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'answer' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'comment';  sortReverse = !sortReverse">
+                            Kommentar
+                            <span ng-show="sortType == 'comment' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'comment' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                        <th ng-click="sortType = 'points';  sortReverse = !sortReverse">
+                            Poäng
+                            <span ng-show="sortType == 'points' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'points' && sortReverse" class="fa fa-caret-up"></span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="answer in resultAnswers | orderBy:sortType:sortReverse | filter:searchUser">
+                        <td>{{$index+1}}</td>
+                        <td>{{resultQuestions[$index].title}}</td>
+                        <td>{{resultQuestions[$index].questionText}}</td>
+                        <td>{{resultQuestions[$index].type}}</td>
+                        <td>{{answer[0].text}}</td>
+                        <td>{{answer[0].comment}}</td>
+                        <td>{{answer[0].points}}/{{resultQuestions[$index].points}}</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
+            </div>
+        </div>
+    </div>
+</div>

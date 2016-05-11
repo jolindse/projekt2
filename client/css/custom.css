@@ -17,9 +17,24 @@ body, html {
     color: white;
 }
 
-.table-checkbox {
-
+#result-information-modal {
+    width: 1000px;
 }
+
+.table-checkbox {
+    width: 23px;
+    height: 23px;
+    cursor: pointer;
+}
+
+.table-checkbox-th {
+    padding-bottom: 6px;
+}
+
+.table-checkbox-td {
+    padding-top: 3px;
+}
+
 #createStudentModal{
     overflow: visible;
 }
