@@ -204,7 +204,7 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
             else if (type === 'text') {
                 var subAnswers = submittedExam.answers[i];
                 if (subAnswers[0].corrected && subAnswers[0].correct) {
-                    subAnswers[0].points = question[i].points;
+                    //subAnswers[0].points = question[i].points;
                     submittedExam.points += subAnswers[0].points;
                 }
             }
