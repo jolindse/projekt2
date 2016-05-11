@@ -230,19 +230,19 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
         });
 
         if (numAnswers === numTotCorrected) {
+            console.log('Maxpoints');
+            submittedExam.completeCorrection = true;
+            // submittedExam.points = totalPoints;
+            if ((submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[0]) {
+                submittedExam.grade = "IG";
+            } else if ((submittedExam.points / maxPoints) * 100 >= orgExam.gradePercentage[0] && (submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[1]) {
+                submittedExam.grade = "G";
+            } else {
+                submittedExam.grade = "VG";
+            }
+            submittedExam.points = Math.round(submittedExam.points * 2) / 2;
+            SendMail.sendCorrected(submittedExam);
         }
-        console.log('Maxpoints');
-        submittedExam.completeCorrection = true;
-        // submittedExam.points = totalPoints;
-        if ((submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[0]) {
-            submittedExam.grade = "IG";
-        } else if ((submittedExam.points / maxPoints) * 100 >= orgExam.gradePercentage[0] && (submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[1]) {
-            submittedExam.grade = "G";
-        } else {
-            submittedExam.grade = "VG";
-        }
-        submittedExam.points = Math.round(submittedExam.points * 2) / 2;
-        SendMail.sendCorrected(submittedExam);
     }
 
     
