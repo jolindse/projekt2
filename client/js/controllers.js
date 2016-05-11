@@ -5,83 +5,96 @@
 /**
  * LOGIN-CONTROLLER
  */
-myApp.controller("loginCtrl", ['$http','$scope','$location','userService','UserManager', function($http, $scope, $location, userService, UserManager) {
-    $scope.errorMessage = "";
-    $scope.username = "";
-    $scope.password = "";
-    $scope.loading = false;
-    var counter = 0;
+myApp.controller("loginCtrl",
+    [
+        '$http',
+        '$scope',
+        '$location',
+        'userService',
+        function
+            (
+                $http,
+                $scope,
+                $location,
+                userService
+            )
+        {
 
-    //Login:
-    $scope.attemptLogin = function() {
+            $scope.errorMessage = "";
+            $scope.username = "";
+            $scope.password = "";
+            $scope.loading = false;
+            var counter = 0;
 
-        $.ajax({
-            type: 'post',
-            url: '/api/user/login/' + $scope.username,
-            data: "password=" + $scope.password,
-            dataType: "json",
-            traditional: true,
+            //Login:
+            $scope.attemptLogin = function() {
 
-            //If student, send to student-site, if admin send to admin-site:
-            success: function (data) {
-                if (data.login == true && data.user.admin == false){
-                    sessionStorage.setItem('userId', data.user.id);
-                    $location.path("/student");
-                }
-                else if (data.login == true && data.user.admin == true){
-                    sessionStorage.setItem('userId', data.user.id);
-                    $location.path("/admin");
-                }
-                else if (data.login == false){
-                    console.log(data);
-                }
+                $.ajax({
+                    type: 'post',
+                    url: '/api/user/login/' + $scope.username,
+                    data: "password=" + $scope.password,
+                    dataType: "json",
+                    traditional: true,
 
-                //Add data to userService:
-                userService.login(data.user.firstName, data.user._id, data.user.admin, data.user.testToTake);
+                    //If student, send to student-site, if admin send to admin-site:
+                    success: function (data) {
+                        if (data.login == true && data.user.admin == false){
+                            sessionStorage.setItem('userId', data.user.id);
+                            $location.path("/student");
+                        }
+                        else if (data.login == true && data.user.admin == true){
+                            sessionStorage.setItem('userId', data.user.id);
+                            $location.path("/admin");
+                        }
+                        else if (data.login == false){
+                            console.log(data);
+                        }
 
-                if(!$scope.$$phase) {
-                    //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
-                    $scope.$apply()
-                }
+                        //Add data to userService:
+                        userService.login(data.user.firstName, data.user._id, data.user.admin, data.user.testToTake);
 
-            },
-            error: function (errormessage) {
-                if (errormessage.responseJSON.message == "Kontrollera användarnamn och lösenord"){
-                    counter++;
-                }
-                if (counter == 3){
-                    $scope.loginError = false;
-                    $scope.sendPasswordBtn = true;
-                    counter = 0;
-                }else {
-                    $scope.errorMessage = errormessage.responseJSON.message;
-                    $scope.loginError = true;
-                }
+                        if(!$scope.$$phase) {
+                            //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
+                            $scope.$apply()
+                        }
 
-                if(!$scope.$$phase) {
-                    //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
-                    $scope.$apply();
-                }
+                    },
+                    error: function (errormessage) {
+                        if (errormessage.responseJSON.message == "Kontrollera användarnamn och lösenord"){
+                            counter++;
+                        }
+                        if (counter == 3){
+                            $scope.loginError = false;
+                            $scope.sendPasswordBtn = true;
+                            counter = 0;
+                        }else {
+                            $scope.errorMessage = errormessage.responseJSON.message;
+                            $scope.loginError = true;
+                        }
+
+                        if(!$scope.$$phase) {
+                            //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
+                            $scope.$apply();
+                        }
+                    }
+                });
+            };
+            $scope.sendPassword = function () {
+                $scope.loginError = false;
+                $scope.loading = true;
+
+                $http.get("/api/sendpass/" + $scope.username).success(function (data, status) {
+                    if (status == 200){
+                        $scope.sendPasswordBtn = false;
+                        $scope.loginSuccess = true;
+                        $scope.successMessage = "Mail med lösenord har skickats!"
+                    }
+                    else {
+                        $scope.errorMessage = "Kunde inte skicka mail, vänligen försök igen.";
+                    }
+                });
             }
-        });
-    };
-    $scope.sendPassword = function () {
-        $scope.loginError = false;
-        $scope.loading = true;
-
-        $http.get("/api/sendpass/" + $scope.username).success(function (data, status) {
-            console.log("status = " + status);
-            if (status == 200){
-                $scope.sendPasswordBtn = false;
-                $scope.loginSuccess = true;
-                $scope.successMessage = "Mail med lösenord har skickats!"
-            }
-            else {
-                $scope.errorMessage = "Kunde inte skicka mail, vänligen försök igen.";
-            }
-        });
-    }
-}]);
+        }]);
 
 /**
  * INDEX-CONTROLLER:
@@ -131,7 +144,17 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, SubmittedManager, UserManager, ExamManager, userService) {
+myApp.controller('studentCtrl', function
+    (
+        $location,
+        $scope,
+        QuestionManager,
+        SubmittedManager,
+        UserManager,
+        ExamManager,
+        userService
+    )
+{
     //Update navbar:
     userService.updateNavbar();
 
@@ -140,6 +163,7 @@ myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, Su
     $scope.testResults = [];
     $scope.resultQuestions = [];
     $scope.resultAnswers = [];
+    $scope.correctAnswers = [];
 
 
     //Get current student:
@@ -169,14 +193,14 @@ myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, Su
 
     SubmittedManager.getSubmittedBy(userService.id, function (submittedtests) {
         submittedtests.forEach(function (submittedTest) {
-           // if (submittedTest.completeCorrection == true) {
+            if (submittedTest.completeCorrection == true) {
                 ExamManager.getExam(submittedTest.exam, function (exam) {
                     $scope.testResults.push({
                         exam: exam,
                         submittedtest: submittedTest
                     })
                 });
-            //}
+            }
         })
     });
 
@@ -193,22 +217,19 @@ myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, Su
     };
 
     $scope.showResults = function (testResult) {
-        console.log(testResult);
         testResult.exam.questions.forEach(function (question) {
             QuestionManager.getQuestion(question, function (questionObj) {
                 $scope.resultQuestions.push(questionObj);
+                var correctAnswer = "";
+                questionObj.answerOptions.forEach(function (answerOption) {
+                    if (answerOption.correct == true){
+                        correctAnswer += answerOption.text + " ";
+                    }
+                });
+                $scope.correctAnswers.push(correctAnswer);
             })
         });
         $scope.resultAnswers = testResult.submittedtest.answers;
-
-        $scope.resultAnswers.forEach(function (answer) {
-            console.log(answer[0].points);
-        });
-
-        console.log("frågor: " + $scope.resultQuestions);
-        console.log("svar: " + $scope.resultAnswers);
-
-
     }
 });
 
@@ -452,6 +473,14 @@ myApp.controller('adminCtrl', function
 
     $scope.deleteExam = function () {
         ExamManager.deleteExam($scope.selectedTest._id);
+        SubmittedManager.getAllSubmitted(function (submittedTests) {
+            submittedTests.forEach(function (submittedTest) {
+                if (submittedTest.exam == selectedTest._id){
+                    SubmittedManager.deleteSubmitted(submittedTest._id);
+                }
+            })
+        });
+
         ExamManager.getAllExams(function (test) {
             $scope.tests = test;
             $route.reload();
@@ -463,7 +492,14 @@ myApp.controller('adminCtrl', function
 /**
  * USERDETAIL-CONTROLLER:
  */
-myApp.controller('userDetailCtrl', function ($scope, UserManager, userService) {
+myApp.controller('userDetailCtrl', function
+    (
+        $scope,
+        UserManager,
+        userService
+    )
+{
+
     $scope.user = "";
     $scope.firstNameDisabled = true;
     $scope.lastNameDisabled = true;
