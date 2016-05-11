@@ -130,24 +130,26 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
                     }
                 });
             }else{
-                console.log("setting a user111");
+                $scope.addStudentToClass();
+                console.log("setting a user111" + $scope.userCon);
                 UserManager.setUser($scope.userCon, function (data) {
                     console.log("setting a user222");
                     $scope.userCon = data;
                     StudentClassManager.setStudentClass($scope.studentClass, function (data) {
                         $scope.studentClass = data;
-                        console.log(data);
                         $scope.getAllUsers();
                     });
-                    $scope.addStudentToClass();
                 });
             };
         $scope.getAllUsers();
-        $scope.resetUser();
     };
     
     $scope.addStudentToClass = function () {
         $scope.studentClass.students.push($scope.userCon._id);
+    };
+
+    $scope.changeStudentToClass = function () {
+        $scope.studentClass.students.delete($scope.userCon._id);
     };
     
     $scope.saveSchoolClass = function () {
