@@ -487,6 +487,16 @@ ul.draggableUl {
     margin-bottom: 20px;
 }
 
+.row-extra-space-lg {
+    margin-bottom: 40px;
+    border-bottom-color: #5e5e5e;
+    border-bottom-width: 2px;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-style: solid;
+}
+
 .top-buttons {
     margin-top: 30px;
 }
@@ -560,4 +570,25 @@ p.infoText, .infoText {
 
 /*
 * END OF CORRECT EXAM
+*/
+
+/*
+* RESULTS
+*/
+
+p.correct-show {
+    color: yellow;
+    font-weight: 700;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+p.correct-fail {
+    color: orange;
+    font-weight: 700;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+/*
+* END OF RESULTS
 */

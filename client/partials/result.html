@@ -1,0 +1,51 @@
+<article class="container">
+
+	<div class="row">
+		<div class="col-md-2">
+			<h2>Resultat</h2>
+		</div>
+	</div>
+	<div ng-show="currExam.feedback" class="jumbotron">
+
+		<div ng-repeat="currRes in resultsArray">
+			<div class="row">
+				<div class="col-md-3 col-md-offset-2">
+					<p>Fråga {{currRes.qIndex}}</p>
+				</div>
+				<div class="col-md-5">
+					<p><strong>{{currRes.title}}</strong></p>
+				</div>
+			</div>
+			<div ng-show="currRes.type !== 'text'" class="row row-extra-space-lg">
+				<div class="col-md-3 col-md-offset-2 text-center"
+					 ng-class="{'btn-success': currRes.correct, 'btn-danger': !currRes.correct}">
+					<p class="correct-show" ng-show="currRes.correct">RÄTT</p>
+					<p class="correct-fail" ng-show="!currRes.correct">FEL</p>
+				</div>
+				<div class="col-md-5 text-right">
+					<p>Poäng: {{currRes.points}}/{{currRes.maxPoints}}</p>
+				</div>
+			</div>
+
+			<div ng-show="currRes.type === 'text'" class="row row-extra-space-lg">
+				<div class="col-md-12 text-center">
+					<p>Denna frågan måste din lärare rätta</p>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5 col-md-offset-5 text-right">
+				<h2>Totalpoäng: <strong>{{currResult.points}}</strong>/{{currExam.maxPoints}}</h2>
+			</div>
+		</div>
+	</div>
+
+	<div ng-show="!currExam.feedback" class="jumbotron">
+		<div class="row">
+			<div class="col-md-12 text-center">
+
+				<h2>Du har lämnat in ditt prov.</h2>
+			</div>
+		</div>
+	</div>
+</article>
