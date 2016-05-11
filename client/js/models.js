@@ -454,10 +454,10 @@ myApp.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', fun
                     callback(submitteds);
                 })
         },
-        setSubmitted: function (submittedData) {
+        setSubmitted: function (submittedData, callback) {
             var submitted = SubmittedManager._retriveInstance(submittedData._id, submittedData);
             submitted.update();
-            return submitted;
+            callback(submitted);
         },
         deleteSubmitted: function (id) {
             SubmittedManager._load(id, function (currSubmitted) {
