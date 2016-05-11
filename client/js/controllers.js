@@ -161,10 +161,12 @@ myApp.controller('studentCtrl', function
     $scope.user = null;
     $scope.selectedTest = null;
     $scope.testResults = [];
+
     $scope.resultQuestions = [];
     $scope.resultAnswers = [];
     $scope.correctAnswers = [];
-
+    $scope.resultAnswerObject = [];
+    $scope.resultAnswersPoints = [];
 
     //Get current student:
     UserManager.getUser(userService.id, function (data) {
@@ -217,19 +219,37 @@ myApp.controller('studentCtrl', function
     };
 
     $scope.showResults = function (testResult) {
+        $scope.resultQuestions = [];
+        $scope.resultAnswers = [];
+        $scope.resultAnswerObject = [];
+        $scope.correctAnswers = [];
+        $scope.resultAnswersPoints = [];
+
         testResult.exam.questions.forEach(function (question) {
             QuestionManager.getQuestion(question, function (questionObj) {
                 $scope.resultQuestions.push(questionObj);
                 var correctAnswer = "";
                 questionObj.answerOptions.forEach(function (answerOption) {
-                    if (answerOption.correct == true){
+                    if (answerOption.correct == true || questionObj.type == "rank"){
                         correctAnswer += answerOption.text + " ";
                     }
                 });
                 $scope.correctAnswers.push(correctAnswer);
-            })
+            });
         });
-        $scope.resultAnswers = testResult.submittedtest.answers;
+
+        $scope.resultAnswerObject = testResult.submittedtest.answers;
+
+        testResult.submittedtest.answers.forEach(function (answerObj) {
+            var submittedAnswer = "";
+            var submittedPoints = 0;
+           answerObj.forEach(function (answer) {
+               submittedAnswer += answer.text + " ";
+               submittedPoints += answer.points;
+           });
+            $scope.resultAnswers.push(submittedAnswer);
+            $scope.resultAnswersPoints.push(submittedPoints);
+        });
     }
 });
 
