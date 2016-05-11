@@ -186,10 +186,12 @@ myApp.controller('correctionCtrl',
                         var currIndex = $scope.questionsNeedCorrection.indexOf($scope.qIndex);
                         if (currIndex > -1) {
                             $scope.needIndex = currIndex;
+                            $scope.findNeedCorrection(function(){});
                             $scope.getQByIndex($scope.qIndex);
                         } else {
                             var absIndex = $scope.questionsNeedCorrection[0];
                             $scope.qIndex = absIndex;
+                            $scope.findNeedCorrection(function(){});
                             $scope.getQByIndex(absIndex);
                         }
                     }
