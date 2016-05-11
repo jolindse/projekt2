@@ -496,19 +496,17 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            correction.setExamCorrected(updatedExam._id, function (err, subExam) {
-                if (err) {
-                    res.status(404).json({success: false, message: 'Couldn\'t correct test'});
-                } else {
-                    correction.getSubmittedAndCorrectAnswers(subExam._id, function(question, subExam, orgExam) {
-                        correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
-                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function() {
-                                res.status(200).json(submittedExam);
-                            });
-                        });
-                    });
-
-                }
+            correction.getSubmittedAndCorrectAnswers(updatedExam._id, function(question, subExam,orgExam) {
+               correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
+                   Submitted.updateSubmitted(submittedExam._id, submittedExam, function(err, submitted) {
+                       correction.setExamCorrected(submitted._id, function(err, subExam) {
+                            if(err){res.status(404).json({message: Error});}
+                           else {
+                                res.status(200).json(subExam);
+                            }
+                       });
+                   });
+               });
             });
         }
     });
@@ -517,7 +515,6 @@ app.put('/api/submitted/:id', function (req, res) {
 // Try to autocorrect exam
 app.get('/api/submitted/autocorrect/:id', function (req, res) {
     var id = req.params.id;
-    console.log(id); // TEST
     correction.getSubmittedAndCorrectAnswers(id, function (question, subExam, orgExam) {
         //console.log('In app.js question: '+JSON.stringify(question,null, 2)); // TEST
         correction.autoCorrect(question, subExam, orgExam, function (submittedExam) {

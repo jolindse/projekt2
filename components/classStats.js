@@ -33,8 +33,14 @@ module.exports.classStats = function(req, callback) {
         schoolClassId = schoolClass._id; 
         returnObject.numStudents = schoolClass.students.length;
         for (var i = 0; i<schoolClass.students.length; i++) {
-            if(studentArray.length === returnObject.numStudents) {break;}
-            else {studentArray.push(schoolClass.students[i]);}
+            if (studentArray.length === returnObject.numStudents) {
+                console.log('hej');
+            }
+
+            else
+                {
+                    studentArray.push(schoolClass.students[i]);
+                }
         }
         for(var i = 0; i<studentArray.length; i++) {
             SubmittedExam.getByStudent(studentArray[i], function(submitted) {

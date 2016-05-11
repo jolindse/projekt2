@@ -13,50 +13,55 @@ var SendMail = require('./sendMail');
  * @param id
  * @param callback
  */
-module.exports.setExamCorrected = function (id, callback) {
-    console.log('IN setExamCorrected'); // TEST
+module.exports.setExamCorrected = function(id, callback) {
     // Find the exam
     SubmittedExam.findOne(
         {_id: id},
-        function (err, exam) {
-            if (err) {
+        function(err, exam) {
+            if(err) {
                 console.log(err);
             } else {
-                var numAnswers = exam.answers.length;
+                var correctedArray = [];
                 var corrected = 0;
-                exam.answers.forEach(function (answer) {
-                    if (answer.corrected === 'true') {
-                        corrected++;
+                var numAnswers = exam.answers.length;
+                for (var i = 0; i<exam.answers.length; i++) {
+                    var subAnswers = exam.answers[i];
+                    for (var j=0; j<subAnswers.length;j++) {
+                        if(subAnswers[j].corrected) {
+                            console.log('pushar true');
+                            correctedArray.push('true');
+                        } else {
+                            console.log('Pushar false');
+                            correctedArray.push('false');
+                        }
+                        }
+                        
                     }
-                });
-                // If all answers are corrected set, the exam to completely corrected
-                if (corrected == numAnswers) {
+                }
+                if (correctedArray.indexOf('false')<0) {
+                    console.log('complete correction');
                     SubmittedExam.findOneAndUpdate(
                         {_id: id},
-                        {
-                            $set: {completeCorrection: true}
-
-                        },
-                        {upsert: false}, callback
+                        {$set:{completeCorrection: true}},
+                        {new: true},
+                        callback
                     );
-                    // If all answers are not corrected
                 } else {
                     SubmittedExam.findOneAndUpdate(
                         {_id: id},
-                        {
-                            $set: {completeCorrection: false}
-                        },
-                        {upsert: false}, callback
+                        {$set: {completeCorrection: false}},
+                        {new: true},
+                        callback
                     );
                 }
             }
-        }
+        
     );
 };
 
 /** Fetch submitted answers and correct answers
  *
-
+ 
  * @param callback
  */
 module.exports.getSubmittedAndCorrectAnswers = function (id, callback) {
@@ -117,16 +122,15 @@ module.exports.getSubmittedAndCorrectAnswers = function (id, callback) {
  * @param submittedExam
  * @param callback
  */
-module.exports.autoCorrect = function (question, submittedExam, orgExam, callback) {
-    console.log('IN autoCorrect'); // TEST
+module.exports.autoCorrect = function(question, submittedExam, orgExam, callback) {
     var maxPoints = orgExam.maxPoints;
     var type; // Type of question; radiobuttons, checkboxes or rank
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
             type = question[i].type;
-
+            
             // Single type
-            if (type === 'single') {
+            if(type === 'single') {
                 var subAnswer = submittedExam.answers[i];
                 // console.log('Current answer is single (Question ' + i + ') : QUESTION: ' + JSON.stringify(question[i], null, 2) + ' \nANSWER: ' + JSON.stringify(subAnswer, null, 2) + '\n\n'); // TEST
                 if (!subAnswer[0].corrected) {
@@ -152,7 +156,6 @@ module.exports.autoCorrect = function (question, submittedExam, orgExam, callbac
             else if (type === 'multi') {
                 var subAnswers = submittedExam.answers[i];
                 var correctArray = [];
-                //console.log('Current answer is multi (Question ' + i + ') : QUESTION: ' + JSON.stringify(question[i], null, 2) + ' \nANSWER: ' + JSON.stringify(subAnswers, null, 2) + '\n\n'); // TEST
                 question[i].answerOptions.forEach(function (answerOption) {
                     if (answerOption.correct) {
                         if (correctArray.indexOf(answerOption.text < 0)) {
@@ -163,13 +166,11 @@ module.exports.autoCorrect = function (question, submittedExam, orgExam, callbac
                 for (var j = 0; j < subAnswers.length; j++) {
                     if (!subAnswers[j].corrected) {
                         if (correctArray.indexOf(subAnswers[j].text) > -1) {
-                            //console.log('Question ' + i + ' Subanswer ' + JSON.stringify(subAnswers[j], null, 2) + ' is correct' + '\n\n'); // TEST
                             subAnswers[j].corrected = true;
                             subAnswers[j].correct = true;
                             subAnswers[j].points = (question[i].points / correctArray.length);
                             submittedExam.points += subAnswers[j].points;
                         } else {
-                            //console.log('Question ' + i + 'Subanswer ' + JSON.stringify(subAnswers[j], null, 2) + ' is faulty' + '\n\n'); // TEST
                             subAnswers[j].corrected = true;
                             subAnswers[j].correct = false;
                             subAnswers[j].points = 0;
@@ -177,23 +178,19 @@ module.exports.autoCorrect = function (question, submittedExam, orgExam, callbac
                     }
                 }
             }
-
+            
             // Rank type
             else if (type === 'rank') {
                 var subAnswers = submittedExam.answers[i];
-                //console.log('Current answer is rank (Question ' + i + ') : QUESTION: ' + JSON.stringify(question[i], null, 2) + ' \nANSWER: ' + JSON.stringify(subAnswers, null, 2) + '\n\n'); // TEST
                 for (var j = 0; j < subAnswers.length; j++) {
-                    if (!subAnswers[j].corrected) {
-                        //console.log('Rank itteration: ' + j + ' length: ' + subAnswers.length); // TEST
+                    if(!subAnswers[j].corrected) {
                         // Set the student's answer as corrected
                         subAnswers[j].corrected = true;
-                        if (subAnswers[j].text === question[i].answerOptions[j].text) {
-                            //console.log('Question ' + i + ' Subanswer ' + JSON.stringify(subAnswers[j], null, 2) + ' is correct' + '\n\n'); // TEST
+                        if(subAnswers[j].text === question[i].answerOptions[j].text) {
                             subAnswers[j].correct = true;
-                            subAnswers[j].points = (question[i].points / question[i].answerOptions.length);
+                            subAnswers[j].points = (question[i].points/question[i].answerOptions.length);
                             submittedExam.points += subAnswers[j].points;
                         } else {
-                            //console.log('Question ' + i + 'Subanswer ' + JSON.stringify(subAnswers[j], null, 2) + ' is faulty' + '\n\n'); // TEST
                             subAnswers[j].correct = false;
                             subAnswers[j].points = 0;
                         }
@@ -201,40 +198,39 @@ module.exports.autoCorrect = function (question, submittedExam, orgExam, callbac
                 }
             }
 
-            else if (type === 'text') {
+            else if(type === 'text') {
                 var subAnswers = submittedExam.answers[i];
-                //console.log('Current answer is text (Question ' + i + ') : QUESTION: ' + JSON.stringify(question[i], null, 2) + ' \nANSWER: ' + JSON.stringify(subAnswers, null, 2) + '\n\n'); // TEST
+                if (subAnswers[0].corrected  && subAnswers[0].correct) {
+                    subAnswers[0].points = question[i].points;
+                    submittedExam.points += subAnswers[0].points;
+                }
             }
         }
-
+/*
         // Check if all answers are corrected
         var numAnswers = submittedExam.answers.length;
         var numSubCorrected = 0;
         var numTotCorrected = 0;
         submittedExam.answers.forEach(function (answer) {
             var subAnswers = answer;
-            subAnswers.forEach(function (sub) {
-                if (sub.corrected) {
-                    numSubCorrected++;
-                }
-                if (numSubCorrected === subAnswers.length) {
-                    numTotCorrected++;
-                }
+            subAnswer.forEach(function(sub) {
+               if(sub.corrected){numSubCorrected++;}
+                if(numSubCorrected === subAnswer.length) {numTotCorrected++;}
             });
         });
-
-        if (numAnswers == numTotCorrected) {
-            submittedExam.completeCorrection = true;
+*/
+        if (submittedExam.completeCorrection) {
+            // submittedExam.completeCorrection = true;
 
             //submittedExam.points = totalPoints;
-            if ((submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[0]) {
+            if ((submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[0]) {
                 submittedExam.grade = "IG";
-            } else if ((submittedExam.points / maxPoints) * 100 >= orgExam.gradePercentage[0] && (submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[1]) {
+            } else if ((submittedExam.points/maxPoints)*100 >= orgExam.gradePercentage[0] && (submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[1]) {
                 submittedExam.grade = "G";
             } else {
                 submittedExam.grade = "VG";
             }
-            submittedExam.points = Math.round(submittedExam.points * 2) / 2;
+            submittedExam.points = Math.round(submittedExam.points*2)/2;
             SendMail.sendCorrected(submittedExam);
         }
 
