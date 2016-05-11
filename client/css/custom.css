@@ -443,7 +443,10 @@ ul.draggableUl {
     margin-bottom: 10px;
 }
 .selectedRow{
-    background-color: #00a5ff;
+    background-color: #337AB7;
+}
+.unselectedRow{
+    background-color: transparent;
 }
 
 .smallLabeltext {
