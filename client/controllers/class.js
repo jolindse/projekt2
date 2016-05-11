@@ -34,38 +34,6 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             })
         })
     };
-    // $scope.getAllUsers = function () {
-    //     UserManager.getAllUsers(function (data) {
-    //         $scope.users = data;
-    //         console.log(data);
-    //         $scope.users.forEach(function (student) {
-    //             if (student.admin == false) {
-    //                 $scope.selectedStudents.push(
-    //                     {
-    //                         user: student,
-    //                         studentClass: ""
-    //
-    //                     }
-    //                 );
-    //             }
-    //         });
-    //
-    //         StudentClassManager.getAllStudentClasses(function (data) {
-    //             $scope.selectedClasses = data;
-    //             console.log(data);
-    //             //Add classes to the array "selectedStudents":
-    //             $scope.selectedStudents.forEach(function (student) {
-    //                 $scope.selectedClasses.forEach(function (studentClass) {
-    //                     studentClass.students.forEach(function (studentId) {
-    //                         if (student.userCon._id == studentId){
-    //                             student.studentClass = studentClass.name;
-    //                         }
-    //                     })
-    //                 })
-    //             });
-    //         });
-    //     });
-    // };
     
     $scope.getAllStudentClasses = function () {
         StudentClassManager.getAllStudentClasses (function (data) {
@@ -107,12 +75,12 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
     };
 
     $scope.deleteUserBut = function () {
-        console.log("ska deleta user" + $scope.userCon._id)
+        console.log("ska deleta user" + $scope.userCon._id);
         UserManager.deleteUser($scope.userCon._id, function () {
             $scope.getAllUsers();
             console.log("callback");
         });
-        $scope.getAllUsers();
+        console.log("Uppdaterat listan efter delete")
     };
     
     $scope.saveUser = function () {
@@ -146,10 +114,6 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
     
     $scope.addStudentToClass = function () {
         $scope.studentClass.students.push($scope.userCon._id);
-    };
-
-    $scope.changeStudentToClass = function () {
-        $scope.studentClass.students.delete($scope.userCon._id);
     };
     
     $scope.saveSchoolClass = function () {
