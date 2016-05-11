@@ -180,7 +180,7 @@ myApp.controller('correctionCtrl',
             $scope.toggleNeedCorrection = function () {
                 if ($scope.questionsNeedCorrection.length > 0) {
                     $scope.onlyNeedCorrection = !$scope.onlyNeedCorrection;
-                    if ($scope.questionsNeedCorrection) {
+                    if (!$scope.questionsNeedCorrection) {
                         $scope.getQByIndex($scope.qIndex);
                     } else {
                         var currIndex = $scope.questionsNeedCorrection.indexOf($scope.qIndex);
@@ -247,10 +247,13 @@ myApp.controller('correctionCtrl',
             $scope.setCorrected = function () {
                 $scope.currSubAns[0].corrected = true;
                 var origIndex = $scope.questions.indexOf($scope.currQuestion);
+                console.log('Orig index of question'+origIndex); // TEST
                 var indexToRemove = $scope.questionsNeedCorrection.indexOf(origIndex);
+                console.log('Ta bort index: '+indexToRemove); // TEST
                 if (indexToRemove > -1) {
                     $scope.questionsNeedCorrection.splice(indexToRemove, 1);
                 }
+                $scope.findNeedCorrection(function(){});
             };
 
             // UPDATES
@@ -259,7 +262,7 @@ myApp.controller('correctionCtrl',
              */
             $scope.postCorrected = function () {
                 SubmittedManager.setSubmitted($scope.currSubmitted, function (data) {
-                    console.log('RETURNED AFTER SET: ' + JSON.stringify(data, null, 2)); // TEST
+                    // console.log('RETURNED AFTER SET: ' + JSON.stringify(data, null, 2)); // TEST
                     $scope.currSubmitted = data;
                     if ($scope.questionsNeedCorrection.length === 0) {
                         $location.path('/finishedcorr')

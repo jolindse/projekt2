@@ -10,12 +10,14 @@ myApp.controller('makeQuestionCtrl',
         'Upload',
         'APIBASEURL',
         '$uibModal',
+        '$timeout',
         function ($scope,
                   QuestionManager,
                   userService,
                   Upload,
                   APIBASEURL,
-                  $uibModal) {
+                  $uibModal,
+                  $timeout) {
 
             // FUNCTIONS
 
@@ -26,24 +28,10 @@ myApp.controller('makeQuestionCtrl',
              */
             $scope.removeImage = function () {
                 $scope.questionImage = '';
-            }
-
-            /**
-             * Checks or unchecks correct status of answer
-             *
-             * @param index
-             */
-            /*
-            $scope.checkboxChange = function (index) {
-                if ($scope.question.type === 'single') {
-                    for (var i = 0; i < $scope.question.answerOptions.length; i++) {
-                        if (i !== index) {
-                            $scope.question.answerOptions[i].correct = false;
-                        }
-                    }
+                if ($scope.question.imageUrl) {
+                    delete $scope.question.imageUrl;
                 }
-            };
-            */
+            }
 
             /**
              * Initializes a new question
@@ -105,7 +93,6 @@ myApp.controller('makeQuestionCtrl',
                             $scope.question.answerOptions[i].correct = !$scope.question.answerOptions[i].correct;
                         }
                     }
-                    ;
                 }
             };
 
@@ -167,6 +154,9 @@ myApp.controller('makeQuestionCtrl',
 
                 if ($scope.okForm) {
                     delete $scope.question.$$hashKey;
+                    $scope.question.answerOptions.forEach(function (currAns) {
+                        delete currAns.$$hashKey;
+                    });
 
                     // Upload using multipart if image file is present.
                     if ($scope.questionImage && $scope.questionImage !== '') {
@@ -186,6 +176,7 @@ myApp.controller('makeQuestionCtrl',
                             uploadForm.success(function (data, status, headers, config) {
                                 $scope.question = data;
                                 QuestionManager.setQuestion($scope.question);
+                                $scope.questionSaved();
                             });
                         } else {
                             uploadForm = Upload.upload({
@@ -202,6 +193,7 @@ myApp.controller('makeQuestionCtrl',
                             // Upload complete
                             uploadForm.success(function (data, status, headers, config) {
                                 QuestionManager.setQuestion($scope.question);
+                                $scope.questionUpdated();
                             });
                         }
                     } else {
@@ -209,17 +201,51 @@ myApp.controller('makeQuestionCtrl',
                         if ($scope.question._id) {
                             var updatedQ = QuestionManager.setQuestion($scope.question);
                             $scope.question = updatedQ;
+                            $scope.questionUpdated();
                         } else {
                             // Standard add question to database.
                             QuestionManager.addQuestion($scope.question, function (data) {
                                 $scope.question = data;
+                                $scope.questionSaved();
                             });
                         }
                     }
                 }
             };
 
+
             // Standard actions
+
+            /**
+             * Displays messages after question actions 
+             */
+            $scope.questionUpdated = function () {
+                $scope.messageTime = true;
+                $scope.updatedQ = true;
+                $timeout(function(){
+                    $scope.messageTime = false;
+                    $scope.updatesQ = false;
+                },5000);
+            };
+
+            $scope.questionDeleted = function () {
+                $scope.messageTime = true;
+                $scope.deletedQ = true;
+                $timeout(function(){
+                    $scope.messageTime = false;
+                    $scope.deletedQ = false;
+                },5000);
+            };
+
+            $scope.questionSaved = function () {
+                $scope.messageTime = true;
+                $scope.savedQ = true;
+                $timeout(function(){
+                    $scope.messageTime = false;
+                    $scope.savedQ = false;
+                },5000);
+            };
+
 
             /**
              * Loads a question
@@ -229,8 +255,8 @@ myApp.controller('makeQuestionCtrl',
             $scope.loadQuestion = function (id) {
                 QuestionManager.getQuestion(id, function (data) {
                     $scope.question = data;
-                    if ($scope.question.imageUrl.length > 0) {
-                        $scope.questionImage = APIBASEURL+'/'+$scope.question.imageUrl;
+                    if ($scope.question.imageUrl) {
+                        $scope.questionImage = APIBASEURL + '/' + $scope.question.imageUrl;
                     }
                 });
             };
@@ -245,6 +271,7 @@ myApp.controller('makeQuestionCtrl',
                     QuestionManager.deleteQuestion($scope.question._id);
                     $scope.newQuestion();
                 }
+                $scope.questionDeleted();
             };
 
             // Modal

@@ -3,6 +3,10 @@ myApp.controller('finishedCorrCtrl',['$scope','$location','$timeout', function (
     $timeout(function(){
         console.log('Timeout started'); // TEST
         $location.path('/admin');
-    },10000)
-    
+    },5000);
+
+    $scope.gotoIndex = function() {
+        $location.path('/admin');
+    };
+
 }]);

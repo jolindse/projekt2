@@ -146,7 +146,6 @@ app.delete('/api/user/:id', function (req, res) {
         if (err) {
             res.status(405).json('Delete operation unsuccessful.');
         } else {
-            //TODO Hangs from tooling.
             Class.removeStudent(id);
             Submitted.removeStudent(id);
         }
@@ -298,11 +297,6 @@ app.delete('/api/exam/:id', function (req, res) {
 
 // Get specific exam (id) with questions
 app.get('/api/exam/:id', function (req, res) {
-    var result = [];
-    var currExam = '';
-    var questionsArray = [];
-    var counter = 0;
-
     Exam.getExam(req.params.id, function (err, exam) {
         if (err) {
             res.status(404).json('No such exam.');
@@ -355,10 +349,9 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
     // Workaround for the multipart upload array problem.
     var questionToFormat = req.body;
     var currQuestion = req.body;
-
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
-            currQuestion = JSON.parse(JSON.stringify(JSON.parse(questionToFormat))); // In order to make a clone and not a reference to original object.
+            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
             currQuestion.answerOptions = [];
             for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
                 currQuestion.answerOptions[i] = {
@@ -387,12 +380,11 @@ app.post('/api/question', multer({dest: './questionImages/'}).single('file'), fu
 
 app.put('/api/question', multer({dest: './questionImages/'}).single('file'), function (req, res) {
     // Workaround for the multipart upload array problem.
-    var questionToFormat = req.body;
-    var currQuestion = req.body;
-
+    var questionToFormat = req.body.data;
+    var currQuestion = req.body.data;
     if (questionToFormat.type !== 'text') {
         if (questionToFormat.answerOptions.text) {
-            currQuestion = JSON.parse(JSON.stringify(JSON.parse(questionToFormat))); // In order to make a clone and not a reference to original object.
+            currQuestion = JSON.parse(JSON.stringify(questionToFormat)); // In order to make a clone and not a reference to original object.
             currQuestion.answerOptions = [];
             for (var i = 0; i < questionToFormat.answerOptions.text.length; i++) {
                 currQuestion.answerOptions[i] = {
@@ -410,6 +402,9 @@ app.put('/api/question', multer({dest: './questionImages/'}).single('file'), fun
     if (req.file) {
         currQuestion.imageUrl = req.file.filename;
     }
+
+
+
     Question.updateQuestion(currQuestion._id, currQuestion, function (err, updatedQuestion) {
         if (err) {
             console.log(err);
@@ -474,9 +469,9 @@ app.post('/api/submitted', function (req, res) {
                 if (err) {
                     res.status(404).json({success: false, message: 'Couldn\'t correct test'});
                 } else {
-                    correction.getSubmittedAndCorrectAnswers(currSubmitted._id, function(question, subExam, orgExam) {
-                        correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
-                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function() {
+                    correction.getSubmittedAndCorrectAnswers(currSubmitted._id, function (question, subExam, orgExam) {
+                        correction.autoCorrect(question, subExam, orgExam, function (submittedExam) {
+                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function () {
                                 res.status(200).json(submittedExam);
                             });
                         });
@@ -496,17 +491,19 @@ app.put('/api/submitted/:id', function (req, res) {
             console.log(err);
             res.status(404);
         } else {
-            correction.getSubmittedAndCorrectAnswers(updatedExam._id, function(question, subExam,orgExam) {
-               correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
-                   Submitted.updateSubmitted(submittedExam._id, submittedExam, function(err, submitted) {
-                       correction.setExamCorrected(submitted._id, function(err, subExam) {
-                            if(err){res.status(404).json({message: Error});}
-                           else {
+            correction.getSubmittedAndCorrectAnswers(updatedExam._id, function (question, subExam, orgExam) {
+                correction.autoCorrect(question, subExam, orgExam, function (submittedExam) {
+                    Submitted.updateSubmitted(submittedExam._id, submittedExam, function (err, submitted) {
+                        correction.setExamCorrected(submitted._id, function (err, subExam) {
+                            if (err) {
+                                res.status(404).json({message: Error});
+                            }
+                            else {
                                 res.status(200).json(subExam);
                             }
-                       });
-                   });
-               });
+                        });
+                    });
+                });
             });
         }
     });
@@ -555,16 +552,20 @@ app.get('/api/submittedneedcorr/', function (req, res) {
         if (err) {
             res.status(404).json('Error');
         } else {
-            if(!exam) {res.status(200).json([]);}
-            else {res.status(200).json(exam);}
+            if (!exam) {
+                res.status(200).json([]);
+            }
+            else {
+                res.status(200).json(exam);
+            }
         }
     });
 });
 
 /*
---------------------------------------------------------
-    Mail endpoints
---------------------------------------------------------
+ --------------------------------------------------------
+ Mail endpoints
+ --------------------------------------------------------
  */
 
 // Send email
@@ -579,42 +580,42 @@ app.post('/api/mail', function (req, res) {
 });
 
 // Send password to user
-app.get('/api/sendpass/:id', function(req, res) {
-   sendMail.sendPassword(req.params.id, function(success) {
-      if(success.success === true) {
-          res.status(200).json(success);
-      } else {
-          res.status(404).json(success);
-      }
-   });
+app.get('/api/sendpass/:id', function (req, res) {
+    sendMail.sendPassword(req.params.id, function (success) {
+        if (success.success === true) {
+            res.status(200).json(success);
+        } else {
+            res.status(404).json(success);
+        }
+    });
 });
 
 /*
----------------------------------
-            STATISTICS
----------------------------------
-*/
+ ---------------------------------
+ STATISTICS
+ ---------------------------------
+ */
 
-app.get('/api/statistics/:scope/:id', function(req, res) {
+app.get('/api/statistics/:scope/:id', function (req, res) {
     if (req.params.scope === 'exam') {
-        examStat.examStats(req, function(returnObject) {
-            if(!returnObject.success) {
+        examStat.examStats(req, function (returnObject) {
+            if (!returnObject.success) {
                 res.status(400).json(returnObject);
             } else {
                 res.status(200).json(returnObject);
             }
         });
-    } else if(req.params.scope === 'user') {
-        userStat.userStats(req, function(returnObject) {
-            if(!returnObject.success) {
+    } else if (req.params.scope === 'user') {
+        userStat.userStats(req, function (returnObject) {
+            if (!returnObject.success) {
                 res.status(400).json(returnObject);
             } else {
                 res.status(200).json(returnObject);
             }
         });
-    } else if(req.params.scope === 'class') {
-        classStat.classStats(req, function(returnObject) {
-            if(!returnObject.success) {
+    } else if (req.params.scope === 'class') {
+        classStat.classStats(req, function (returnObject) {
+            if (!returnObject.success) {
                 res.status(400).json(returnObject);
             } else {
                 res.status(200).json(returnObject);
@@ -626,9 +627,9 @@ app.get('/api/statistics/:scope/:id', function(req, res) {
 
 
 /*
--------------------------------------------
-                Starta servern
--------------------------------------------
+ -------------------------------------------
+ Starta servern
+ -------------------------------------------
  */
 // Start listening and log start.
 var listener = app.listen(3000, function () {
