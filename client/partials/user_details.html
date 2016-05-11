@@ -2,7 +2,6 @@
     <div class="jumbotron">
         <h1 class="display-3">Dina uppgifter</h1>
         <p class="lead"></p>
-        <hr class="m-y-2">
 
         <div class="panel-body inf-content">
             <div class="row">
@@ -17,7 +16,7 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input ng-model="user.firstName" type="text" name="firstname" ng-disabled="firstNameDisabled">
+                                    <input ng-model="user.firstName" class="userdetail-field" type="text" name="firstname" ng-disabled="firstNameDisabled">
                                 </td>
                                 <td>
                                     <span ng-click="changeFirstName()" class="edit-user glyphicon glyphicon-edit"></span>
@@ -30,7 +29,7 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input type="text" name="lastname" ng-disabled="lastNameDisabled" ng-model="user.surName">
+                                    <input type="text" name="lastname" class="userdetail-field" ng-disabled="lastNameDisabled" ng-model="user.surName">
                                 </td>
                                 <td>
                                     <span ng-click="changeLastName()" class="edit-user glyphicon glyphicon-edit"></span>
@@ -43,7 +42,7 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input type="password" name="password" ng-disabled="passwordDisabled" ng-model="user.password">
+                                    <input type="password" name="password" class="userdetail-field" ng-disabled="passwordDisabled" ng-model="user.password">
                                 </td>
                                 <td>
                                     <span ng-click="changePassword()" class="edit-user glyphicon glyphicon-edit"></span>
@@ -56,7 +55,7 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <input type="text" name="email" ng-disabled="emailDisabled" ng-model="user.email">
+                                    <input type="text" name="email" class="userdetail-field" ng-disabled="emailDisabled" ng-model="user.email">
                                 </td>
                                 <td>
                                     <span ng-click="changeEmail()" class="edit-user glyphicon glyphicon-edit"></span>
@@ -69,7 +68,7 @@
                                     </strong>
                                 </td>
                                 <td class="text-primary">
-                                    <input type="text" name="persNumb" ng-disabled="true" ng-model="user.id">
+                                    <input type="text" name="persNumb" class="userdetail-field" ng-disabled="true" ng-model="user.id">
                                 </td>
                                 <td>
                                     <span class="glyphicon glyphicon-lock"></span>

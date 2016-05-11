@@ -1,29 +1,53 @@
 <article class="container">
     <div class="jumbotron">
         <h1 class="display-3">Prov</h1>
-        <p class="lead">Det finns för tillfället {{tests.length}}st prov att administrera.</p>
-        <hr class="m-y-2">
+        <p class="lead">Det finns {{tests.length}}st prov att administrera.</p>
         <table class="table" id="examTable">
             <thead class="thead">
             <tr>
-                <th>Ämne</th>
                 <th>Provnamn</th>
-                <th>Tid</th>
-                <th>Maxpoäng</th>
-                <th>Tillgänglig</th>
+                <th>Ämne</th>
+                <th class="table-center-row">Tid</th>
+                <th class="table-center-row">Antal frågor</th>
+                <th>Tillgängligt</th>
             </tr>
             </thead>
             <tbody ng-repeat="test in tests">
             <tr ng-click="selectExam(tests[$index])" ng-class="{activerow: tests[$index] === selectedTest}" class="clickable-row">
-                <td>{{test.subject}}</td>
                 <td>{{test.title}}</td>
-                <td>{{test.time}}</td>
-                <td></td>
+                <td>{{test.subject}}</td>
+                <td class="table-center-row">{{test.time}}min</td>
+                <td class="table-center-row">{{test.questions.length}}</td>
                 <td>{{test.interval[0]}} - {{test.interval[1]}} </td>
             </tr>
             </tbody>
         </table>
         <button ng-hide="selectedTest == null" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
+        <button ng-click="editExam()" ng-hide="selectedTest == null" type="button" class="btn btn-warning">Redigera prov</button>
+
+        <hr class="m-y-2">
+
+        <p class="lead">Det finns {{testsToCorrect.length}} st prov att rätta.</p>
+
+        <table class="table">
+            <thead class="thead">
+            <tr>
+                <th>Provnamn</th>
+                <th>Ämne</th>
+                <th class="table-center-row">Antal frågor</th>
+                <th>Student</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="test in testsToCorrect">
+            <tr ng-click="selectTestToCorrect(testsToCorrect[$index])" ng-class="{activerow: testsToCorrect[$index] === selectedTestToCorrect}" class="clickable-row">
+                <td>{{test.exam.title}}</td>
+                <td>{{test.exam.subject}}</td>
+                <td class="table-center-row">{{test.exam.questions.length}}</td>
+                <td>{{test.student.firstName}} {{test.student.surName}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button ng-hide="selectedTestToCorrect == null" ng-click="correctTest()" type="button" class="btn btn-success">Rätta prov</button>
     </div>
 </article>
 
@@ -51,7 +75,7 @@
                     <thead class="thead">
                     <tr>
                         <th ng-click="">
-                            <input class="checkbox" id="selectAll" type="checkbox"/>
+                            <input ng-model="isSelectAll" ng-click="selectAllStudents()" class="table-checkbox" id="selectAll" type="checkbox"/>
                         </th>
                         <th ng-click="sortType = 'firstName'; sortReverse = !sortReverse">
                             Förnamn
@@ -72,7 +96,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="user in selectedStudents | orderBy:sortType:sortReverse | filter:searchUser">
-                        <td><input class="checkbox" type="checkbox" ng-model="user.selected"/></td>
+                        <td><input class="table-checkbox" type="checkbox" ng-model="user.selected"/></td>
                         <td>{{user.user.firstName}}</td>
                         <td>{{user.user.surName}}</td>
                         <td>{{user.studentClass}}</td>
@@ -87,8 +111,8 @@
                 <div ng-show="errorShare" class="alert alert-danger" role="alert">
                     <p>{{errorMessage}}</p>
                 </div>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Stäng</button>
-                <button ng-hide="successShare" ng-click="shareExam()" type="button" class="btn btn-primary" ><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> OK</button>
+                <button ng-hide="successShare" ng-click="shareExam()" type="button" data-dismiss="modal" class="btn btn-success" ><span ng-show="loading" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> OK</button>
+                <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Stäng</button> -->
             </div>
         </div>
     </div>
@@ -105,7 +129,6 @@
                 <h4 class="modal-title">Delat provet {{selectedTest.title}} till:</h4>
             </div>
             <div class="modal-body">
-
                 <table class="table">
                     <thead class="thead">
                     <tr>

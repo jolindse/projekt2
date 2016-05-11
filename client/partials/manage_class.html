@@ -42,6 +42,7 @@
                     <table class="table">
                         <thead class="thead">
                             <tr>
+                                <th>Behörighet</th>
                                 <th>Personnummer</th>
                                 <th>Förnamn</th>
                                 <th>Efternamn</th>
@@ -49,23 +50,22 @@
                                 <th>Klass</th>
                             </tr>
                         </thead>
-                        <tbody ng-repeat="user in users">
-                            <tr ng-click="loadUser(users[$index],$index)" class="clickable-row" ng-class='{"selectedRow":user === userCon}'>
+                        <tbody ng-repeat="user in users | filter:studentClass.name: true">
+                            <tr ng-class='{"selectedRow":user === userCon}' ng-click="loadUser(users[$index],$index)" class="clickable-row">
+                                <td>
+                                    <div ng-if="user.admin == true">Admin</div>
+                                    <div ng-if="user.admin == false">Elev</div>
+                                </td>
                                 <td>{{user.id}}</td>
                                 <td>{{user.firstName}}</td>
                                 <td>{{user.surName}}</td>
                                 <td>{{user.email}}</td>
-                                <td>{{user.studentClass}}</td>
+                                <td>{{user.className}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
         </div>
         <div class="modal fade" id="createStudentModal" role="dialog">
             <div class="modal-dialog">
@@ -145,14 +145,36 @@
                                         </strong>
                                     </td>
                                     <td class="text-primary">
-                                        <input type="text" name="firstname" ng-model="userCon.admin">
+                                        <!--<label class="radio-inline"><input type="radio" name="authority" ng-model="userCon-admin" ng-value="true">Admin</label>-->
+                                        <!--<label class="radio-inline"><input type="radio" name="authority" ng-model="userCon-admin" ng-value="false">Elev</label>-->
+                                        <input type="text" name="authority" ng-model="userCon.admin">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            Skolklass:
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                Välj klass
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li id="classDropdownItem" ng-repeat="class in studentClasses" ng-click="loadClass(studentClasses[$index])"><a href="#">{{class.name}}</a></li>
+                                                <li class="divider"></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     <div class="modal-footer">
-                        <button ng-click="saveUser()" type="button" id="sparaStudent" class="btn btn-success" data-dismiss="modal">Spara ändringar</button>
+                        <button ng-click="saveUser()" type="button" id="sparaStudent" class="btn btn-success" data-dismiss="modal">Spara användare</button>
                     </div>
                 </div>
             </div>
@@ -172,13 +194,10 @@
             </div>
                 </div>
                 <div class="modal-footer">
-            <button class="btn btn-success" id="saveSchoolClass" ng-click="saveSchoolClass()" data-dismiss="modal">Spara Skolklass</button>
+            <button class="btn btn-success" id="sparaSkolKlass" ng-click="saveSchoolClass()" data-dismiss="modal">Spara Skolklass</button>
                 </div>
              </div>
             </div>
         </div>
-    </div>
-    <div ng-repeat="(key, prop) in class">
-        <tt>{{key}}; {{prop}}</tt>
     </div>
 </article>

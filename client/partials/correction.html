@@ -4,7 +4,9 @@
         <div class="col-md-3">
             <h1>Rätta</h1>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 text-right">
+            <button ng-class="{'btn-success': onlyNeedCorrection}" ng-click="toggleNeedCorrection()"
+                    class="btn btn-sm button-top"><span class="infoText">Visa endast i behov av rättning</span></button>
         </div>
     </div>
 
@@ -18,16 +20,17 @@
                 <p ng-show="onlyNeedCorrection"> Fråga <strong>{{needIndex+1}}</strong> av <strong>{{questionsNeedCorrection.length}}</strong>
                 </p>
             </div>
-
-            <div class="col-md-10 text-right">
-                <p>Visa bara frågor som behöver rättas
-                <checkbox ng-init="onlyNeedCorrection = false" ng-class="{'btn-success' : onlyNeedCorrection}" large ng-model="onlyNeedCorrection" ng-change="toggleNeedCorrection()"></checkbox>
-                </div>
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-2 text-right">
+                <button class="btn btn-success btn-lg button-text-large" ng-click="postCorrected()">Markera rättad</button>
+            </div>
         </div>
+
         <!-- Info rows -->
         <div class="row">
             <div class="col-md-2 col-md-offset-1">
-                <p class="infoText">Prov:<br/>
+                <p class="infoText">Prov:</p>
             </div>
             <div class="col-md-3">
                 <p class="infoText"><strong>{{currExam.title}}</strong></p>
@@ -48,7 +51,7 @@
                 <p class="infoText">{{currExam.maxPoints}}</p>
             </div>
             <div ng-show="!currExam.anonymous" class="col-md-2">
-                Email:<br/>
+                <p class="infoText">Email:</p>
             </div>
             <div class="col-md-3" ng-show="!currExam.anonymous">
                 <p class="infoText">{{currUser.email}}</p>
@@ -148,57 +151,63 @@
         </div>
 
         <!-- Correct non correct points -->
-        <div class="row" ng-show="currQuestion.type === 'text'">
-            <div class="col-md-6">
+        <div class="row form-group" ng-show="currQuestion.type === 'text'">
+            <div class="col-md-2">
+                <p><strong>Status:</strong></p>
             </div>
-            <div class="col-md-6">
-                <div class="btn-group text-right" uib-dropdown keyboard-nav>
-                    <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-lg"
+            <div class="col-md-4 btn-group">
+                <button ng-class="{'btn-success' : currSubAns[0].correct}" class="btn btn-lg button-text"
+                        ng-click="setCorrect()">Rätt
+                    <span class="glyphicon glyphicon-ok"></span></button>
+                <button ng-class="{'btn-danger' : !currSubAns[0].correct}" class="btn btn-lg button-text"
+                        ng-click="setFault()">Fel
+                </button>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="btn-group" uib-dropdown keyboard-nav>
+                    <button id="simple-btn-keyboard-nav" type="button" class="btn btn-default btn-lg button-text"
                             uib-dropdown-toggle>
-                        <p class="button-text"><strong>Poäng {{currSubAns[0].points}} <span class="caret"></span></strong></p></button>
+                        <span class="button-text"><strong>Poäng</strong></span>
+                        <i class="caret"></i></button>
                     <ul uib-dropdown-menu>
-                        <li ng-repeat="currP in currQPoints track by $index" role="menuitem" ng-click="currSubAns[0].points = currQPoints[$index]">{{currP}}</li>
+                        <li class="menutext" ng-repeat="currP in currQPoints track by $index"
+                            ng-click="currSubAns[0].points = currQPoints[$index]">{{currP}}
+                        </li>
                     </ul>
                 </div>
             </div>
+            <div class="col-md-2 text-right">
+                <p>Poäng</p>
+                <h2><strong>{{getPoints()}}</strong></h2>
+            </div>
+
         </div>
 
         <div class="row" ng-show="currQuestion.type !== 'text'">
+            <div class="col-md-6">
+            </div>
             <div class="col-md-6 text-right">
-                <p>Poäng <strong>{{getPoints()}}</strong></p>
+                <p>Poäng
+                <h2><strong>{{getPoints()}}</strong></h2>
             </div>
         </div>
 
-        <!-- Comment and points awarded
-        <div class="row">
-            <div class="col-md-5 col-md-offset-1">
-                <div ng-show="currQuestion.type === 'text'">
-                    <textarea class="form-control" ng-model="currSubAns[0].comment" rows="3"
+        <!-- Comments -->
+        <div class="row" ng-show="currQuestion.type === 'text'">
+            <div class="col-md-2">
+                <p><strong>Kommentar:</strong></p>
+            </div>
+            <div class="col-md-8">
+					<textarea class="form-control" ng-model="currSubAns[0].comment" rows="3"
                               placeholder="Skriv eventuell kommentar här"></textarea>
-                </div>
             </div>
-            <div class="col-md-3"></div>
-            <div class="col-md-1">
-                <p><strong>Poäng</strong></p>
-            </div>
-            <div class="col-md-1">
-                <div ng-show="currQuestion.type !== 'text'">
-                    {{getPoints()}}
-                </div>
-                <div ng-show="currQuestion.type === 'text'">
-                    <input class="text-right" type="number" ng-model="currSubAns[0].points">
-                </div>
-            </div>
-            <div class="col-md-1"></div>
-
         </div>
-        -->
     </div>
 
     <!-- DEBUG INFO -->
-
     onlyNeedCorrection: {{onlyNeedCorrection}}<br/>
     qIndex: {{qIndex}}<br/>
+    needCorrectionArray: {{questionsNeedCorrection}}<br/>
     needIndex: {{needIndex}}<br/>
     currSubmitted:<br/>
     <div ng-repeat="(key, prop) in currSubmitted">
@@ -209,10 +218,12 @@
     <div ng-repeat="(key, prop) in currExam">
         <tt>{{key}} : {{prop}}</tt>
     </div>
+    <br/>
     currSubAns:<br/>
     <div ng-repeat="(key, prop) in currSubAns">
         <tt>{{key}} : {{prop}}</tt>
     </div>
+    <br/>
     currQuestion:<br/>
     <div ng-repeat="(key, prop) in currQuestion">
         <tt>{{key}} : {{prop}}</tt>

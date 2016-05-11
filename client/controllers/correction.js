@@ -34,6 +34,10 @@ myApp.controller('correctionCtrl',
                 $scope.qIndex = '';                     // Index of current question
                 $scope.needIndex = '';                  // Index of need correction question
                 $scope.currQPoints = [];                // Array with all viable points for a question
+                $scope.hasNextQ = false;                // Do we have a another question?
+                $scope.hasPreviousQ = false;            // Do we have a previous question?
+                $scope.onlyNeedCorrection = false;      // Only display questions not corrected.
+                //$scope.needCorr = false;                // Does the current question need correction?
 
                 SubmittedManager.getSubmitted(id, function (data) {
                     $scope.currSubmitted = data;
@@ -60,13 +64,14 @@ myApp.controller('correctionCtrl',
                 var waiting = $scope.currExam.questions.length;
                 $scope.currExam.questions.forEach(function (currEQ) {
                     QuestionManager.getQuestion(currEQ, function (currQ) {
-                        $scope.questions.push(currQ);
-                        finish();
+                        var origIndex = $scope.currExam.questions.indexOf(currQ._id);
+                        finish(currQ, origIndex);
                     });
                 });
 
-                function finish() {
+                function finish(question, index) {
                     waiting--;
+                    $scope.questions[index] = question;
                     if (waiting === 0) {
                         $scope.findNeedCorrection(function () {
                             callback();
@@ -171,23 +176,23 @@ myApp.controller('correctionCtrl',
              * Toogles between only need correction and all questions
              */
             $scope.toggleNeedCorrection = function () {
-                if ($scope.onlyNeedCorrection === true) {
-                    console.log('onlyNeed är tydligen true'); // TEST
-                    $scope.onlyNeedCorrection = false;
-                    $scope.getQByIndex($scope.qIndex);
-                } else {
-                    console.log('onlyNeed är tydligen false'); // TEST
-                    $scope.onlyNeedCorrection = true;
-                    var currIndex = $scope.questionsNeedCorrection.indexOf($scope.qIndex);
-                    if (currIndex > -1) {
-                        $scope.needIndex = currIndex;
+                if ($scope.questionsNeedCorrection.length > 0) {
+                    $scope.onlyNeedCorrection = !$scope.onlyNeedCorrection;
+                    if ($scope.questionsNeedCorrection) {
                         $scope.getQByIndex($scope.qIndex);
                     } else {
-                        $scope.needIndex = 0;
-                        var absIndex = $scope.questionsNeedCorrection[$scope.needIndex];
-                        $scope.qIndex = absIndex;
-                        $scope.getQByIndex(absIndex);
+                        var currIndex = $scope.questionsNeedCorrection.indexOf($scope.qIndex);
+                        if (currIndex > -1) {
+                            $scope.needIndex = currIndex;
+                            $scope.getQByIndex($scope.qIndex);
+                        } else {
+                            var absIndex = $scope.questionsNeedCorrection[0];
+                            $scope.qIndex = absIndex;
+                            $scope.getQByIndex(absIndex);
+                        }
                     }
+                } else {
+                    $scope.onlyNeedCorrection = false;
                 }
             };
 
@@ -217,23 +222,49 @@ myApp.controller('correctionCtrl',
                 }
             };
 
+            /**
+             * Sets question as correct
+             */
+            $scope.setCorrect = function () {
+                $scope.currSubAns[0].correct = true;
+                $scope.setCorrected();
+            };
+
+            /**
+             * Sets question as incorrect
+             */
+            $scope.setFault = function () {
+                $scope.currSubAns[0].correct = false;
+                $scope.currSubAns[0].points = 0;
+                $scope.setCorrected();
+            };
+
+            /**
+             * Updates correction status of question
+             */
+            $scope.setCorrected = function () {
+                $scope.currSubAns[0].corrected = true;
+                var origIndex = $scope.questions.indexOf($scope.currQuestion);
+                var indexToRemove = $scope.questionsNeedCorrection.indexOf(origIndex);
+                if (indexToRemove > -1) {
+                    $scope.questionsNeedCorrection.splice(indexToRemove, 1);
+                }
+            };
+
             // UPDATES
 
             /**
              * Saves and updates submitted exam
              */
-            $scope.setCorrected = function () {
-                $scope.currSubmitted[0].corrected = true;
-                SubmittedManager.setSubmitted($scope.currSubmitted);
+            $scope.postCorrected = function () {
+                SubmittedManager.setSubmitted($scope.currSubmitted, function (data){
+                    $scope.currSubmitted = data;
+                });
             };
 
             // INIT
 
-            $scope.hasNextQ = false;                    // Do we have a another question?
-            $scope.hasPreviousQ = false;                // Do we have a previous question?
-            $scope.onlyNeedCorrection = false;          // Only display questions not corrected.
-            $scope.needCorr = false;                    // Does the current question need correction?
+            $scope.startCorrection(userService.submittedTest);
 
-            $scope.startCorrection(userService.testToCorrect);
-
-        }]);
+        }
+    ]);

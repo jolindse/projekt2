@@ -8,15 +8,13 @@ myApp.controller('doExamCtrl',
         'ExamManager',
         'SubmittedManager',
         'QuestionManager',
-        'APIBASEURL',
-        '$http',
+        '$location',
         function ($scope,
                   userService,
                   ExamManager,
                   SubmittedManager,
                   QuestionManager,
-                  APIBASEURL,
-                  $http) {
+                  $location) {
 
             /*
              FUNCTIONS
@@ -56,19 +54,21 @@ myApp.controller('doExamCtrl',
                 var i = 0;
                 $scope.currExam.questions.forEach(function (currEQ) {
                     QuestionManager.getQuestion(currEQ, function (currQ) {
-                        $scope.questions.push(currQ);
-                        if (currQ.type === 'rank') {
-                            $scope.setupRanking(i);
-                        } else {
-                            $scope.currSubmitted.answers[i] = ([{"text": ""}]);
-                        }
-                        i++;
-                        finish();
+                        //$scope.questions.push(currQ);
+                        var index = $scope.currExam.questions.indexOf(currQ._id);
+                        finish(currQ, index);
                     });
                 });
 
-                function finish() {
+                function finish(question, index) {
                     waiting--;
+                    $scope.questions[index] = question;
+                    if ($scope.questions[index].type === 'rank') {
+                        console.log('Rank question index: '+index); // TEST
+                        $scope.setupRanking(index);
+                    } else {
+                        $scope.currSubmitted.answers[index] = ([{"text": ""}]);
+                    }
                     if (waiting === 0) {
                         callback();
                     }
@@ -172,12 +172,9 @@ myApp.controller('doExamCtrl',
              */
             $scope.submitExam = function () {
                 SubmittedManager.addSubmitted($scope.currSubmitted, function (data) {
-                    console.log(JSON.stringify(data));
-                    if (data._id) {
-                        $http.get(APIBASEURL + '/api/submitted/autocorrect/' + data._id)
-                            .then(function (resData) {
-                            });
-                    }
+                    userService.setResults(data._id);
+
+                    $location.path('/result');
                 });
             };
 

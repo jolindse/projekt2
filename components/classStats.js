@@ -1,6 +1,7 @@
 /**
  * Created by Mattias on 2016-05-07.
  */
+
 var User = require('../models/User');
 var Class = require('../models/Class');
 var Exam = require('../models/Exam');

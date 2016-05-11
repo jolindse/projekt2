@@ -1,4 +1,26 @@
-<div class="container">
-    <h1>Välkommen {{user.firstName}}</h1>
-    <p><i>Inloggad som admin</i></p>
-</div><!-- /container -->
+<article class="container">
+    <div class="jumbotron">
+        <h1 class="display-3">Välkommen {{user.firstName}}</h1>
+        <p class="lead">Det finns {{testsToCorrect.length}} st prov att rätta.</p>
+
+        <table class="table">
+            <thead class="thead">
+            <tr>
+                <th>Provnamn</th>
+                <th>Ämne</th>
+                <th class="table-center-row">Antal frågor</th>
+                <th>Student</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="test in testsToCorrect">
+            <tr ng-click="selectTestToCorrect(testsToCorrect[$index])" ng-class="{activerow: testsToCorrect[$index] === selectedTestToCorrect}" class="clickable-row">
+                <td>{{test.exam.title}}</td>
+                <td>{{test.exam.subject}}</td>
+                <td class="table-center-row">{{test.exam.questions.length}}</td>
+                <td>{{test.student.firstName}} {{test.student.surName}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button ng-hide="selectedTestToCorrect == null" ng-click="correctTest()" type="button" class="btn btn-success">Rätta prov</button>
+    </div>
+</article>

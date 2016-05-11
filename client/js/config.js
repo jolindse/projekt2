@@ -33,9 +33,9 @@ myApp.config(function ($routeProvider) {
             controller: 'adminCtrl'
         })
 
-        .when('/userTable', {
-            templateUrl: 'partials/usertable.html',
-            controller: 'adminCtrl'
+        .when('/studentresults', {
+            templateUrl: 'partials/student_results.html',
+            controller: 'studentCtrl'
         })
 
         .when('/home', {
@@ -91,6 +91,11 @@ myApp.config(function ($routeProvider) {
         .when('/correctexam', {
             templateUrl: 'partials/correction.html',
             controller: 'correctionCtrl'
+        })
+
+        .when('/result', {
+            templateUrl: 'partials/result.html',
+            controller: 'resultCtrl'
         })
 
         .otherwise({

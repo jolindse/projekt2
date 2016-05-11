@@ -26,7 +26,6 @@ var userSchema = mongoose.Schema({
     password: {
         type: String,
         default: 'password'
-
     },
     email: {
         type: String,

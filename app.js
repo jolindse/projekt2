@@ -467,21 +467,22 @@ app.post('/api/submitted', function (req, res) {
     var currSubmitted = req.body;
     Submitted.addSubmitted(currSubmitted, function (err, currSubmitted) {
         if (err) {
-            console.log('fel i addSubmitted');
+            console.log(err);
             res.status(404);
         } else {
-            console.log(currSubmitted._id);
-            correction.getSubmittedAndCorrectAnswers(currSubmitted._id, function(question, subExam, orgExam) {
-                correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
-                    Submitted.updateSubmitted(submittedExam._id, submittedExam, function(err, submitted) {
-                        correction.setExamCorrected(submitted._id, function(err, subExam) {
-                            if(err){res.status(404).json({message: error});}
-                            else {
-                                res.status(200).json(subExam);
-                            }
+            correction.setExamCorrected(currSubmitted._id, function (err, subExam) {
+                if (err) {
+                    res.status(404).json({success: false, message: 'Couldn\'t correct test'});
+                } else {
+                    correction.getSubmittedAndCorrectAnswers(currSubmitted._id, function(question, subExam, orgExam) {
+                        correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
+                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function() {
+                                res.status(200).json(submittedExam);
+                            });
                         });
                     });
-                });
+
+                }
             });
         }
     });
@@ -513,7 +514,8 @@ app.put('/api/submitted/:id', function (req, res) {
 
 // Try to autocorrect exam
 app.get('/api/submitted/autocorrect/:id', function (req, res) {
-    correction.getSubmittedAndCorrectAnswers(req, res, function (question, subExam, orgExam) {
+    var id = req.params.id;
+    correction.getSubmittedAndCorrectAnswers(id, function (question, subExam, orgExam) {
         //console.log('In app.js question: '+JSON.stringify(question,null, 2)); // TEST
         correction.autoCorrect(question, subExam, orgExam, function (submittedExam) {
             // Update the submitted exam in db
