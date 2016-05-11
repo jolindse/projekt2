@@ -476,8 +476,8 @@ app.post('/api/submitted', function (req, res) {
                 } else {
                     correction.getSubmittedAndCorrectAnswers(currSubmitted._id, function(question, subExam, orgExam) {
                         correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
-                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function() {
-                                res.status(200).json(submittedExam);
+                            Submitted.updateSubmitted(submittedExam._id, submittedExam, function(err, submittedExam) {
+                                if(!err) {res.status(200).json(submittedExam)};
                             });
                         });
                     });
