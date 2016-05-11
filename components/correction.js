@@ -111,11 +111,11 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
     if (submittedExam.completeCorrection != true) {
         for (var i = 0; i < question.length; i++) {
             type = question[i].type;
-            
+
             // Single type
-            if(type === 'single') {
+            if (type === 'single') {
                 var subAnswer = submittedExam.answers[i];
-                if(!subAnswer[0].corrected) {
+                if (!subAnswer[0].corrected) {
                     for (var j = 0; j < question[i].answerOptions.length; j++) {
                         if (subAnswer[0].text === question[i].answerOptions[j].text && question[i].answerOptions[j].correct) {
                             subAnswer[0].correct = true;
@@ -138,12 +138,12 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 var correctArray = [];
                 question[i].answerOptions.forEach(function (answerOption) {
                     if (answerOption.correct) {
-                        if(correctArray.indexOf(answerOption.text<0)) {
+                        if (correctArray.indexOf(answerOption.text < 0)) {
                             correctArray.push(answerOption.text);
                         }
                     }
                 });
-                for (var j=0; j<subAnswers.length; j++) {
+                for (var j = 0; j < subAnswers.length; j++) {
                     if (!subAnswers[j].corrected) {
                         if (correctArray.indexOf(subAnswers[j].text) > -1) {
                             subAnswers[j].corrected = true;
@@ -159,38 +159,38 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 }
                 var totalSubAnswerPoints = 0;
                 console.log('subAnswers: ' + subAnswers.length);
-                for (var k = 0; k<subAnswers.length; k++) {
+                for (var k = 0; k < subAnswers.length; k++) {
                     totalSubAnswerPoints += subAnswers[k].points;
                 }
-                
-                for (var k = 0; k<subAnswers.length; k++) {
+
+                for (var k = 0; k < subAnswers.length; k++) {
                     submittedExam.points = submittedExam.points + subAnswers[k].points;
                 }
-                
-                for (var k = 0; k<subAnswers.length; k++) {
+
+                for (var k = 0; k < subAnswers.length; k++) {
                     if (subAnswers[k].points < 0) {
                         subAnswers[k].points = 0;
-                        
+
                     }
                 }
-                
+
                 if (totalSubAnswerPoints <= 0) {
-                    for (var k = 0; k<subAnswers.length; k++) {
+                    for (var k = 0; k < subAnswers.length; k++) {
                         subAnswers[k].points = 0;
                     }
                 }
             }
-            
+
             // Rank type
-            else if(type === 'rank') {
+            else if (type === 'rank') {
                 var subAnswers = submittedExam.answers[i];
                 for (var j = 0; j < subAnswers.length; j++) {
-                    if(!subAnswers[j].corrected) {
+                    if (!subAnswers[j].corrected) {
                         // Set the student's answer as corrected
                         subAnswers[j].corrected = true;
-                        if(subAnswers[j].text === question[i].answerOptions[j].text) {
+                        if (subAnswers[j].text === question[i].answerOptions[j].text) {
                             subAnswers[j].correct = true;
-                            subAnswers[j].points = (question[i].points/question[i].answerOptions.length);
+                            subAnswers[j].points = (question[i].points / question[i].answerOptions.length);
                             submittedExam.points += subAnswers[j].points;
                         } else {
                             subAnswers[j].correct = false;
@@ -199,47 +199,52 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                     }
                 }
             }
-                
+
             // Text type
             else if (type === 'text') {
                 var subAnswers = submittedExam.answers[i];
-                if (subAnswers[0].corrected  && subAnswers[0].correct) {
+                if (subAnswers[0].corrected && subAnswers[0].correct) {
                     subAnswers[0].points = question[i].points;
                     submittedExam.points += subAnswers[0].points;
                 }
             }
-            if(submittedExam.points < 0) {
+            if (submittedExam.points < 0) {
                 submittedExam.points = 0;
             }
         }
-/*
+
         // Check if all answers are corrected
         var numAnswers = submittedExam.answers.length;
         var numSubCorrected = 0;
         var numTotCorrected = 0;
         submittedExam.answers.forEach(function (answer) {
             var subAnswers = answer;
-            subAnswer.forEach(function(sub) {
-               if(sub.corrected){numSubCorrected++;}
-                if(numSubCorrected === subAnswer.length) {numTotCorrected++;}
+            subAnswers.forEach(function (sub) {
+                if (sub.corrected) {
+                    numSubCorrected++;
+                }
+                if (numSubCorrected === subAnswers.length) {
+                    numTotCorrected++;
+                }
             });
         });
-*/
-        if (submittedExam.completeCorrection) {
-            // submittedExam.completeCorrection = true;
 
-            //submittedExam.points = totalPoints;
-            if ((submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[0]) {
-                submittedExam.grade = "IG";
-            } else if ((submittedExam.points/maxPoints)*100 >= orgExam.gradePercentage[0] && (submittedExam.points/maxPoints)*100 < orgExam.gradePercentage[1]) {
-                submittedExam.grade = "G";
-            } else {
-                submittedExam.grade = "VG";
-            }
-            submittedExam.points = Math.round(submittedExam.points*2)/2;
-            SendMail.sendCorrected(submittedExam);
+        if (numAnswers === numTotCorrected) {
         }
-
+        console.log('Maxpoints');
+        submittedExam.completeCorrection = true;
+        // submittedExam.points = totalPoints;
+        if ((submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[0]) {
+            submittedExam.grade = "IG";
+        } else if ((submittedExam.points / maxPoints) * 100 >= orgExam.gradePercentage[0] && (submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[1]) {
+            submittedExam.grade = "G";
+        } else {
+            submittedExam.grade = "VG";
+        }
+        submittedExam.points = Math.round(submittedExam.points * 2) / 2;
+        SendMail.sendCorrected(submittedExam);
     }
+
+    
     callback(submittedExam);
 };
