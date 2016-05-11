@@ -93,6 +93,11 @@ myApp.config(function ($routeProvider) {
             controller: 'correctionCtrl'
         })
 
+        .when('/result', {
+            templateUrl: 'partials/result.html',
+            controller: 'resultCtrl'
+        })
+
         .otherwise({
             redirectTo: '/login'
         });

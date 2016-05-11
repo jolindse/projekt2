@@ -8,15 +8,13 @@ myApp.controller('doExamCtrl',
         'ExamManager',
         'SubmittedManager',
         'QuestionManager',
-        'APIBASEURL',
-        '$http',
+        '$location',
         function ($scope,
                   userService,
                   ExamManager,
                   SubmittedManager,
                   QuestionManager,
-                  APIBASEURL,
-                  $http) {
+                  $location) {
 
             /*
              FUNCTIONS
@@ -71,7 +69,6 @@ myApp.controller('doExamCtrl',
                     } else {
                         $scope.currSubmitted.answers[index] = ([{"text": ""}]);
                     }
-                    console.log('Added question: '+JSON.stringify($scope.questions[index],null,2)); // TEST
                     if (waiting === 0) {
                         callback();
                     }
@@ -175,7 +172,9 @@ myApp.controller('doExamCtrl',
              */
             $scope.submitExam = function () {
                 SubmittedManager.addSubmitted($scope.currSubmitted, function (data) {
-                    console.log(JSON.stringify(data, null, 2));
+                    userService.setResults(data._id);
+
+                    $location.path('/result');
                 });
             };
 
