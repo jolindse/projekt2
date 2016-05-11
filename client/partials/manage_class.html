@@ -67,11 +67,6 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4"></div>
-        </div>
         <div class="modal fade" id="createStudentModal" role="dialog">
             <div class="modal-dialog">
             <div class="modal-content">
@@ -169,7 +164,7 @@
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li ng-repeat="class in studentClasses" ng-click="loadClass(studentClasses[$index])"><a>{{class.name}}</a></li>
+                                                <li id="classDropdownItem" ng-repeat="class in studentClasses" ng-click="loadClass(studentClasses[$index])"><a href="#">{{class.name}}</a></li>
                                                 <li class="divider"></li>
                                             </ul>
                                         </div>

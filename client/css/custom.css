@@ -20,6 +20,12 @@ body, html {
 .table-checkbox {
 
 }
+#createStudentModal{
+    overflow: visible;
+}
+#createStudentModal.modal-body{
+    overflow-y: auto;
+}
 /* END OF SHARE TEST MODAL */
 
 .clickable-row{ /*in a table*/
