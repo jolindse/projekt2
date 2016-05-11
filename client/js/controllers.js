@@ -138,6 +138,9 @@ myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, Su
     $scope.user = null;
     $scope.selectedTest = null;
     $scope.testResults = [];
+    $scope.resultQuestions = [];
+    $scope.resultAnswers = [];
+
 
     //Get current student:
     UserManager.getUser(userService.id, function (data) {
@@ -168,18 +171,8 @@ myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, Su
         submittedtests.forEach(function (submittedTest) {
            // if (submittedTest.completeCorrection == true) {
                 ExamManager.getExam(submittedTest.exam, function (exam) {
-                    var maxPoints = 0;
-                    console.log(exam);
-                    exam.questions.forEach(function (question) {
-                        QuestionManager.getQuestion(question, function (questionObj) {
-                            maxPoints += questionObj.points;
-                            console.log(maxPoints);
-                        });
-
-                    });
                     $scope.testResults.push({
                         exam: exam,
-                        maxpoints: maxPoints,
                         submittedtest: submittedTest
                     })
                 });
@@ -198,12 +191,44 @@ myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, Su
         UserManager.setUser($scope.user);
         $location.path("/doexam");
     };
+
+    $scope.showResults = function (testResult) {
+        console.log(testResult);
+        testResult.exam.questions.forEach(function (question) {
+            QuestionManager.getQuestion(question, function (questionObj) {
+                $scope.resultQuestions.push(questionObj);
+            })
+        });
+        $scope.resultAnswers = testResult.submittedtest.answers;
+
+        $scope.resultAnswers.forEach(function (answer) {
+            console.log(answer[0].points);
+        });
+
+        console.log("frågor: " + $scope.resultQuestions);
+        console.log("svar: " + $scope.resultAnswers);
+
+
+    }
 });
 
 /**
  * ADMIN-CONTROLLER:
  */
-myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter, $http, $scope, SubmittedManager, StudentClassManager, UserManager, ExamManager, userService) {
+myApp.controller('adminCtrl', function
+    (
+        APIBASEURL,
+        $route,
+        $timeout,
+        $location,
+        $filter, $http,
+        $scope, SubmittedManager,
+        StudentClassManager,
+        UserManager,
+        ExamManager,
+        userService
+    )
+{
     userService.updateNavbar();
 
     //Current user:
@@ -423,6 +448,14 @@ myApp.controller('adminCtrl', function (APIBASEURL, $timeout, $location, $filter
         $timeout(function(){
             userService.editTest($scope.selectedTest._id);
         }, 50);
+    };
+
+    $scope.deleteExam = function () {
+        ExamManager.deleteExam($scope.selectedTest._id);
+        ExamManager.getAllExams(function (test) {
+            $scope.tests = test;
+            $route.reload();
+        });
     }
 
 });
