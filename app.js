@@ -467,9 +467,10 @@ app.post('/api/submitted', function (req, res) {
     var currSubmitted = req.body;
     Submitted.addSubmitted(currSubmitted, function (err, currSubmitted) {
         if (err) {
-            console.log(err);
+            console.log('fel i addSubmitted');
             res.status(404);
         } else {
+            console.log(currSubmitted._id);
             correction.getSubmittedAndCorrectAnswers(currSubmitted._id, function(question, subExam, orgExam) {
                 correction.autoCorrect(question, subExam, orgExam, function(submittedExam) {
                     Submitted.updateSubmitted(submittedExam._id, submittedExam, function(err, submitted) {

@@ -20,7 +20,7 @@ module.exports.setExamCorrected = function(id, callback) {
         {_id: id},
         function(err, exam) {
             if(err) {
-                console.log('setExamCorrected ' + err);
+                console.log('setExamCorrected error');
             } else {
                 var correctedArray = [];
                 var corrected = 0;
@@ -74,7 +74,7 @@ module.exports.getSubmittedAndCorrectAnswers = function(id, callback) {
     // Fetch the submitted exam
     SubmittedExam.getSubmitted(id, function(err, submittedExam) {
         if (err) {console.log('getSubmitted ' + id);
-        console.log(id);}
+        }
         else {
             if(!submittedExam.points) {submittedExam.points = 0;}
             subExam = submittedExam.exam;
