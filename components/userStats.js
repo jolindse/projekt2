@@ -9,6 +9,9 @@ var SubmittedExam = require('../models/SubmittedExam');
 var Question = require('../models/Question');
 var moment = require('moment');
 
+/*
+    Genererar statistik på elev-nivå
+ */
 module.exports.userStats = function(req, callback) {
     var totalQuestions;
     var gQuestions = 0;
@@ -32,11 +35,13 @@ module.exports.userStats = function(req, callback) {
     
     returnObject.user = req.params.id;
     
+    // Hämtar alla prov eleven har lämnat in
     SubmittedExam.getByStudent(req.params.id, function(err, subExams) {
         if(err){error(err, callback, returnObject);}
         else {
             returnObject.numExams = subExams.length;
             subExams.forEach(function (subExam) {
+                // Kontrollerar betygen på proven
                 if (subExam.grade === 'IG') {
                     returnObject.numIGExams++;
                 }
@@ -54,6 +59,7 @@ module.exports.userStats = function(req, callback) {
         }
     });
     
+    // Kollar alla privtider
     function getExamTime(subExams) {
         subExams.forEach(function(subExam) {
             var startTime = moment(subExam.startTime).unix();

@@ -8,14 +8,16 @@ var SubmittedExam = require('../models/SubmittedExam');
 var Question = require('../models/Question');
 var moment = require('moment');
 
-
+/*
+    Genererar statistik på klass-nivå
+ */
 module.exports.classStats = function(req, callback) {
-    var schoolClassId;
     var submittedArray = [];
     var studentArray = [];
     var returnObject = {
         success: false,
         error: '',
+        class: 0,
         numStudents: 0,
         numExams: 0,
         numIGExams: 0,
@@ -27,7 +29,10 @@ module.exports.classStats = function(req, callback) {
         examTime: [],
         avgExamTime: []
     };
-
+    
+    returnObject.class = req.params.id;
+    
+    // Hämtar klassen
     Class.getClass(req.params.id, function(err, schoolClass) {
         if(err){error(err, callback, returnObject);}
         else{
@@ -37,12 +42,15 @@ module.exports.classStats = function(req, callback) {
                 studentArray.push(schoolClass.students[i]);
             }
             for(var i = 0; i<studentArray.length; i++) {
+                // Hämtar inlämnade prov från varje elev i klassen
                 SubmittedExam.getByStudent(studentArray[i], function(err, submitted) {
                     if(err){error(err, callback, returnObject);}
                     else {
+                        // Om alla prov är hämtade kolla provtider
                         if (submittedArray.length === returnObject.numStudents) {
                             getExamTimes(submittedArray);
                         } else {
+                            // Kontrollerar betyget på proven
                             for (var j = 0; j < submitted.length; j++) {
                                 submittedArray.push(submitted[j]);
                                 returnObject.numExams++;
@@ -52,6 +60,7 @@ module.exports.classStats = function(req, callback) {
                                     returnObject.percentageGExams = (returnObject.numGExams/returnObject.numExams)*100;}
                                 else if(submitted[j].grade === 'VG'){returnObject.numVGExams++;
                                     returnObject.percentageVGExams = (returnObject.numVGExams/returnObject.numExams)*100;}
+                                // Om inte alla elever i klassen har skrivit alla prov så lägg in en tom sträng
                                 if (submitted.length<returnObject.numStudents) {
                                     submittedArray.push('');
                                 }
@@ -63,6 +72,9 @@ module.exports.classStats = function(req, callback) {
         }
     });
    
+    /*
+        Kontrollerar provtider
+     */
     function getExamTimes(submittedArray) {
         var totalTimeMinutes = 0;
         submittedArray.forEach(function(submittedExam) {

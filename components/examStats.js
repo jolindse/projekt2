@@ -9,6 +9,9 @@ var SubmittedExam = require('../models/SubmittedExam');
 var Question = require('../models/Question');
 var moment = require('moment');
 
+/*
+    Genererar statistik på provnivå
+ */
 module.exports.examStats = function(req, callback) {
     var gQuestions = 0;
     var gQuestionsPartial = 0;
@@ -18,6 +21,7 @@ module.exports.examStats = function(req, callback) {
     var returnObject = {
         success: false,
         error: '',
+        exam: 0,
         numStudents: 0,
         numNoResults: 0,
         numIGResults: 0,
@@ -38,13 +42,20 @@ module.exports.examStats = function(req, callback) {
         examTime: [],
         avgExamTime: []
     };
+    
+    returnObject.exam = req.params.id;
+    
+    // Hämtar provet
     Exam.findById(req.params.id, function(err, exam) {
         if(err) {error(err, callback, returnObject);}
         else {
+            // Hämtar alla prov som lämnats in
             SubmittedExam.getByExam(exam._id, function(err, subExams) {
                 if(err){error(err, callback, returnObject);}
                 else {
                     returnObject.numStudents = subExams.length;
+                    
+                    // Kollar graderingen på de inlämnade proven
                     subExams.forEach(function(subExam) {
                         if(subExam.grade === 'IG') {returnObject.numIGResults++;
                         returnObject.percentageIGResults = (returnObject.numIGResults/returnObject.numStudents)*100;}
@@ -52,6 +63,8 @@ module.exports.examStats = function(req, callback) {
                         returnObject.percentageGResults = (returnObject.numGResults/returnObject.numStudents)*100;}
                         else if(subExam.grade === 'VG') {returnObject.numVGResults++;
                         returnObject.percentageVGResults = (returnObject.numVGResults/returnObject.numStudents)*100;}
+                            
+                        // Om inte provet är helt rättat
                         else if(!subExam.grade) {returnObject.numNoResults++;
                         returnObject.percentageNoResults = (returnObject.numNoResults/returnObject.numStudents)*100;}
                     });
@@ -61,12 +74,16 @@ module.exports.examStats = function(req, callback) {
         }
     });
     
+    /*
+        Hämtar frågorna som hör till provet
+     */
     function getQuestions(subExams, exam, callback, returnObject) {
         subExams.forEach(function(subExam) {
             exam.questions.forEach(function(question){
                 Question.getQuestion(question, function(err, currQuestion) {
                     if(err){error(err, callback, returnObject);}
                     else {
+                        // Om arrayen innehåller alla frågor så kontrollera svaren
                         if(questionsArray.indexOf(currQuestion)<0) {questionsArray.push(currQuestion);}
                         if(questionsArray.length === exam.questions.length) {checkAnswers(subExams);}
                     }     
@@ -75,6 +92,9 @@ module.exports.examStats = function(req, callback) {
         });
     }
 
+    /*
+        Kontrollerar elevernas svar   
+    */
     function checkAnswers(subExams) {
         subExams.forEach(function(subExam) {
            for (var i = 0; i<subExam.answers.length; i++) {
@@ -83,24 +103,37 @@ module.exports.examStats = function(req, callback) {
                for (var j = 0; j < subAnswers.length; j++) {
                    if(subAnswers[j].correct) {numSubAnswersCorrect++;}
                }
+               
+               // Har man svarat helt rätt och frågan är en G
                if(numSubAnswersCorrect === questionsArray[i].answerOptions.length && !questionsArray[i].vgQuestion) {
                    gQuestions++;
                    returnObject.numGQuestions++;
-               } else if(numSubAnswersCorrect < questionsArray[i].answerOptions.length && 
+               }
+               // Har man svarat delvis rätt och frågan är en G
+               else if(numSubAnswersCorrect < questionsArray[i].answerOptions.length && 
                    numSubAnswersCorrect > 0 && !questionsArray.vgQuestion) {
                    gQuestions++;
                    returnObject.numGQuestionsPartial++;
-               } else if(numSubAnswersCorrect === questionsArray[i].answerOptions.length && questionsArray[i].vgQuestion){
+               } 
+               // Har man svarat helt rätt och frågan är en VG
+               else if(numSubAnswersCorrect === questionsArray[i].answerOptions.length && questionsArray[i].vgQuestion){
                    vgQuestions++;
                    returnObject.numVGQuestions++;
-               } else if(numSubAnswersCorrect < questionsArray[i].answerOptions.length && 
+               }
+               // Har man svarat delvis rätt och frågan är en VG
+               else if(numSubAnswersCorrect < questionsArray[i].answerOptions.length && 
                     numSubAnswersCorrect > 0 && questionsArray[i].vgQuestion) {
                    vgQuestions++;
                    returnObject.numVGQuestionsPartial++;
-               } else {returnObject.numIGQuestions++;}
+               }
+               // Har man svarat helt fel
+               else {returnObject.numIGQuestions++;}
+               
                returnObject.percentageGQuestions = (returnObject.numGQuestions/gQuestions)*100;
                returnObject.percentageVGQuestions = (returnObject.numVGQuestions/vgQuestions)*100;
                returnObject.percentageIGQuestions = (returnObject.numIGQuestions/(gQuestions+vgQuestions))*100;
+               
+               // Om alla frågor är kontrollerade så kolla tiderna
                if(returnObject.numIGQuestions + returnObject.numGQuestions + returnObject.numVGQuestions +
                   returnObject.numGQuestionsPartial + returnObject.numVGQuestionsPartial === questionsArray.length) {
                    examTime(subExams, callback, returnObject);
@@ -109,6 +142,9 @@ module.exports.examStats = function(req, callback) {
         });
     }
     
+    /*
+        Räknar ut hur lång tid eleverna har tagit på sig för att skriva provet
+     */
     function examTime(subExams, callback, returnObject) {
         subExams.forEach(function(subExam) {
             var startTime = moment(subExam.startTime).unix();
