@@ -169,12 +169,30 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                             subAnswers[j].corrected = true;
                             subAnswers[j].correct = true;
                             subAnswers[j].points = (question[i].points / correctArray.length);
-                            submittedExam.points += subAnswers[j].points;
+                            //submittedExam.points += subAnswers[j].points;
                         } else {
                             subAnswers[j].corrected = true;
                             subAnswers[j].correct = false;
-                            subAnswers[j].points = 0;
+                            console.log(correctArray);
+                            subAnswers[j].points = 0 - (question[i].points / correctArray.length);
                         }
+                    }
+                }
+                var totalSubAnswerPoints = 0;
+                console.log('subAnswers: ' + subAnswers.length);
+                for (var k = 0; k<subAnswers.length; k++) {
+                    totalSubAnswerPoints += subAnswers[k].points;
+                    console.log('Efter '+(k+1)+'a svaret: ' + totalSubAnswerPoints);
+                }
+                
+                for (var k = 0; k<subAnswers.length; k++) {
+                    console.log(submittedExam.points);
+                    submittedExam.points = submittedExam.points + subAnswers[k].points;
+                }
+                
+                for (var k = 0; k<subAnswers.length; k++) {
+                    if (subAnswers[k].points < 0) {
+                        subAnswers[k].points = 0;
                     }
                 }
             }
@@ -204,6 +222,9 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                     subAnswers[0].points = question[i].points;
                     submittedExam.points += subAnswers[0].points;
                 }
+            }
+            if(submittedExam.points < 0) {
+                submittedExam.points = 0;
             }
         }
 /*
