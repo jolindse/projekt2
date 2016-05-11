@@ -1,46 +1,49 @@
 <article class="container">
     <div class="jumbotron">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
+            <div>
                 <h2>Klasser</h2>
             </div>
-            <div class="col-md-2 text-right">
-                <button class="btn btn-success btn-sm" id="newClassModal" data-toggle="modal" data-target="#createClassModal" ><span
+            <div class="text-right">
+                <button class="btn btn-success btn-sm" id="newClassModal" data-toggle="modal" ng-click="resetSchoolClass()" data-target="#createClassModal" ><span
                         class="glyphicon glyphicon-plus"></span></button>
                 <button class="btn btn-danger btn-sm" id="deleteClassBut" ng-click="deleteClassBut()"><span
                         class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-warning" id="editClassBut" ng-show="editClassBut" data-toggle="modal" data-target="#createClassModal">Redigera klass</button>
             </div>
-            <div class="col-md-6">
-                <h2>Användare</h2>
-            </div>
-            <div class="col-md-2 text-right">
-                <button class="btn btn-success btn-sm" id="newStudentModal" data-toggle="modal" data-target="#createStudentModal"><span
-                        class="glyphicon glyphicon-plus"></span></button>
-                <button class="btn btn-danger btn-sm" id="deleteUserBut" ng-click="deleteUserBut()"><span
-                        class="glyphicon glyphicon-remove"></span></button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
+            <div>
                 <div class="panel panel-default">
                     <table class="table">
                         <thead class="thead">
-                            <tr>
-                                <th>Skolklasser</th>
-                            </tr>
+                        <tr>
+                            <th>Skolklasser</th>
+                        </tr>
                         </thead>
                         <tbody ng-repeat="class in studentClasses">
-                            <tr ng-class='{"selectedRow":class === studentClass}' ng-click="loadClass((class),$index)" class="clickable-row">
-                                <td>{{class.name}}</td>
-                            </tr>
+                        <tr ng-class='{"selectedRow":class === studentClass}' ng-click="loadClass((class),$index)" class="clickable-row">
+                            <td>{{class.name}}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+            </div>
             <div class="col-md-8">
-                <div class="panel panel-default">
-                    <table class="table">
-                        <thead class="thead">
+            <div>
+                <h2>Användare</h2>
+            </div>
+            <div class="text-right">
+                <button class="btn btn-success btn-sm" id="newStudentModal" data-toggle="modal" ng-click="resetUser()" data-target="#createStudentModal"><span
+                        class="glyphicon glyphicon-plus"></span></button>
+                <button class="btn btn-danger btn-sm" id="deleteUserBut" ng-click="deleteUserBut()"><span
+                        class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="btn btn-warning" id="editUserBut" ng-show="editUserBut" data-toggle="modal" data-target="#createStudentModal">Redigera användare</button>
+            </div>
+                <div>
+                    <div class="panel panel-default">
+                        <table class="table">
+                            <thead class="thead">
                             <tr>
                                 <th>Behörighet</th>
                                 <th>Personnummer</th>
@@ -49,8 +52,8 @@
                                 <th>Email</th>
                                 <th>Klass</th>
                             </tr>
-                        </thead>
-                        <tbody ng-repeat="user in users | filter:studentClass.name: true">
+                            </thead>
+                            <tbody ng-repeat="user in users | filter:studentClass.name: true">
                             <tr ng-class='{"selectedRow":user === userCon}' ng-click="loadUser((user), $index)" class="clickable-row">
                                 <td>
                                     <div ng-if="user.admin == true">Admin</div>
@@ -62,9 +65,11 @@
                                 <td>{{user.email}}</td>
                                 <td>{{user.className}}</td>
                             </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
             </div>
         </div>
         <div class="modal fade" id="createStudentModal" role="dialog">
@@ -108,16 +113,6 @@
                                         <input type="password" name="password" ng-model="userCon.password">
                                     </td>
                                 </tr>
-                                <!--<tr>-->
-                                    <!--<td>-->
-                                        <!--<strong>-->
-                                            <!--Bekräfta lösenord:-->
-                                        <!--</strong>-->
-                                    <!--</td>-->
-                                    <!--<td>-->
-                                        <!--<input type="password" name="password" ng-model="user.password">-->
-                                    <!--</td>-->
-                                <!--</tr>-->
                                 <tr>
                                     <td>
                                         <strong>
@@ -147,7 +142,6 @@
                                     <td class="text-primary">
                                         <label class="radio-inline"><input type="radio" name="authority" ng-model="userCon.admin" ng-value="true">Admin</label>
                                         <label class="radio-inline"><input type="radio" name="authority" ng-model="userCon.admin" ng-value="false">Elev</label>
-                                        <!--<input type="text" name="authority" ng-model="userCon.admin">-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -159,12 +153,13 @@
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                Välj klass
+                                                <!--<input id="dropDownClassName" ng-model="studentClass.name" readonly>-->
+
                                                 <span class="caret"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li id="classDropdownItem" ng-repeat="class in studentClasses" ng-click="loadClass(studentClasses[$index])"><a>{{class.name}}</a></li>
+                                                <li id="classDropdownItem" ng-repeat="class in studentClasses" ng-click="loadClass(class)"><a>{{class.name}}</a></li>
                                                 <li class="divider"></li>
                                             </ul>
                                         </div>
@@ -190,7 +185,7 @@
                 <div class="modal-body">
             <div class="input-group">
                 <span class="input-group-addon" id="foreName">Klassnamn</span>
-                <input class="form-control" aria-describedby="foreName" type="text" ng-model="class.name" >
+                <input class="form-control" aria-describedby="foreName" type="text" ng-model="studentClass.name" >
             </div>
                 </div>
                 <div class="modal-footer">

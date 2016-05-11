@@ -45,10 +45,12 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
     $scope.loadUser = function (currUser, index) {
         if($scope.userCon === currUser){
             $scope.userCon = "";
+            $scope.editUserBut = false;
         }else {
             console.log("laddat user" + currUser._id);
             $scope.userCon = currUser;
             $scope.selectedUser = index;
+            $scope.editUserBut = true;
             console.log($scope.userCon._id);
         }
     };
@@ -56,11 +58,13 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
     $scope.loadClass = function (currClass, index) {
         if($scope.studentClass === currClass){
             $scope.studentClass = "";
+            $scope.editClassBut = false;
         }
         else{
         console.log("laddat klass"+ currClass._id);
             $scope.studentClass = currClass;
             $scope.selectedRow = index;
+            $scope.editClassBut = true;
         console.log($scope.studentClass._id);
         }
     };
@@ -80,6 +84,7 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             $scope.getAllUsers();
             console.log("callback");
         });
+        $scope.getAllUsers();
         console.log("Uppdaterat listan efter delete")
     };
     
@@ -89,43 +94,53 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
                 UserManager.addUser($scope.userCon, function (data) {
                     console.log("Adding a user");
                     $scope.userCon = data;
-                    if($scope.studentClass !== undefined){
-                    StudentClassManager.setStudentClass($scope.studentClass, function (data) {
-                        $scope.studentClass = data;
-                        $scope.getAllUsers();
-                    });
-                    $scope.addStudentToClass();
-                    }
+                     if($scope.studentClass !== undefined) {
+                         StudentClassManager.setStudentClass($scope.studentClass, function (data) {
+                             $scope.studentClass = data;
+                         });
+                         $scope.addStudentToClass($scope.userCon._id);
+                     }
                 });
             }else{
-                $scope.addStudentToClass();
                 console.log("setting a user111" + $scope.userCon);
+                $scope.addStudentToClass($scope.userCon._id);
                 UserManager.setUser($scope.userCon, function (data) {
-                    console.log("setting a user222");
                     $scope.userCon = data;
                     StudentClassManager.setStudentClass($scope.studentClass, function (data) {
+                        console.log("setting student class");
                         $scope.studentClass = data;
-                        $scope.getAllUsers();
                     });
                 });
             };
+        $scope.getAllStudentClasses();
         $scope.getAllUsers();
     };
-    
-    $scope.addStudentToClass = function () {
-        $scope.studentClass.students.push($scope.userCon._id);
-    };
-    
+
     $scope.saveSchoolClass = function () {
-        StudentClassManager.addStudentClass($scope.class, function (data) {
-            $scope.class = data;
-            $scope.getAllStudentClasses();
-        })
-        $scope.resetSchoolClass();
+        if($scope.studentClass._id === undefined){
+            StudentClassManager.addStudentClass($scope.studentClass, function (data) {
+                $scope.studentClass = data;
+                $scope.getAllStudentClasses();
+            });
+        }else{
+            StudentClassManager.setStudentClass($scope.studentClass, function (data) {
+                $scope.studentClass = data;
+                $scope.getAllStudentClasses();
+            })
+        }
+    };
+
+    $scope.addStudentToClass = function (data) {
+        $scope.studentClass.students.push(data);
+    };
+
+    $scope.setStudentToClass = function (currClass) {
+        console.log(currClass);
+        $scope.studentClass = currClass;
     };
 
     $scope.resetSchoolClass = function () {
-        $scope.class = "";
+        $scope.studentClass = "";
     };
 
     $scope.resetUser = function () {

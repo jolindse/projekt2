@@ -20,14 +20,20 @@ body, html {
 .table-checkbox {
 
 }
+/* END OF SHARE TEST MODAL */
+
+/* SHARE createStudent MODAL */
 #createStudentModal{
     overflow: visible;
 }
 #createStudentModal.modal-body{
     overflow-y: auto;
 }
-/* END OF SHARE TEST MODAL */
-
+#dropDownClassName{
+    outline: none;
+    border: none;
+}
+/* END OF createStudent MODAL */
 .clickable-row{ /*in a table*/
     cursor: pointer;
 }
