@@ -131,7 +131,7 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
 /**
  * STUDENT-CONTROLLER:
  */
-myApp.controller('studentCtrl', function ($location, $scope, SubmittedManager, UserManager, ExamManager, userService) {
+myApp.controller('studentCtrl', function ($location, $scope, QuestionManager, SubmittedManager, UserManager, ExamManager, userService) {
     //Update navbar:
     userService.updateNavbar();
 
@@ -166,14 +166,24 @@ myApp.controller('studentCtrl', function ($location, $scope, SubmittedManager, U
 
     SubmittedManager.getSubmittedBy(userService.id, function (submittedtests) {
         submittedtests.forEach(function (submittedTest) {
-            if (submittedTest.completeCorrection == true) {
+           // if (submittedTest.completeCorrection == true) {
                 ExamManager.getExam(submittedTest.exam, function (exam) {
+                    var maxPoints = 0;
+                    console.log(exam);
+                    exam.questions.forEach(function (question) {
+                        QuestionManager.getQuestion(question, function (questionObj) {
+                            maxPoints += questionObj.points;
+                            console.log(maxPoints);
+                        });
+
+                    });
                     $scope.testResults.push({
                         exam: exam,
+                        maxpoints: maxPoints,
                         submittedtest: submittedTest
                     })
-                })
-            }
+                });
+            //}
         })
     });
 
