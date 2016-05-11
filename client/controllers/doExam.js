@@ -58,11 +58,6 @@ myApp.controller('doExamCtrl',
                     QuestionManager.getQuestion(currEQ, function (currQ) {
                         //$scope.questions.push(currQ);
                         var index = $scope.currExam.questions.indexOf(currQ._id);
-                        if (currQ.type === 'rank') {
-                            $scope.setupRanking(index);
-                        } else {
-                            $scope.currSubmitted.answers[index] = ([{"text": ""}]);
-                        }
                         finish(currQ, index);
                     });
                 });
@@ -70,6 +65,13 @@ myApp.controller('doExamCtrl',
                 function finish(question, index) {
                     waiting--;
                     $scope.questions[index] = question;
+                    if ($scope.questions[index].type === 'rank') {
+                        console.log('Rank question index: '+index); // TEST
+                        $scope.setupRanking(index);
+                    } else {
+                        $scope.currSubmitted.answers[index] = ([{"text": ""}]);
+                    }
+                    console.log('Added question: '+JSON.stringify($scope.questions[index],null,2)); // TEST
                     if (waiting === 0) {
                         callback();
                     }
