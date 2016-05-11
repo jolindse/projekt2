@@ -173,7 +173,6 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                         } else {
                             subAnswers[j].corrected = true;
                             subAnswers[j].correct = false;
-                            console.log(correctArray);
                             subAnswers[j].points = 0 - (question[i].points / correctArray.length);
                         }
                     }
@@ -182,16 +181,21 @@ module.exports.autoCorrect = function(question, submittedExam, orgExam, callback
                 console.log('subAnswers: ' + subAnswers.length);
                 for (var k = 0; k<subAnswers.length; k++) {
                     totalSubAnswerPoints += subAnswers[k].points;
-                    console.log('Efter '+(k+1)+'a svaret: ' + totalSubAnswerPoints);
                 }
                 
                 for (var k = 0; k<subAnswers.length; k++) {
-                    console.log(submittedExam.points);
                     submittedExam.points = submittedExam.points + subAnswers[k].points;
                 }
                 
                 for (var k = 0; k<subAnswers.length; k++) {
                     if (subAnswers[k].points < 0) {
+                        subAnswers[k].points = 0;
+                        
+                    }
+                }
+                
+                if (totalSubAnswerPoints <= 0) {
+                    for (var k = 0; k<subAnswers.length; k++) {
                         subAnswers[k].points = 0;
                     }
                 }
