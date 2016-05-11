@@ -18,7 +18,6 @@ module.exports.examStats = function(req, callback) {
     var returnObject = {
         success: false,
         error: '',
-        exam: 0,
         numStudents: 0,
         numNoResults: 0,
         numIGResults: 0,
