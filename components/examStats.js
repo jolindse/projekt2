@@ -11,101 +11,102 @@ var moment = require('moment');
 
 module.exports.examStats = function(req, callback) {
     var gQuestions = 0;
+    var gQuestionsPartial = 0;
     var vgQuestions = 0;
+    var vgQuestionsPartial = 0;
     var questionsArray = [];
     var returnObject = {
         success: false,
         error: '',
         exam: 0,
         numStudents: 0,
+        numNoResults: 0,
         numIGResults: 0,
         numGResults: 0,
         numVGResults: 0,
+        percentageNoResults: 0,
         percentageIGResults: 0,
         percentageGResults: 0,
         percentageVGResults: 0,
         numIGQuestions: 0,
         numGQuestions: 0,
+        numGQuestionsPartial: 0,
         numVGQuestions: 0,
+        numVGQuestionsPartial: 0,
+        percentageIGQuestions: 0,
         percentageGQuestions: 0,
         percentageVGQuestions: 0,
         examTime: [],
         avgExamTime: []
     };
-    Exam.findById(req.params.id, function (err, exam) {
-        if (err) {
-            error(err, callback, returnObject);
-        }
+    Exam.findById(req.params.id, function(err, exam) {
+        if(err) {error(err, callback, returnObject);}
         else {
-            SubmittedExam.getByExam(exam._id, function (err, subExams) {
-                if (err) {
-                    error(err, callback, returnObject);
-                }
+            SubmittedExam.getByExam(exam._id, function(err, subExams) {
+                if(err){error(err, callback, returnObject);}
                 else {
-                    returnObject.exam = exam._id;
                     returnObject.numStudents = subExams.length;
-                    subExams.forEach(function (sub) {
-                        
-                            if (sub.grade === 'IG') {
-                                returnObject.numIGResults++;
-                                returnObject.percentageIGResults = (returnObject.numIGResults / returnObject.numStudents) * 100;
-                            } else if (sub.grade === 'G') {
-                                returnObject.numGResults++;
-                                returnObject.percentageGResults = (returnObject.numGResults / returnObject.numStudents) * 100;
-                            } else if (sub.grade === 'VG') {
-                                returnObject.numVGResults++;
-                                returnObject.percentageVGResults = (returnObject.numVGResults / returnObject.numStudents) * 100;
-                            }
+                    subExams.forEach(function(subExam) {
+                        if(subExam.grade === 'IG') {returnObject.numIGResults++;
+                        returnObject.percentageIGResults = (returnObject.numIGResults/returnObject.numStudents)*100;}
+                        else if(subExam.grade === 'G') {returnObject.numGResults++;
+                        returnObject.percentageGResults = (returnObject.numGResults/returnObject.numStudents)*100;}
+                        else if(subExam.grade === 'VG') {returnObject.numVGResults++;
+                        returnObject.percentageVGResults = (returnObject.numVGResults/returnObject.numStudents)*100;}
+                        else if(!subExam.grade) {returnObject.numNoResults++;
+                        returnObject.percentageNoResults = (returnObject.numNoResults/returnObject.numStudents)*100;}
                     });
-                    getQuestions(subExams, callback, returnObject);
+                    getQuestions(subExams, exam, callback, returnObject);
                 }
             });
         }
     });
-
-    function getQuestions(subExams, callback, returnObject) {
-        subExams.forEach(function(subExam) {
-           Exam.getExam(subExam.exam, function(err, exam) {
-               if(err){error(err, callback, returnObject);}
-               else {
-                    exam.questions.forEach(function(question) {
-                        Question.getQuestion(question, function(err, q) {
-                            if(err){error(err, callback, returnObject);}
-                            else {
-                                if (questionsArray.indexOf(question) < 0) {
-                                    questionsArray.push(q)
-                                }
-                                if (questionsArray.length === exam.questions.length) {
-                                    checkAnswers(subExams);
-                                }
-                            }
-                        });
-                    });
-               }
-           });
-       });
-    }
     
+    function getQuestions(subExams, exam, callback, returnObject) {
+        subExams.forEach(function(subExam) {
+            exam.questions.forEach(function(question){
+                Question.getQuestion(question, function(err, currQuestion) {
+                    if(err){error(err, callback, returnObject);}
+                    else {
+                        if(questionsArray.indexOf(currQuestion)<0) {questionsArray.push(currQuestion);}
+                        if(questionsArray.length === exam.questions.length) {checkAnswers(subExams);}
+                    }     
+                }); 
+            });
+        });
+    }
+
     function checkAnswers(subExams) {
-        subExams.forEach(function(sub) {
-            for(var i = 0; i < sub.answers.length; i++) {
-                if (questionsArray[i].vgQuestion === false) {
-                    gQuestions++;
-                    if(sub.answers[i].correct === true) {
-                        returnObject.numGQuestions++;
-                        returnObject.percentageGQuestions = ((returnObject.numGQuestions*returnObject.numStudents) / (gQuestions*returnObject.numStudents))*100;
-                    } else {returnObject.numIGQuestions++;}
-                } else if(questionsArray[i].vgQuestion === true) {
-                    vgQuestions++;
-                    if(sub.answers[i].correct === true) {
-                        returnObject.numVGQuestions++;
-                        returnObject.percentageVGQuestions = ((returnObject.numVGQuestions*returnObject.numStudents) / (vgQuestions*returnObject.numStudents))*100;
-                    } else {returnObject.numIGQuestions++;}
-                }
-                if(returnObject.numIGQuestions + returnObject.numGQuestions + returnObject.numVGQuestions === questionsArray.length*returnObject.numStudents) {
-                    examTime(subExams, callback, returnObject);
-                }
-            }
+        subExams.forEach(function(subExam) {
+           for (var i = 0; i<subExam.answers.length; i++) {
+               var subAnswers = subExam.answers[i];
+               var numSubAnswersCorrect = 0;
+               for (var j = 0; j < subAnswers.length; j++) {
+                   if(subAnswers[j].correct) {numSubAnswersCorrect++;}
+               }
+               if(numSubAnswersCorrect === questionsArray[i].answerOptions.length && !questionsArray[i].vgQuestion) {
+                   gQuestions++;
+                   returnObject.numGQuestions++;
+               } else if(numSubAnswersCorrect < questionsArray[i].answerOptions.length && 
+                   numSubAnswersCorrect > 0 && !questionsArray.vgQuestion) {
+                   gQuestions++;
+                   returnObject.numGQuestionsPartial++;
+               } else if(numSubAnswersCorrect === questionsArray[i].answerOptions.length && questionsArray[i].vgQuestion){
+                   vgQuestions++;
+                   returnObject.numVGQuestions++;
+               } else if(numSubAnswersCorrect < questionsArray[i].answerOptions.length && 
+                    numSubAnswersCorrect > 0 && questionsArray[i].vgQuestion) {
+                   vgQuestions++;
+                   returnObject.numVGQuestionsPartial++;
+               } else {returnObject.numIGQuestions++;}
+               returnObject.percentageGQuestions = (returnObject.numGQuestions/gQuestions)*100;
+               returnObject.percentageVGQuestions = (returnObject.numVGQuestions/vgQuestions)*100;
+               returnObject.percentageIGQuestions = (returnObject.numIGQuestions/(gQuestions+vgQuestions))*100;
+               if(returnObject.numIGQuestions + returnObject.numGQuestions + returnObject.numVGQuestions +
+                  returnObject.numGQuestionsPartial + returnObject.numVGQuestionsPartial === questionsArray.length) {
+                   examTime(subExams, callback, returnObject);
+               }
+           }
         });
     }
     
