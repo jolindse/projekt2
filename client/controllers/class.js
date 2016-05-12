@@ -78,6 +78,7 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
         $scope.studentClass = "";
     };
 
+
     $scope.deleteUserBut = function () {
         console.log("ska deleta user" + $scope.userCon._id);
         UserManager.deleteUser($scope.userCon._id, function () {
@@ -85,32 +86,34 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
             console.log("callback");
         });
         $scope.getAllUsers();
+        $scope.userCon = "";
         console.log("Uppdaterat listan efter delete")
     };
     
     $scope.saveUser = function () {
          console.log(JSON.stringify($scope.userCon,null,2));
             if($scope.userCon._id === undefined) {
-                UserManager.addUser($scope.userCon, function (data) {
-                    console.log("Adding a user");
-                    $scope.userCon = data;
-                     if($scope.studentClass !== undefined) {
-                         StudentClassManager.setStudentClass($scope.studentClass, function (data) {
-                             $scope.studentClass = data;
-                         });
-                         $scope.addStudentToClass($scope.userCon._id);
-                     }
-                });
+                    UserManager.addUser($scope.userCon, function (data) {
+                        console.log("Adding a user");
+                        $scope.userCon = data;
+                        if ($scope.studentClass !== undefined) {
+                            StudentClassManager.setStudentClass($scope.studentClass, function (data) {
+                                $scope.studentClass = data;
+                            });
+                            $scope.addStudentToClass($scope.userCon._id);
+                        }
+                    });
             }else{
                 console.log("setting a user111" + $scope.userCon);
-                $scope.addStudentToClass($scope.userCon._id);
                 UserManager.setUser($scope.userCon, function (data) {
                     $scope.userCon = data;
-                    StudentClassManager.setStudentClass($scope.studentClass, function (data) {
-                        console.log("setting student class");
-                        $scope.studentClass = data;
-                    });
                 });
+                StudentClassManager.setStudentClass($scope.studentClass, function (data) {
+                    console.log("setting student class");
+                    $scope.studentClass = data;
+                    $scope.getAllUsers();
+                });
+                $scope.addStudentToClass($scope.userCon._id);
             };
         $scope.getAllStudentClasses();
         $scope.getAllUsers();
@@ -133,6 +136,10 @@ myApp.controller('classCtrl',['$scope', 'userService', 'StudentClassManager','Us
     $scope.addStudentToClass = function (data) {
         $scope.studentClass.students.push(data);
     };
+
+    // $scope.deleteStudentFromClass = function (data) {
+    //     $scope.studentClass.students.clearData(data);
+    // };
 
     $scope.setStudentToClass = function (currClass) {
         console.log(currClass);
