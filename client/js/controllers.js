@@ -160,7 +160,8 @@ myApp.controller('studentCtrl', function
         SubmittedManager,
         UserManager,
         ExamManager,
-        userService
+        userService,
+        $uibModal
     )
 {
     //Update navbar:
@@ -239,12 +240,15 @@ myApp.controller('studentCtrl', function
             QuestionManager.getQuestion(question, function (questionObj) {
                 $scope.resultQuestions.push(questionObj);
                 var correctAnswer = "";
+
                 questionObj.answerOptions.forEach(function (answerOption) {
                     if (answerOption.correct == true || questionObj.type == "rank"){
                         correctAnswer += answerOption.text + " ";
                     }
                 });
+
                 $scope.correctAnswers.push(correctAnswer);
+
             });
         });
 
@@ -257,10 +261,29 @@ myApp.controller('studentCtrl', function
                submittedAnswer += answer.text + " ";
                submittedPoints += answer.points;
            });
+
             $scope.resultAnswers.push(submittedAnswer);
             $scope.resultAnswersPoints.push(submittedPoints);
         });
-    }
+    };
+
+    /**
+     * Initializes question picking modal
+     */
+    $scope.showStats = function () {
+        var listModal = $uibModal.open({
+            animation: true,
+            templateUrl: 'modalviews/statisticsModal.html',
+            controller: 'statsCtrl',
+            size: 'lg',
+            resolve: {
+                statsParam: {
+                    type: 'user',
+                    id: $scope.user._id
+                }
+            }
+        });
+    };
 });
 
 /**
@@ -498,7 +521,6 @@ myApp.controller('adminCtrl', function
      * Initializes question picking modal
      */
     $scope.showStats = function (examId) {
-        console.log('VISA DIG '+examId); // TEST
         var listModal = $uibModal.open({
             animation: true,
             templateUrl: 'modalviews/statisticsModal.html',
