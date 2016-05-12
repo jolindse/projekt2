@@ -14,6 +14,8 @@ var SendMail = require('./sendMail');
  * @param callback
  */
 module.exports.setExamCorrected = function (id, callback) {
+    var grade = '';
+
     // Find the exam
     SubmittedExam.findOne(
         {_id: id},
@@ -35,22 +37,39 @@ module.exports.setExamCorrected = function (id, callback) {
                             correctedArray.push('false');
                         }
                     }
-
                 }
             }
+
             if (correctedArray.indexOf('false') < 0) {
                 console.log('complete correction');
-                SubmittedExam.findOneAndUpdate(
-                    {_id: id},
-                    {$set: {completeCorrection: true}},
-                    {new: true},
-                    callback
-                );
+                SubmittedExam.getSubmitted(id, function(err, subExam) {
+                   var exam = subExam.exam;
+                    console.log('subexam points: ' + exam.points);
+                    Exam.getExam(exam,function(err, exam) {
+                        var maxPoints = exam.maxPoints;
+                        console.log('Maxpoints: ' + maxPoints);
+                        if((subExam.points/maxPoints)*100 < exam.gradePercentage[0]) {
+                            grade = 'IG';
+                        } else if((subExam.points/maxPoints)*100 >= exam.gradePercentage[0] && (subExam.points/maxPoints)*100<exam.gradePercentage[1]) {
+                            grade = 'G';
+                        } else {
+                            grade = 'VG';
+                        }
+                        subExam.points = Math.round(subExam.points*2)/2;
+                        SendMail.sendCorrected(subExam);
+                        SubmittedExam.findOneAndUpdate(
+                            {_id: id},
+                            {$set: {completeCorrection: true,
+                                    grade: grade}},
+                            callback
+                        );
+                    });
+                });
+               
             } else {
                 SubmittedExam.findOneAndUpdate(
                     {_id: id},
                     {$set: {completeCorrection: false}},
-                    {new: true},
                     callback
                 );
             }
@@ -179,10 +198,11 @@ module.exports.getSubmittedAndCorrectAnswers = function (id, callback) {
                             }
                         }
                     }
-                    var pointsAwarded = ((numCorr-numFault)*pointsPerQ)/numCorr;
-                    var pointsRounded = Math.round(pointsAwarded*2)/2;
-                    corrAns.forEach(function(currIndex){
+                    var pointsAwarded = ((numCorr - numFault) * pointsPerQ) / numCorr;
+                    var pointsRounded = Math.round(pointsAwarded * 2) / 2;
+                    corrAns.forEach(function (currIndex) {
                         subAnswers[currIndex].points = pointsRounded;
+                        submittedExam.points += pointsRounded;
                     });
                 }
 
@@ -216,37 +236,6 @@ module.exports.getSubmittedAndCorrectAnswers = function (id, callback) {
                 if (submittedExam.points < 0) {
                     submittedExam.points = 0;
                 }
-            }
-
-            // Check if all answers are corrected
-            var numAnswers = submittedExam.answers.length;
-            var numSubCorrected = 0;
-            var numTotCorrected = 0;
-            submittedExam.answers.forEach(function (answer) {
-                var subAnswers = answer;
-                subAnswers.forEach(function (sub) {
-                    if (sub.corrected) {
-                        numSubCorrected++;
-                    }
-                    if (numSubCorrected === subAnswers.length) {
-                        numTotCorrected++;
-                    }
-                });
-            });
-
-            if (numAnswers === numTotCorrected) {
-                console.log('Maxpoints');
-                submittedExam.completeCorrection = true;
-                // submittedExam.points = totalPoints;
-                if ((submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[0]) {
-                    submittedExam.grade = "IG";
-                } else if ((submittedExam.points / maxPoints) * 100 >= orgExam.gradePercentage[0] && (submittedExam.points / maxPoints) * 100 < orgExam.gradePercentage[1]) {
-                    submittedExam.grade = "G";
-                } else {
-                    submittedExam.grade = "VG";
-                }
-                submittedExam.points = Math.round(submittedExam.points * 2) / 2;
-                SendMail.sendCorrected(submittedExam);
             }
         }
         callback(submittedExam);
