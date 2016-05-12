@@ -1,0 +1,291 @@
+<div class="modal-header text-right">
+	<span class="text-right closeCross" ng-click="cancel()">&times;</span>
+	<h2 class="modal-title text-left">
+		<span ng-show="statsList.type === 'user'">Användarstatistik</span>
+		<span ng-show="statsList.type === 'exam'">Provstatistik</span>
+		<span ng-show="statsList.type === 'class'">Klassstatistik</span>
+	</h2>
+</div>
+
+<!-- USER -->
+<div ng-show="statsList.type == 'user'" class="modal-body">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<p>Antal prov skrivna: <strong>{{stats.numExams}}</strong></p>
+		</div>
+	</div>
+	<!-- numExams -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med IG resultat</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med G resultat</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med VG resultat</strong></p>
+		</div>
+	</div>
+
+	<!-- nums -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.numIGExams}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numGExams}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numVGExams}}</p>
+		</div>
+	</div>
+
+	<!-- num % Exams -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med IG resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med G resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med VG resultat %</strong></p>
+		</div>
+	</div>
+
+	<!-- num % Percentage -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageIGExams}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageGExams}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageVGExams}} %</p>
+		</div>
+	</div>
+
+	<!-- Avg exam time -->
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<p>Genomsnittlig provtid för studenten: <strong>{{stats.avgExamTime[0].hours}}</strong> timmar och <strong>{{stats.avgExamTime[0].minutes}}</strong>
+				minuter</p>
+		</div>
+	</div>
+</div>
+
+<!-- CLASS -->
+<div ng-show="statsList.type == 'class'" class="modal-body">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<p>Antal prov skrivna av klassens {{stats.numStudents}} studenter: <strong>{{stats.numExams}}</strong></p>
+		</div>
+	</div>
+	<!-- numExams -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med IG resultat</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med G resultat</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med VG resultat</strong></p>
+		</div>
+	</div>
+
+	<!-- nums -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.numIGExams}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numGExams}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numVGExams}}</p>
+		</div>
+	</div>
+
+	<!-- num % Exams -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med IG resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med G resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med VG resultat %</strong></p>
+		</div>
+	</div>
+
+	<!-- num % Percentage -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageIGExams}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageGExams}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageVGExams}} %</p>
+		</div>
+	</div>
+
+	<!-- Avg exam time -->
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<p>Genomsnittlig provtid för klassen: <strong>{{stats.avgExamTime[0].hours}}</strong> timmar och <strong>{{stats.avgExamTime[0].minutes}}</strong>
+				minuter</p>
+		</div>
+	</div>
+</div>
+
+<!-- EXAM -->
+<div ng-show="statsList.type == 'exam'" class="modal-body">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<p>Antal studenter som skrivit provet: <strong>{{stats.numStudents}}</strong></p>
+		</div>
+	</div>
+	<!-- numExams -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med IG resultat</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med G resultat</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med VG resultat</strong></p>
+		</div>
+	</div>
+
+	<!-- nums -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.numIGResults}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numGResults}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numVGResults}}</p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<p>Antal ej färdigrättade prov: <strong>{{stats.numNoResults}}</strong></p>
+		</div>
+	</div>
+
+	<!-- num % Exams -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med IG resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med G resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Prov med VG resultat %</strong></p>
+		</div>
+	</div>
+
+	<!-- num % Percentage -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageIGExams}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageGExams}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageVGExams}} %</p>
+		</div>
+	</div>
+
+	<!-- num Q -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Antal frågor där svaret är helt fel</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Antal G frågor som delvis besvarats rätt</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Antal G frågor som besvarats rätt</strong></p>
+		</div>
+	</div>
+
+	<!-- Number of questions type -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.numIGQuestions}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numGQuestionsPartial}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numGQuestions}}</p>
+		</div>
+	</div>
+
+	<!-- Q types IG G -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Antal VG frågor som delvis besvarats rätt</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Antal VG frågor som besvarats rätt</strong></p>
+		</div>
+	</div>
+
+	<!-- Q tyoes VG -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.numVGQuestionsPartial}}</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.numVGQuestions}}</p>
+		</div>
+	</div>
+
+	<!-- % Questions answered -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p><strong>Frågor med IG resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Frågor med G resultat %</strong></p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p><strong>Frågor med VG resultat %</strong></p>
+		</div>
+	</div>
+
+	<!-- num % Percentage -->
+	<div class="row">
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageIGQuestions}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageGQuestions}} %</p>
+		</div>
+		<div class="col-md-4 text-right">
+			<p>{{stats.percentageVGQuestions}} %</p>
+		</div>
+	</div>
+
+	<!-- Avg exam time -->
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<p>Genomsnittlig provtid för klassen: <strong>{{stats.avgExamTime[0].hours}}</strong> timmar och <strong>{{stats.avgExamTime[0].minutes}}</strong>
+				minuter</p>
+		</div>
+	</div>
+</div>
+

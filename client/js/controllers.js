@@ -247,7 +247,8 @@ myApp.controller('adminCtrl', function
         StudentClassManager,
         UserManager,
         ExamManager,
-        userService
+        userService,
+        $uibModal
     )
 {
     userService.updateNavbar();
@@ -460,6 +461,26 @@ myApp.controller('adminCtrl', function
                     $scope.errorMessage = "Du har nu delat provet " + $scope.selectedTest.title + " men tyvärr har inget email skickats iväg, vänligen försök igen..";
                 });
         }
+
+    };
+
+    /**
+     * Initializes question picking modal
+     */
+    $scope.showStats = function (examId) {
+        console.log('VISA DIG '+examId); // TEST
+        var listModal = $uibModal.open({
+            animation: true,
+            templateUrl: 'modalviews/statisticsModal.html',
+            controller: 'statsCtrl',
+            size: 'lg',
+            resolve: {
+                statsParam: {
+                    type: 'exam',
+                    id: examId
+                }
+            }
+        });
     };
 
     //Listener for button "Edit exam"
