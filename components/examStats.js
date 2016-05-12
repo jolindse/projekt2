@@ -126,12 +126,14 @@ module.exports.examStats = function(req, callback) {
                    returnObject.numVGQuestionsPartial++;
                }
                // Har man svarat helt fel
-              else  {returnObject.numIGQuestions++;}
-               percentageGQuestions = (returnObject.numGQuestions/gQuestions)*100;
+                else  {returnObject.numIGQuestions++;}
+
+               // Räkna ut procentsatser
+               var percentageGQuestions = (returnObject.numGQuestions/gQuestions)*100;
                if (!percentageGQuestions){percentageGQuestions=0;}
-               percentageVGQuestions = (returnObject.numVGQuestions/gQuestions)*100;
+               var percentageVGQuestions = (returnObject.numVGQuestions/vgQuestions)*100;
                if(!percentageVGQuestions) {percentageVGQuestions=0;}
-               percentageIGQuestions = (returnObject.numIGQuestions/gQuestions)*100;
+               var percentageIGQuestions = (returnObject.numIGQuestions/((gQuestions+vgQuestions)*returnObject.numStudents)*100);
                if(!percentageIGQuestions){percentageIGQuestions=0;}
                returnObject.percentageGQuestions = percentageGQuestions;
                returnObject.percentageVGQuestions = percentageVGQuestions;
@@ -139,7 +141,7 @@ module.exports.examStats = function(req, callback) {
                
                // Om alla frågor är kontrollerade så kolla tiderna
                if(returnObject.numIGQuestions + returnObject.numGQuestions + returnObject.numVGQuestions +
-                  returnObject.numGQuestionsPartial + returnObject.numVGQuestionsPartial === questionsArray.length) {
+                  returnObject.numGQuestionsPartial + returnObject.numVGQuestionsPartial === (questionsArray.length*returnObject.numStudents)) {
                    examTime(subExams, callback, returnObject);
                }
            }
