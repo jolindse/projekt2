@@ -202,6 +202,7 @@ module.exports.getSubmittedAndCorrectAnswers = function (id, callback) {
                     var pointsRounded = Math.round(pointsAwarded * 2) / 2;
                     corrAns.forEach(function (currIndex) {
                         subAnswers[currIndex].points = pointsRounded;
+                        submittedExam.points += pointsRounded;
                     });
                 }
 

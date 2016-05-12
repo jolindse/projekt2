@@ -44,7 +44,6 @@ module.exports.examStats = function(req, callback) {
     };
     
     returnObject.exam = req.params.id;
-    
     // Hämtar provet
     Exam.findById(req.params.id, function(err, exam) {
         if(err) {error(err, callback, returnObject);}
@@ -65,6 +64,7 @@ module.exports.examStats = function(req, callback) {
                         returnObject.percentageVGResults = (returnObject.numVGResults/returnObject.numStudents)*100;}
                             
                         // Om inte provet är helt rättat
+                            
                         else if(!subExam.grade) {returnObject.numNoResults++;
                         returnObject.percentageNoResults = (returnObject.numNoResults/returnObject.numStudents)*100;}
                     });
@@ -103,7 +103,6 @@ module.exports.examStats = function(req, callback) {
                for (var j = 0; j < subAnswers.length; j++) {
                    if(subAnswers[j].correct) {numSubAnswersCorrect++;}
                }
-               
                // Har man svarat helt rätt och frågan är en G
                if(numSubAnswersCorrect === questionsArray[i].answerOptions.length && !questionsArray[i].vgQuestion) {
                    gQuestions++;
@@ -127,11 +126,16 @@ module.exports.examStats = function(req, callback) {
                    returnObject.numVGQuestionsPartial++;
                }
                // Har man svarat helt fel
-               else {returnObject.numIGQuestions++;}
-               
-               returnObject.percentageGQuestions = (returnObject.numGQuestions/gQuestions)*100;
-               returnObject.percentageVGQuestions = (returnObject.numVGQuestions/vgQuestions)*100;
-               returnObject.percentageIGQuestions = (returnObject.numIGQuestions/(gQuestions+vgQuestions))*100;
+              else  {returnObject.numIGQuestions++;}
+               percentageGQuestions = (returnObject.numGQuestions/gQuestions)*100;
+               if (!percentageGQuestions){percentageGQuestions=0;}
+               percentageVGQuestions = (returnObject.numVGQuestions/gQuestions)*100;
+               if(!percentageVGQuestions) {percentageVGQuestions=0;}
+               percentageIGQuestions = (returnObject.numIGQuestions/gQuestions)*100;
+               if(!percentageIGQuestions){percentageIGQuestions=0;}
+               returnObject.percentageGQuestions = percentageGQuestions;
+               returnObject.percentageVGQuestions = percentageVGQuestions;
+               returnObject.percentageIGQuestions = percentageIGQuestions;
                
                // Om alla frågor är kontrollerade så kolla tiderna
                if(returnObject.numIGQuestions + returnObject.numGQuestions + returnObject.numVGQuestions +
