@@ -51,7 +51,7 @@ myApp.controller("loginCtrl",
                         }
 
                         //Add data to userService:
-                        userService.login(data.user.firstName, data.user._id, data.user.admin, data.user.testToTake);
+                        userService.login(data.user.firstName, data.user._id, data.user.admin);
 
                         if(!$scope.$$phase) {
                             //https://github.com/yearofmoo/AngularJS-Scope.SafeApply
@@ -101,6 +101,7 @@ myApp.controller("loginCtrl",
  */
 myApp.controller('indexCtrl', function ($scope, $location, userService) {
     $scope.userName = null;
+    $scope.hideNavbar = null;
 
     //When clicking the Newton-logo:
     $scope.clickLogo = function() {
@@ -113,7 +114,8 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
     };
 
     //Updating the nav-bar when broadcast is sent:
-    $scope.$on('updateNavbarBroadcast', function () {
+    $scope.$on('updateNavbarBroadcast', function (event, hideNavbar) {
+        console.log(hideNavbar);
 
         if (sessionStorage.getItem('userId') != null) {
             $scope.showUserIconNav = true;
@@ -125,6 +127,12 @@ myApp.controller('indexCtrl', function ($scope, $location, userService) {
             else if (userService.admin == false) {
                 $scope.showStudentNav = true;
             }
+
+            if (hideNavbar != null){
+                $scope.hideNavbar = hideNavbar;
+            }
+
+
         }
         else {
             $scope.showUserIconNav = false;
@@ -165,7 +173,7 @@ myApp.controller('studentCtrl', function
     $scope.resultQuestions = [];
     $scope.resultAnswers = [];
     $scope.correctAnswers = [];
-    $scope.resultAnswerObject = [];
+    $scope.resultComment = [];
     $scope.resultAnswersPoints = [];
 
     //Get current student:
@@ -215,13 +223,15 @@ myApp.controller('studentCtrl', function
         var currentTime = hours + ":" + minutes;
         userService.startTime = currentTime;
         UserManager.setUser($scope.user);
+        userService.updateNavbar(true);
         $location.path("/doexam");
     };
 
     $scope.showResults = function (testResult) {
+        $scope.selectedTest = testResult.exam;
         $scope.resultQuestions = [];
         $scope.resultAnswers = [];
-        $scope.resultAnswerObject = [];
+        $scope.resultComment = [];
         $scope.correctAnswers = [];
         $scope.resultAnswersPoints = [];
 
@@ -238,7 +248,7 @@ myApp.controller('studentCtrl', function
             });
         });
 
-        $scope.resultAnswerObject = testResult.submittedtest.answers;
+        $scope.resultComment = testResult.submittedtest.answers;
 
         testResult.submittedtest.answers.forEach(function (answerObj) {
             var submittedAnswer = "";

@@ -172,7 +172,7 @@ myApp.controller('doExamCtrl',
             $scope.submitExam = function () {
                 SubmittedManager.addSubmitted($scope.currSubmitted, function (data) {
                     userService.setResults(data._id);
-
+                    userService.updateNavbar(false);
                     $location.path('/result');
                 });
             };

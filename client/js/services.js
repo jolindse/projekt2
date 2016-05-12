@@ -13,16 +13,15 @@ myApp.factory('userService',['$rootScope', function($rootScope){
     user.startTime = "";
     user.resultId = "";
 
-    user.login = function (firstName, id, admin, userTestsToTake){
+    user.login = function (firstName, id, admin){
         this.firstName = firstName;
         this.id = id;
         this.admin = admin;
-        this.testsToTake = userTestsToTake;
         this.updateNavbar();
     };
     
-    user.updateNavbar = function () {
-        $rootScope.$broadcast('updateNavbarBroadcast');
+    user.updateNavbar = function (hideNavbar) {
+        $rootScope.$broadcast('updateNavbarBroadcast', hideNavbar);
     };
 
     user.editTest = function (testId) {

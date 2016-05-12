@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-default">
+<nav ng-hide="hideNavbar" class="navbar navbar-inverse navbar-default">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -35,7 +35,8 @@
                     </ul>
                 </li>
                 <li ng-show="showAdminNav" class="admin-nav"><a href="#/class" id="sortUserTab">Användare</a></li>
-                <li ng-show="showStudentNav" class="student-nav"><a href="#/studentresults" id="studentHomeTab">Resultat</a></li>
+                <li ng-show="showStudentNav" class="student-nav"><a href="#/student">Prov</a></li>
+                <li ng-show="showStudentNav" class="student-nav"><a href="#/studentresults">Resultat</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" ng-show="showUserIconNav">

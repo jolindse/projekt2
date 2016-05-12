@@ -11,7 +11,7 @@
             </tr>
             </thead>
             <tbody ng-repeat="test in testResults">
-            <tr ng-click="showResults(testResults[$index])" data-toggle="modal" data-target="#informationModal" >
+            <tr class="clickable-row" ng-click="showResults(testResults[$index])" data-toggle="modal" data-target="#informationModal" >
                 <td>{{test.exam.title}}</td>
                 <td>{{test.exam.subject}}</td>
                 <td>{{test.submittedtest.grade}}</td>
@@ -30,7 +30,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Resultat från provet {{questionResults.exam.title}} till:</h4>
+                <h4 class="modal-title">Resultat från provet {{selectedTest.title}}</h4>
             </div>
             <div class="modal-body">
                 <table class="table">
@@ -79,7 +79,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="answerObj in resultAnswerObject | orderBy:sortType:sortReverse | filter:searchUser">
+                    <tr ng-repeat="answerObj in resultComment | orderBy:sortType:sortReverse | filter:searchUser">
                         <td>{{$index+1}}</td>
                         <td>{{resultQuestions[$index].title}}</td>
                         <td>{{resultQuestions[$index].type}}</td>
