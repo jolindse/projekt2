@@ -41,8 +41,11 @@ body, html {
 #createStudentModal.modal-body{
     overflow-y: auto;
 }
-/* END OF SHARE TEST MODAL */
-
+#dropDownClassName{
+    outline: none;
+    border: none;
+}
+/* END OF createStudent MODAL */
 .clickable-row{ /*in a table*/
     cursor: pointer;
 }
@@ -140,6 +143,10 @@ body, html {
 /*
 * COMMON ELEMENT STYLING
 */
+
+#studentClassTableRow{
+    border: solid 2px;
+}
 
 .checkbox-answer-options {
     min-width: 33px;
