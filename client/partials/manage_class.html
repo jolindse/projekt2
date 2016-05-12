@@ -5,24 +5,24 @@
             <div>
                 <h2>Klasser</h2>
             </div>
-            <div class="text-right">
-                <button class="btn btn-success btn-sm" id="newClassModal" data-toggle="modal" ng-click="resetSchoolClass()" data-target="#createClassModal" ><span
-                        class="glyphicon glyphicon-plus"></span></button>
-                <button class="btn btn-danger btn-sm" id="deleteClassBut" ng-click="deleteClassBut()"><span
-                        class="glyphicon glyphicon-remove"></span></button>
-                <button type="button" class="btn btn-warning" id="editClassBut" ng-show="editClassBut" data-toggle="modal" data-target="#createClassModal">Redigera klass</button>
-            </div>
+                <div class="text-right">
+                    <button class="btn btn-success btn-sm" id="newClassModal" data-toggle="modal" ng-click="resetSchoolClass()" data-target="#createClassModal" ><span
+                            class="glyphicon glyphicon-plus"></span></button>
+                    <button class="btn btn-danger btn-sm" id="deleteClassBut" ng-click="deleteClassBut()"><span
+                            class="glyphicon glyphicon-remove"></span></button>
+                    <button type="button" class="btn btn-warning" id="editClassBut" ng-show="editClassBut" data-toggle="modal" data-target="#createClassModal">Redigera klass</button>
+                </div>
             <div>
-                <div class="panel panel-default">
-                    <table class="table">
-                        <thead class="thead">
-                        <tr>
-                            <th>Skolklasser</th>
-                        </tr>
-                        </thead>
+                <div class="panel panel-default" >
+                    <table class="table"  >
+                        <!--<thead class="thead">-->
+                        <!--<tr>-->
+                            <!--<th><br></th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
                         <tbody ng-repeat="class in studentClasses">
                         <tr ng-class='{"selectedRow":class === studentClass}' ng-click="loadClass((class),$index)" class="clickable-row">
-                            <td>{{class.name}}</td>
+                            <td id="studentClassTableRow">{{class.name}}</td>
                         </tr>
                         </tbody>
                     </table>

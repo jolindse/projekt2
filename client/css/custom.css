@@ -132,6 +132,10 @@ body, html {
 * COMMON ELEMENT STYLING
 */
 
+#studentClassTableRow{
+    border: solid 2px;
+}
+
 .checkbox-answer-options {
     min-width: 33px;
     min-height: 33px;
