@@ -548,7 +548,7 @@ myApp.controller('adminCtrl', function
         ExamManager.deleteExam($scope.selectedTest._id);
         SubmittedManager.getAllSubmitted(function (submittedTests) {
             submittedTests.forEach(function (submittedTest) {
-                if (submittedTest.exam == selectedTest._id){
+                if (submittedTest.exam == $scope.selectedTest._id){
                     SubmittedManager.deleteSubmitted(submittedTest._id);
                 }
             })
