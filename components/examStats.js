@@ -126,7 +126,9 @@ module.exports.examStats = function(req, callback) {
                    returnObject.numVGQuestionsPartial++;
                }
                // Har man svarat helt fel
-              else  {returnObject.numIGQuestions++;}
+                else  {returnObject.numIGQuestions++;}
+
+               // Räkna ut procentsatser
                var percentageGQuestions = (returnObject.numGQuestions/gQuestions)*100;
                if (!percentageGQuestions){percentageGQuestions=0;}
                var percentageVGQuestions = (returnObject.numVGQuestions/vgQuestions)*100;
