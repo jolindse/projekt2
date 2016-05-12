@@ -252,7 +252,14 @@ myApp.controller('studentCtrl', function
             });
         });
 
-        $scope.resultComment = testResult.submittedtest.answers;
+        testResult.submittedtest.answers.forEach(function (answer) {
+            if (answer[0].comment != null) {
+                $scope.resultComment.push(answer[0].comment);
+            }
+            else{
+                $scope.resultComment.push(" ");
+            }
+        });
 
         testResult.submittedtest.answers.forEach(function (answerObj) {
             var submittedAnswer = "";

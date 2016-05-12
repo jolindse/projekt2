@@ -80,15 +80,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="answerObj in resultComment | orderBy:sortType:sortReverse | filter:searchUser">
+                    <tr ng-repeat="question in resultQuestions | orderBy:sortType:sortReverse | filter:searchUser">
                         <td>{{$index+1}}</td>
-                        <td>{{resultQuestions[$index].title}}</td>
-                        <td>{{resultQuestions[$index].type}}</td>
-                        <td>{{resultQuestions[$index].questionText}}</td>
+                        <td>{{question.title}}</td>
+                        <td>{{question.type}}</td>
+                        <td>{{question.questionText}}</td>
                         <td>{{resultAnswers[$index]}}</td>
                         <td>{{correctAnswers[$index]}}</td>
-                        <td>{{answerObj[0].comment}}</td>
-                        <td>{{resultAnswersPoints[$index]}}/{{resultQuestions[$index].points}}</td>
+                        <td>{{resultComment[$index]}}</td>
+                        <td>{{resultAnswersPoints[$index]}}/{{question.points}}</td>
                     </tr>
                     </tbody>
                 </table>
