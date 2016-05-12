@@ -93,7 +93,7 @@ module.exports.getSubmittedAndCorrectAnswers = function (id, callback) {
     // Fetch the submitted exam
     SubmittedExam.getSubmitted(id, function (err, data) {
         if (err) {
-            console.log('getSubmitted ' + id);
+            //console.log('getSubmitted ' + id);
         }
         else {
             submittedExam = data;
@@ -124,9 +124,9 @@ module.exports.getSubmittedAndCorrectAnswers = function (id, callback) {
                 //console.log('Finish counter: ' + counter); // TEST
                 if (counter === 0) {
                     for (var qI = 0; qI < questions.length; qI++) {
-                        console.log('QUESTIONS TO SEND NR ' + qI + ' type: ' + questions[qI].type); // TEST
+                        //console.log('QUESTIONS TO SEND NR ' + qI + ' type: ' + questions[qI].type); // TEST
                     }
-                    console.log('BEFORE NEXT PART:\n\nQUESTIONS:\n'+JSON.stringify(questions, null, 2)+'\n\nSUBEXAM:\n'+JSON.stringify(subExam,null,2)+'\n\nORGEXAM:\n'+JSON.stringify(orgExam,null,2)); // TEST
+                    //console.log('BEFORE NEXT PART:\n\nQUESTIONS:\n'+JSON.stringify(questions, null, 2)+'\n\nSUBEXAM:\n'+JSON.stringify(subExam,null,2)+'\n\nORGEXAM:\n'+JSON.stringify(orgExam,null,2)); // TEST
                     callback(questions, submittedExam, orgExam);
                 }
             }

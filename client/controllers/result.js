@@ -76,27 +76,14 @@ myApp.controller('resultCtrl', [
 
                 // Points
                 var currAns = $scope.currResult.answers[i];
-                var currPoints = 0;
-                var corrAns = 0;
-                var faultAns = 0;
-                for (var k = 0; k < currAns.length; k++) {
-                    if (currAns[k].correct) {
-                        corrAns++;
-                    } else {
-                        faultAns++;
-                    }
-                    currPoints += currAns[k].points;
-                }
-                if (currObj.type === 'multi') {
-                    var perQPoints = currPoints/corrAns;
-                    if (faultAns > 0){
-                        currPoints -= perQPoints*faultAns;
-                    }
-                }
-                var roundPoints = Math.round(currPoints * 2) / 2;
-                if (roundPoints > 0) {
+                var pointsTot = 0;
+                currAns.forEach(function (ansObj){
+                    pointsTot += ansObj.points;
+                });
+
+                if (pointsTot > 0) {
                     currObj.correct = true;
-                    currObj.points = roundPoints;
+                    currObj.points = pointsTot;
                 } else {
                     currObj.correct = false;
                     currObj.points = 0;
@@ -104,7 +91,6 @@ myApp.controller('resultCtrl', [
                 // Add to resultsArray
                 $scope.resultsArray[i] = currObj;
             }
-            console.log('resultsarray: ' + JSON.stringify($scope.resultsArray, null, 2)); // TEST
         };
 
         // INIT

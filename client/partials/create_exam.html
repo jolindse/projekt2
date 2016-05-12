@@ -160,9 +160,31 @@
                 </div>
             </div>
         </form>
+
+        <div ng-show="messageTime && savedE" class="row">
+            <div class="col-md-6 col-md-offset-3 text-center"
+                 ng-class="{'alert alert-success': savedE}">
+                Provet sparar
+            </div>
+        </div>
+
+        <div ng-show="messageTime && updatedE" class="row">
+            <div class="col-md-6 col-md-offset-3 text-center"
+                 ng-class="{'alert alert-warning': updatedE}">
+                Provet uppdaterat
+            </div>
+        </div>
+
+        <div ng-show="messageTime && deletedE" class="row">
+            <div class="col-md-6 col-md-offset-3 text-center"
+                 ng-class="{'alert alert-danger': deletedE}">
+                Provet raderat
+            </div>
+        </div>
+
     </div>
 
-    <!-- DEBUG INFO -->
+    <!-- DEBUG INFO
     <tt>CurrExam:</tt><br/>
     <div ng-repeat="(key, prop) in exam">
         <tt>{{key}}; {{prop}}</tt>

@@ -64,7 +64,6 @@ myApp.controller('doExamCtrl',
                     waiting--;
                     $scope.questions[index] = question;
                     if ($scope.questions[index].type === 'rank') {
-                        console.log('Rank question index: '+index); // TEST
                         $scope.setupRanking(index);
                     } else {
                         $scope.currSubmitted.answers[index] = ([{"text": ""}]);

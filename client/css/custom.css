@@ -607,3 +607,16 @@ p.correct-fail {
 /*
 * END OF RESULTS
 */
+
+/*
+ANIMATIONS
+*/
+
+*.ng-hide-add, *.ng-hide-remove {
+    transition: 0.2s linear all;
+}
+
+*.ng-hide {
+    position: absolute;
+    opacity: 0;
+}
