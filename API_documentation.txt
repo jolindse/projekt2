@@ -1,7 +1,7 @@
 =========================================================================================================================
 API ENDPOINTS:
 =========================================================================================================================
-Endpoint:					Call:	Expects:	Returns:		Info:
+Endpoint:					Call:	Expects:	Returns:		    Info:
 
 /api/user					GET		-			[user]			    Gets ALL users
 /api/user					POST	user		-				    Adds a user

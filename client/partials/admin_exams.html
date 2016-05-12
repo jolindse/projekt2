@@ -25,7 +25,7 @@
         <button ng-hide="selectedTest == null" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Dela prov</button>
         <button ng-click="editExam()" ng-hide="selectedTest == null" type="button" class="btn btn-warning">Redigera prov</button>
         <button ng-click="deleteExam()" ng-hide="selectedTest == null" type="button" class="btn btn-danger">Radera prov</button>
-        <button ng-click="showStats(selectedTest._id)" ng-hide="selectedTest == null"><span class="glyphicon glyphicon-stats"></span></button>
+        <button ng-click="showStats(selectedTest._id)" ng-hide="selectedTest == null" class="btn btn-success"><span class="glyphicon glyphicon-stats"></span></button>
         <hr class="m-y-2">
 
         <p class="lead">Det finns {{testsToCorrect.length}} st prov att rätta.</p>

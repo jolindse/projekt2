@@ -275,7 +275,6 @@ myApp.controller('makeQuestionCtrl',
             };
 
             // Modal
-
             /**
              * Initializes question picking modal
              */
