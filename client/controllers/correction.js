@@ -9,12 +9,14 @@ myApp.controller('correctionCtrl',
         'QuestionManager',
         'UserManager',
         'userService',
+        '$location',
         function ($scope,
                   ExamManager,
                   SubmittedManager,
                   QuestionManager,
                   UserManager,
-                  userService) {
+                  userService,
+                  $location) {
 
             // FUNCTIONS
 
@@ -37,7 +39,6 @@ myApp.controller('correctionCtrl',
                 $scope.hasNextQ = false;                // Do we have a another question?
                 $scope.hasPreviousQ = false;            // Do we have a previous question?
                 $scope.onlyNeedCorrection = false;      // Only display questions not corrected.
-                //$scope.needCorr = false;                // Does the current question need correction?
 
                 SubmittedManager.getSubmitted(id, function (data) {
                     $scope.currSubmitted = data;
@@ -90,7 +91,8 @@ myApp.controller('correctionCtrl',
                     var subAns = $scope.currSubmitted.answers[i];
                     var question = $scope.questions[i];
                     if (question.type === 'text' && !subAns[0].corrected) {
-                        $scope.questionsNeedCorrection.push(i)
+                        subAns[0].corrected = false;
+                        $scope.questionsNeedCorrection.push(i);
                     }
                 }
                 callback();
@@ -178,16 +180,18 @@ myApp.controller('correctionCtrl',
             $scope.toggleNeedCorrection = function () {
                 if ($scope.questionsNeedCorrection.length > 0) {
                     $scope.onlyNeedCorrection = !$scope.onlyNeedCorrection;
-                    if ($scope.questionsNeedCorrection) {
+                    if (!$scope.questionsNeedCorrection) {
                         $scope.getQByIndex($scope.qIndex);
                     } else {
                         var currIndex = $scope.questionsNeedCorrection.indexOf($scope.qIndex);
                         if (currIndex > -1) {
                             $scope.needIndex = currIndex;
+                            $scope.findNeedCorrection(function(){});
                             $scope.getQByIndex($scope.qIndex);
                         } else {
                             var absIndex = $scope.questionsNeedCorrection[0];
                             $scope.qIndex = absIndex;
+                            $scope.findNeedCorrection(function(){});
                             $scope.getQByIndex(absIndex);
                         }
                     }
@@ -245,20 +249,26 @@ myApp.controller('correctionCtrl',
             $scope.setCorrected = function () {
                 $scope.currSubAns[0].corrected = true;
                 var origIndex = $scope.questions.indexOf($scope.currQuestion);
+                console.log('Orig index of question'+origIndex); // TEST
                 var indexToRemove = $scope.questionsNeedCorrection.indexOf(origIndex);
+                console.log('Ta bort index: '+indexToRemove); // TEST
                 if (indexToRemove > -1) {
                     $scope.questionsNeedCorrection.splice(indexToRemove, 1);
                 }
+                $scope.findNeedCorrection(function(){});
             };
 
             // UPDATES
-
             /**
              * Saves and updates submitted exam
              */
             $scope.postCorrected = function () {
-                SubmittedManager.setSubmitted($scope.currSubmitted, function (data){
+                SubmittedManager.setSubmitted($scope.currSubmitted, function (data) {
+                    // console.log('RETURNED AFTER SET: ' + JSON.stringify(data, null, 2)); // TEST
                     $scope.currSubmitted = data;
+                    if ($scope.questionsNeedCorrection.length === 0) {
+                        $location.path('/finishedcorr')
+                    }
                 });
             };
 

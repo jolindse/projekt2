@@ -8,11 +8,13 @@ myApp.controller('makeExamCtrl',
         'ExamManager',
         'QuestionManager',
         '$uibModal',
+        '$timeout',
         function ($scope,
                   userService,
                   ExamManager,
                   QuestionManager,
-                  $uibModal) {
+                  $uibModal,
+                  $timeout) {
 
             /*
              FUNCTIONS
@@ -55,6 +57,7 @@ myApp.controller('makeExamCtrl',
                 if ($scope.exam._id) {
                     ExamManager.deleteExam($scope.exam._id);
                     $scope.newExam();
+                    $scope.examDeleted();
                 }
             }
 
@@ -70,6 +73,7 @@ myApp.controller('makeExamCtrl',
                 $scope.exam.maxPoints = totalP;
                 ExamManager.addExam($scope.exam, function (data) {
                     $scope.exam = data;
+                    $scope.examSaved();
                 });
             };
 
@@ -79,6 +83,7 @@ myApp.controller('makeExamCtrl',
             $scope.updateExam = function () {
                 var examUpdated = ExamManager.setExam($scope.exam);
                 $scope.loadExam(examUpdated._id);
+                $scope.examUpdated();
             };
 
             /**
@@ -203,6 +208,38 @@ myApp.controller('makeExamCtrl',
                     });
                 });
             };
+
+
+            /**
+             * Displays messages after question actions
+             */
+            $scope.examUpdated = function () {
+                $scope.messageTime = true;
+                $scope.updatedE = true;
+                $timeout(function () {
+                    $scope.messageTime = false;
+                    $scope.updatesE = false;
+                }, 5000);
+            };
+
+            $scope.examDeleted = function () {
+                $scope.messageTime = true;
+                $scope.deletedE = true;
+                $timeout(function () {
+                    $scope.messageTime = false;
+                    $scope.deletedE = false;
+                }, 5000);
+            };
+
+            $scope.examSaved = function () {
+                $scope.messageTime = true;
+                $scope.savedE = true;
+                $timeout(function () {
+                    $scope.messageTime = false;
+                    $scope.savedE = false;
+                }, 5000);
+            };
+
 
             /*
              INIT

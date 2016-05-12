@@ -119,10 +119,12 @@
                         <div class="input-group input-group-sm">
 
                             <span class="input-group-btn">
-                                <button ng-class="{'btn-success': currAnswer.correct === true, 'incorrectAnswer': currAnswer.correct === false}" ng-click="toggleCorrect($index)"
+                                <button ng-class="{'btn-success': currAnswer.correct === true, 'incorrectAnswer': currAnswer.correct === false}"
+                                        ng-click="toggleCorrect($index)"
                                         class="btn incorrectAnswer"><span
                                         class="glyphicon glyphicon-ok"></span></button></span>
-                            <input ng-class="{'btn-success': currAnswer.correct === true}" type="text" class="form-control"
+                            <input ng-class="{'btn-success': currAnswer.correct === true}" type="text"
+                                   class="form-control"
                                    ng-model="question.answerOptions[$index].text"
                                    placeholder="Svarstext">
                                     <span class="input-group-btn">
@@ -171,9 +173,31 @@
             </div>
         </div>
 
+        <div ng-show="messageTime && savedQ" class="row">
+            <div class="col-md-6 col-md-offset-3 text-center"
+                 ng-class="{'alert alert-success': savedQ}">
+                Frågan sparad
+            </div>
+        </div>
+
+        <div ng-show="messageTime && updatedQ" class="row">
+            <div class="col-md-6 col-md-offset-3 text-center"
+                 ng-class="{'alert alert-warning': updatedQ}">
+                Frågan uppdaterad
+            </div>
+        </div>
+
+        <div ng-show="messageTime && deletedQ" class="row">
+            <div class="col-md-6 col-md-offset-3 text-center"
+                 ng-class="{'alert alert-danger': deletedQ}">
+                Frågan raderad
+            </div>
+        </div>
+
+
     </div>
 
-    <!-- DEBUG INFO -->
+    <!-- DEBUG INFO
     Validate error: {{validateError}} <br/>
     <div ng-repeat="(key, prop) in question">
         <tt>{{key}} : {{prop}}</tt>

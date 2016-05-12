@@ -270,8 +270,10 @@ myApp.factory('Question', ['$http', 'APIBASEURL', function ($http, APIBASEURL) {
             $http.delete(APIBASEURL + '/api/question/' + this._id);
         },
         update: function () {
-            console.log('update in models data: '+JSON.stringify(this)); // TEST
-            $http.put(APIBASEURL + '/api/question/' + this._id, this);
+            var updQ = this;
+            console.log(JSON.stringify(updQ,null,2));
+            //$http.put(APIBASEURL + '/api/question/' + id, this);
+            $http.put(APIBASEURL+'/api/question',{headers: {'Content-Type': 'multipart/form-data'}, data: updQ});
         }
     };
     return Question;
@@ -454,10 +456,10 @@ myApp.factory('SubmittedManager', ['$http', '$q', 'Submitted', 'APIBASEURL', fun
                     callback(submitteds);
                 })
         },
-        setSubmitted: function (submittedData) {
+        setSubmitted: function (submittedData, callback) {
             var submitted = SubmittedManager._retriveInstance(submittedData._id, submittedData);
             submitted.update();
-            return submitted;
+            callback(submitted);
         },
         deleteSubmitted: function (id) {
             SubmittedManager._load(id, function (currSubmitted) {

@@ -30,7 +30,7 @@
                             </tr>
                         </thead>
                         <tbody ng-repeat="class in studentClasses">
-                            <tr ng-class='{"selectedRow":class === studentClass}' ng-click="loadClass(studentClasses[$index],$index)" class="clickable-row">
+                            <tr ng-class='{"selectedRow":class === studentClass}' ng-click="loadClass((class),$index)" class="clickable-row">
                                 <td>{{class.name}}</td>
                             </tr>
                         </tbody>
@@ -51,7 +51,7 @@
                             </tr>
                         </thead>
                         <tbody ng-repeat="user in users | filter:studentClass.name: true">
-                            <tr ng-class='{"selectedRow":user === userCon}' ng-click="loadUser(users[$index],$index)" class="clickable-row">
+                            <tr ng-class='{"selectedRow":user === userCon}' ng-click="loadUser((user), $index)" class="clickable-row">
                                 <td>
                                     <div ng-if="user.admin == true">Admin</div>
                                     <div ng-if="user.admin == false">Elev</div>
@@ -145,9 +145,9 @@
                                         </strong>
                                     </td>
                                     <td class="text-primary">
-                                        <!--<label class="radio-inline"><input type="radio" name="authority" ng-model="userCon-admin" ng-value="true">Admin</label>-->
-                                        <!--<label class="radio-inline"><input type="radio" name="authority" ng-model="userCon-admin" ng-value="false">Elev</label>-->
-                                        <input type="text" name="authority" ng-model="userCon.admin">
+                                        <label class="radio-inline"><input type="radio" name="authority" ng-model="userCon.admin" ng-value="true">Admin</label>
+                                        <label class="radio-inline"><input type="radio" name="authority" ng-model="userCon.admin" ng-value="false">Elev</label>
+                                        <!--<input type="text" name="authority" ng-model="userCon.admin">-->
                                     </td>
                                 </tr>
                                 <tr>
@@ -164,7 +164,7 @@
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li id="classDropdownItem" ng-repeat="class in studentClasses" ng-click="loadClass(studentClasses[$index])"><a href="#">{{class.name}}</a></li>
+                                                <li id="classDropdownItem" ng-repeat="class in studentClasses" ng-click="loadClass(studentClasses[$index])"><a>{{class.name}}</a></li>
                                                 <li class="divider"></li>
                                             </ul>
                                         </div>

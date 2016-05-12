@@ -3,6 +3,7 @@
  */
 var myApp = angular.module('myApp', [
     'ngRoute',
+    'ngAnimate',
     'datetimepicker',
     'ui.bootstrap',
     'ui.checkbox',
@@ -98,19 +99,24 @@ myApp.config(function ($routeProvider) {
             controller: 'resultCtrl'
         })
 
+        .when('/finishedcorr', {
+            templateUrl: 'partials/finished_correction.html',
+            controller: 'finishedCorrCtrl'
+        })
+
         .otherwise({
             redirectTo: '/login'
         });
 });
 
-myApp.run(function($rootScope, $location) {
-    $rootScope.$on("$routeChangeStart", function(event, next, current) {
+myApp.run(function ($rootScope, $location) {
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
 
         //If no logged user, redirect to /login
         if (sessionStorage.getItem('userId') == null) {
 
             //If the next page is login, do nothing.
-            if ( next.templateUrl === "partials/login.html") {
+            if (next.templateUrl === "partials/login.html") {
             }
             //Else, change location to login:
             else {
@@ -132,12 +138,12 @@ var noSessionIdUrls = [
     "template"
 ];
 
-myApp.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push( function ($q, $injector, $rootScope) {
+myApp.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($q, $injector, $rootScope) {
         return {
-            request: function(config) {
-                for(var i = 0; i < noSessionIdUrls.length; i++) {
-                    if(config.url.startsWith(noSessionIdUrls[i])) {
+            request: function (config) {
+                for (var i = 0; i < noSessionIdUrls.length; i++) {
+                    if (config.url.startsWith(noSessionIdUrls[i])) {
                         return config;
                     }
                 }
