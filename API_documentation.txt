@@ -8,17 +8,17 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/user/(id) 				PUT		user 		-				    Updates a user
 /api/user/(id)				GET 	-			user 			    Gets specific user
 /api/user/(id)				DELETE	-			-				    Deletes a user
-/api/user/login/(id)		POST	user.id		login:bool		    Login, returns true or false
+/api/user/login/(id)		POST	user.id		login:bool, user    Login, returns true or false
 
-/api/class					GET 	-			class				Gets ALL classes
+/api/class					GET 	-			[class]				Gets ALL classes
 /api/class 					POST 	class 		class 				Adds a class
 /api/class/:id 				PUT 	class 		.					Updates a class
 /api/class/:id 				DELETE  - 			-					Deletes a class
-/api/class/:id 				DELETE  -			-					Deletes a class and ALL it's students.
+/api/class/remove/:id 		DELETE  -			-					Deletes a class and ALL it's students.
 
 /api/exam					GET 	- 			[exam]			    Gets ALL exams
-/api/exam 					POST 	exam 		-				    Adds a exam
-/api/exam/(id)				PUT 	exam 		- 				    Updates a exam
+/api/exam 					POST 	exam 		exam				Adds a exam
+/api/exam/(id)				PUT 	exam 		exam 				Updates a exam
 /api/exam/(id)				GET 	-			[exam,[questions]]	Gets a specific exam with its questions
 /api/exam/(id)				DELETE 	- 			-				    Deletes a exam and all submitted that relates to it
 /api/exam/cre8or/(id)		GET 	-			[exam]			    Gets all exams by a cre8or
@@ -35,12 +35,13 @@ Endpoint:					Call:	Expects:	Returns:		Info:
 /api/submitted/(id) 		PUT 	submitted 	- 				    Updates a submitted exam
 /api/submitted/(id) 		DELETE 	- 			-				    Deletes a submitted exam
 /api/submitted/user/(id)	GET 	- 			[submitted]		    Gets ALL submitted exams by a student
-/api/submitted/needcorr     GET     -           [submitted]         Gets all exams which needs to be corrected
+/api/submittedneedcorr      GET     -           [submitted]         Gets all exams which needs to be corrected
+/api/submitted/autocorrect/(id)  GET    -       exam
 
 /api/mail                   POST    [id]        success:boolean     Expects an array with user id's, returns boolean. Name the array rec
-/api/sendpass               GET     id          success:boolean     Sends login and password to user. Expects a user's loginId
+/api/sendpass/(id)          GET                 success:boolean     Sends login and password to user. Expects a user's loginId
 
-/api/statistics/scope/id    GET     scope, id   jsonObject          scope: user, class och exam, id: ObjectId
+/api/statistics/(scope)/(id)    GET     scope, id   jsonObject          Returns different statistics dependent of the scope. Scope: user, class or exam, id: ObjectId
 
 all (id) except for the login one refers to MongoDB _id.
 
